@@ -51,7 +51,3 @@ Vector3& Vector3::operator = (Vector3&& v)
 Vector3::~Vector3()
 {
 }
-
-float m_x;
-float m_y;
-float m_z;
