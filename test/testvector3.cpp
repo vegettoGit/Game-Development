@@ -23,6 +23,9 @@ void main()
    // Destructor of temporary
    Vector3 test4(PassAndReturn(Vector3(7.0f, 8.0f, 9.0f)));
 
+   test1.normalize();
+   float length = test1.length();
+
    // test4 destructor
    // test3 destructor
    // test2 destructor

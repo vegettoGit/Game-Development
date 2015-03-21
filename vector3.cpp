@@ -1,5 +1,6 @@
 #include "vector3.h"
 #include <utility>
+#include <math.h>
 
 
 Vector3::Vector3()
@@ -50,4 +51,27 @@ Vector3& Vector3::operator = (Vector3&& v)
 
 Vector3::~Vector3()
 {
+}
+
+float Vector3::operator * (const Vector3& v)
+{
+   return (m_x * v.m_x + m_y * v.m_y + m_z * v.m_z);
+}
+
+Vector3& Vector3::operator /= (float scalar)
+{
+   m_x /= scalar;
+   m_y /= scalar;
+   m_z /= scalar;
+   return *this;
+}
+
+float Vector3::length()
+{
+   return sqrt((*this) * (*this));
+}
+
+void Vector3::normalize()
+{
+   *this /= length();
 }
