@@ -1,2 +1,2 @@
 # Game Development
-A collection of various useful game development algorithms
+A collection of various useful game development libraries
