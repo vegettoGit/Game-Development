@@ -34,7 +34,7 @@ Vector3 LinkConfiguration::Solve(const Vector3& link1StartPoint, const Vector3& 
      Result joint point = (a, b, 0)
    
      |result joint point - (0, 0, 0)| = L1
-     |end point - result joint point|       = L2
+     |end point - result joint point| = L2
    
      a^2 + b^2 = L1^2                  
      (c - a)^2 + b^2 = L2^2   ;  c^2 - 2ca + a^2 + b^2 = L2^2            
