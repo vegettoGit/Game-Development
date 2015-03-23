@@ -53,9 +53,31 @@ Vector3::~Vector3()
 {
 }
 
-float Vector3::operator * (const Vector3& v)
+float Vector3::operator * (const Vector3& v) const
 {
    return (m_x * v.m_x + m_y * v.m_y + m_z * v.m_z);
+}
+
+Vector3 Vector3::operator + (const Vector3& v) const
+{
+   Vector3 result(*this);
+
+   result.m_x += v.m_x;
+   result.m_y += v.m_y;
+   result.m_z += v.m_z;
+
+   return result;
+}
+
+Vector3 Vector3::operator - (const Vector3& v) const
+{
+   Vector3 result(*this);
+
+   result.m_x -= v.m_x;
+   result.m_y -= v.m_y;
+   result.m_z -= v.m_z;
+
+   return result;
 }
 
 Vector3& Vector3::operator /= (float scalar)
@@ -63,10 +85,11 @@ Vector3& Vector3::operator /= (float scalar)
    m_x /= scalar;
    m_y /= scalar;
    m_z /= scalar;
+
    return *this;
 }
 
-float Vector3::length()
+float Vector3::length() const
 {
    return sqrt((*this) * (*this));
 }

@@ -18,11 +18,14 @@ struct Vector3
    ~Vector3             ();
 
    // Dot product
-   float    operator *  (const Vector3& v);
+   float    operator *  (const Vector3& v) const;
+
+   Vector3  operator +  (const Vector3& v) const;
+   Vector3  operator -  (const Vector3& v) const;
 
    Vector3& operator /= (float scalar);
 
-   float    length      ();
+   float    length      () const;
    void     normalize   ();
 
    float    m_x;

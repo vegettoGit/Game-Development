@@ -26,6 +26,9 @@ void main()
    test1.normalize();
    float length = test1.length();
 
+   // Constructs a temporary, adds the values and calls the move constructor to take steal the temporary's resources
+   Vector3 test5 = test3 + test4;
+
    // test4 destructor
    // test3 destructor
    // test2 destructor
