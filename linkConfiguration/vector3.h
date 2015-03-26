@@ -19,9 +19,13 @@ struct Vector3
 
    // Dot product
    float    operator *  (const Vector3& v) const;
-
+   
    Vector3  operator +  (const Vector3& v) const;
    Vector3  operator -  (const Vector3& v) const;
+
+   Vector3  operator *  (float) const;
+
+   Vector3& operator += (const Vector3& v);
 
    Vector3& operator /= (float scalar);
 

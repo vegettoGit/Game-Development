@@ -58,6 +58,17 @@ float Vector3::operator * (const Vector3& v) const
    return (m_x * v.m_x + m_y * v.m_y + m_z * v.m_z);
 }
 
+Vector3 Vector3::operator * (float scalar) const
+{
+   Vector3 result(*this);
+
+   result.m_x *= scalar;
+   result.m_y *= scalar;
+   result.m_z *= scalar;
+
+   return result;
+}
+
 Vector3 Vector3::operator + (const Vector3& v) const
 {
    Vector3 result(*this);
@@ -78,6 +89,15 @@ Vector3 Vector3::operator - (const Vector3& v) const
    result.m_z -= v.m_z;
 
    return result;
+}
+
+Vector3& Vector3::operator += (const Vector3& v)
+{
+   m_x += v.m_x;
+   m_y += v.m_y;
+   m_z += v.m_z;
+
+   return *this;
 }
 
 Vector3& Vector3::operator /= (float scalar)

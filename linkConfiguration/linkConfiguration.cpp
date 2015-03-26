@@ -63,15 +63,11 @@ Vector3 LinkConfiguration::Solve(const Vector3& link1StartPoint, const Vector3& 
    Vector3 v2;
    if (v1.m_x == 0 && v1.m_y == 0)
    {
-      v2.m_x = 1;
-      v2.m_y = 0;
-      v2.m_z = 0;
+      v2 = Vector3(1.0f, 0.0f, 0.0f);
    }
    else
    {
-      v2.m_x = -v1.m_y;
-      v2.m_y = v1.m_x;
-      v2.m_z = 0;
+      v2 = Vector3(-v1.m_y, v1.m_x, 0.0f);
    }
 
    // Solution on plane XY
@@ -82,17 +78,11 @@ Vector3 LinkConfiguration::Solve(const Vector3& link1StartPoint, const Vector3& 
    // Translate into P coordinates
    Vector3 result;
    
-   result.m_x = a * v1.m_x;
-   result.m_y = a * v1.m_y;
-   result.m_z = a * v1.m_z;
-   result.m_x += b * v2.m_x;
-   result.m_y += b * v2.m_y;
-   result.m_z += b * v2.m_z;
+   result = v1 * a;
+   result += (v2 * b);
 
    // Translate into world coordinates
-   result.m_x += link1StartPoint.m_x;
-   result.m_y += link1StartPoint.m_y;
-   result.m_z += link1StartPoint.m_z;
+   result += link1StartPoint;
 
    return result;
 }
