@@ -1,3 +1,7 @@
+#include "test.h"
+
+#ifdef TEST_VECTOR3
+
 #include "vector3.h"
 
 // Intentionally created to test move constructor
@@ -39,3 +43,5 @@ void main()
 
    return;
 }
+
+#endif

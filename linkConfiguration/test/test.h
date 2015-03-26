@@ -1,0 +1,3 @@
+// #define TEST_VECTOR3
+#define TEST_LINK_CONFIGURATION
+
