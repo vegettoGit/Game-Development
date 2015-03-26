@@ -1,4 +1,4 @@
-#include "vector3.h"
+struct Vector3;
 
 /*
 
@@ -11,20 +11,20 @@
 */
 class LinkConfiguration
 {
-   LinkConfiguration                    ();
-   ~LinkConfiguration                   ();
+   LinkConfiguration                     ();
+   ~LinkConfiguration                    ();
 
-   LinkConfiguration                    (const LinkConfiguration& v)   = delete;
-   LinkConfiguration&       operator =  (const LinkConfiguration& v)   = delete;
+   LinkConfiguration                     (const LinkConfiguration& v)   = delete;
+   LinkConfiguration&       operator =   (const LinkConfiguration& v)   = delete;
 
-   LinkConfiguration                    (LinkConfiguration&& v)        = delete;
-   LinkConfiguration&       operator =  (LinkConfiguration&& v)        = delete;
+   LinkConfiguration                     (LinkConfiguration&& v)        = delete;
+   LinkConfiguration&       operator =   (LinkConfiguration&& v)        = delete;
 
 public:
 
-   const LinkConfiguration& GetInstance ();
+   static LinkConfiguration& GetInstance ();
 
-   Vector3                  Solve       (const Vector3& link1StartPoint, const Vector3& link2EndPoint, float link1Length, float link2Length);
+   Vector3                  Solve        (const Vector3& link1StartPoint, const Vector3& link2EndPoint, float link1Length, float link2Length);
 
 };
 

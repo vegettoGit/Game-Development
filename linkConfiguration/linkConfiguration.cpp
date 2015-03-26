@@ -1,4 +1,5 @@
 #include "linkConfiguration.h"
+#include "Vector3.h"
 #include <math.h>
 
 LinkConfiguration::LinkConfiguration()
@@ -9,7 +10,7 @@ LinkConfiguration::~LinkConfiguration()
 {
 }
 
-const LinkConfiguration& LinkConfiguration::GetInstance()
+LinkConfiguration& LinkConfiguration::GetInstance()
 {
    static LinkConfiguration s_instance;
    return s_instance;
@@ -44,15 +45,20 @@ Vector3 LinkConfiguration::Solve(const Vector3& link1StartPoint, const Vector3& 
    
      c^2 - 2ca = L2^2 - L1^2  ;  c - 2a = (L2^2 - L1^2) / c
      a - c / 2 = (L1^2 - L2^2) / c / 2
-   
+     a = c / 2 + (L1^2 - L2^2) / c / 2
+     2a = c +  (L1^2 - L2^2) / c
+
      The final computed values are the following (later we have to translate them back to the plane P):
-     a = (c + (L1^2 - L2^2/c)) / 2
+     a = (c + (L1^2 - L2^2) / c)) / 2
      b = sqrt(L1^2 - a^2)
 
    */
 
    // Since the start point in our local coordinates is at (0, 0, 0), c = Length (V1)
    Vector3 v1 = link2EndPoint - link1StartPoint;
+   float c = v1.length();
+
+   v1.normalize();
 
    Vector3 v2;
    if (v1.m_x == 0 && v1.m_y == 0)
@@ -68,11 +74,9 @@ Vector3 LinkConfiguration::Solve(const Vector3& link1StartPoint, const Vector3& 
       v2.m_z = 0;
    }
 
-   float c = v1.length();
-
    // Solution on plane XY
    float l1Square = link1Length * link1Length;
-   float a = (c + (l1Square - link2Length * link2Length / c)) / 2.0f;
+   float a = (c + (l1Square - link2Length * link2Length) / c) / 2.0f;
    float b = sqrt(l1Square - a * a);
 
    // Translate into P coordinates
@@ -89,8 +93,6 @@ Vector3 LinkConfiguration::Solve(const Vector3& link1StartPoint, const Vector3& 
    result.m_x += link1StartPoint.m_x;
    result.m_y += link1StartPoint.m_y;
    result.m_z += link1StartPoint.m_z;
-
-   // TODO: Testing and debugging
 
    return result;
 }
