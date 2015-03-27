@@ -22,9 +22,16 @@ class LinkConfiguration
 
 public:
 
+   enum class JointSolution
+   { 
+      FOUND, 
+      NOT_FOUND,
+      ERROR 
+   };
+
    static LinkConfiguration& GetInstance ();
 
-   Vector3                  Solve        (const Vector3& link1StartPoint, const Vector3& link2EndPoint, float link1Length, float link2Length);
+   JointSolution             Solve(const Vector3& link1StartPoint, const Vector3& link2EndPoint, float link1Length, float link2Length, Vector3& solution);
 
 };
 

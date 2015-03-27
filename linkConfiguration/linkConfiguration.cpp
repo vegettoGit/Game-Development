@@ -2,6 +2,7 @@
 #include "Vector3.h"
 #include <math.h>
 
+
 LinkConfiguration::LinkConfiguration()
 {
 }
@@ -16,8 +17,10 @@ LinkConfiguration& LinkConfiguration::GetInstance()
    return s_instance;
 }
 
-Vector3 LinkConfiguration::Solve(const Vector3& link1StartPoint, const Vector3& link2EndPoint, float link1Length, float link2Length)
+LinkConfiguration::JointSolution LinkConfiguration::Solve(const Vector3& link1StartPoint, const Vector3& link2EndPoint, float link1Length, float link2Length, Vector3& solution)
 {
+   JointSolution result = JointSolution::FOUND;
+
    /*
 
      Here is the math involved in solving the problem :)
@@ -58,31 +61,39 @@ Vector3 LinkConfiguration::Solve(const Vector3& link1StartPoint, const Vector3& 
    Vector3 v1 = link2EndPoint - link1StartPoint;
    float c = v1.length();
 
-   v1.normalize();
-
-   Vector3 v2;
-   if (v1.m_x == 0 && v1.m_y == 0)
+   if (c > (link1Length + link2Length))
    {
-      v2 = Vector3(1.0f, 0.0f, 0.0f);
+      result = JointSolution::NOT_FOUND;
    }
    else
    {
-      v2 = Vector3(-v1.m_y, v1.m_x, 0.0f);
+      v1.normalize();
+
+      Vector3 v2 = (v1.m_x == 0 && v1.m_y == 0) ? Vector3(1.0f, 0.0f, 0.0f) : Vector3(-v1.m_y, v1.m_x, 0.0f);
+
+      // Solution on plane XY
+      float l1Square = link1Length * link1Length;
+      float l2Square = link2Length * link2Length;
+      float a = (c + (l1Square - l2Square) / c) / 2.0f;
+
+      float squareB = l1Square - a * a;
+
+      if (squareB < 0.0f)
+      {
+         result = JointSolution::NOT_FOUND;
+      }
+      else
+      {
+         float b = sqrt(squareB);
+
+         // Translate into P coordinates
+         solution = v1 * a;
+         solution += (v2 * b);
+
+         // Translate into world coordinates
+         solution += link1StartPoint;
+      }
    }
-
-   // Solution on plane XY
-   float l1Square = link1Length * link1Length;
-   float a = (c + (l1Square - link2Length * link2Length) / c) / 2.0f;
-   float b = sqrt(l1Square - a * a);
-
-   // Translate into P coordinates
-   Vector3 result;
-   
-   result = v1 * a;
-   result += (v2 * b);
-
-   // Translate into world coordinates
-   result += link1StartPoint;
 
    return result;
 }
