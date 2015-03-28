@@ -25,6 +25,7 @@ void main()
    solveAndExamineResult(Vector3(1.0f, 0.0f, 0.0f), Vector3(4.0f, 0.0f, 0.0f), 1.0f, 2.0f);
    solveAndExamineResult(Vector3(1.0f, 0.0f, 0.0f), Vector3(4.0f, 0.0f, 0.0f), 1.0f, 3.0f);
    solveAndExamineResult(Vector3(1.0f, 0.0f, 0.0f), Vector3(4.0f, 0.0f, 0.0f), 1.0f, 13.0f);
+   solveAndExamineResult(Vector3(1.0f, 0.0f, 0.0f), Vector3(4.0f, 0.0f, 0.0f), -1.0f, 13.0f);
 }
 
 #endif

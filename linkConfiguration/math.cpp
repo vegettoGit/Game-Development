@@ -15,7 +15,22 @@
 
 const float Math::c_epsilon = 0.00001f;
 
+float Math::epsilon(float a, float b)
+{
+   return ( std::fabs(a) < std::fabs(b) ? std::fabs(b) : std::fabs(a) ) * c_epsilon;
+}
+
+bool Math::equal(float a, float b)
+{
+   return fabs(a - b) < epsilon(a, b);
+}
+
 bool Math::lessThan(float a, float b)
 {
-   return (b - a) > ( (std::fabs(a) < std::fabs(b) ? std::fabs(b) : std::fabs(a)) * c_epsilon );
+   return (b - a) > epsilon(a, b);
+}
+
+bool Math::greaterThan(float a, float b)
+{
+   return lessThan(b, a);
 }

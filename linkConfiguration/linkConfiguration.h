@@ -26,6 +26,7 @@ public:
    { 
       FOUND, 
       NOT_FOUND,
+      ERROR_NEGATIVE_LENGTH,
       ERROR 
    };
 
