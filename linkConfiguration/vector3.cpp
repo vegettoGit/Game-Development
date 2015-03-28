@@ -73,9 +73,7 @@ Vector3 Vector3::operator + (const Vector3& v) const
 {
    Vector3 result(*this);
 
-   result.m_x += v.m_x;
-   result.m_y += v.m_y;
-   result.m_z += v.m_z;
+   result += v;
 
    return result;
 }
