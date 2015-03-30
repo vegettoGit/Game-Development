@@ -1,4 +1,5 @@
 #include "graphics.h"
+#include "graphicsGame.h"
 #include "vector3.h"
 #include <utility>
 
@@ -9,6 +10,8 @@
 // TODO: These are default window size constants, but we should have it configurable
 const int Graphics::s_window_width  = 1024;
 const int Graphics::s_window_height = 768;
+
+std::unique_ptr<IGraphicsGame> Graphics::s_graphicsGame = nullptr;
 
 
 Color::Color()
@@ -34,7 +37,7 @@ Color& Color::operator = (const Color& color)
 {
    m_red   = color.m_red;
    m_green = color.m_green;
-   m_blue = color.m_blue;
+   m_blue  = color.m_blue;
 
    return *this;
 }
@@ -48,7 +51,7 @@ Color& Color::operator = (Color&& color)
 {
    m_red   = color.m_red;
    m_green = color.m_green;
-   m_blue = color.m_blue;
+   m_blue  = color.m_blue;
 
    return *this;
 }
@@ -90,6 +93,11 @@ void Graphics::drawAxis(float length, const Color& color)
    drawVector3(origin, Vector3(0.0f, 0.0f, length), color);
 }
 
+void Graphics::renderScene(const IGraphicsGame& graphicsGame)
+{
+   graphicsGame.render();
+}
+
 void Graphics::renderScene()
 {
    glClear(GL_COLOR_BUFFER_BIT);
@@ -100,13 +108,15 @@ void Graphics::renderScene()
    gluPerspective(1.0f, 1.0f, 1.0f, 10000.0f);
    gluLookAt(-3000.0f, -3000.0f, -3000.0f, 0, 0, 0, 0.0f, 1.0f, 0.0f);
 
-   drawAxis(50.0f, Color(0.0f, 1.0f, 0.0f));
+   renderScene(*s_graphicsGame);
 
    glFlush();
 }
 
-void Graphics::init(int argc, char* argv[], const char* name)
+void Graphics::init(int argc, char* argv[], const char* name, std::unique_ptr<IGraphicsGame> graphicsGame)
 {
+   s_graphicsGame = std::move(graphicsGame);
+
    glutInit(&argc, argv);
    glutInitDisplayMode(GLUT_SINGLE | GLUT_RGBA);
    glutInitWindowSize(s_window_width, s_window_height);

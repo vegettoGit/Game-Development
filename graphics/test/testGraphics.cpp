@@ -1,20 +1,26 @@
 #include "test.h"
+#include <memory>
+#include <utility>
 
 #ifdef TEST_GRAPHICS
 
 #include "graphics.h"
+#include "graphicsGame.h"
 #include "vector3.h"
 
-static void myGame()
+struct TestGraphicsGame : IGraphicsGame
 {
-   Graphics::GetInstance().drawAxis(50.0f, Color(0.0f, 1.0f, 0.0f));
-}
+   void render() const override
+   {
+      Graphics::GetInstance().drawAxis(50.0f, Color(0.0f, 1.0f, 0.0f));
+   }
+};
 
 void main(int argc, char* argv[])
 {
-   Graphics::GetInstance().init(argc, argv, "Graphics example");
+   std::unique_ptr<IGraphicsGame> testGraphicsGame = std::make_unique<TestGraphicsGame>();
 
-   // TODO: We will be passing to Graphics a reference to a class which will handle our game loop render logic
+   Graphics::GetInstance().init(argc, argv, "Graphics example", std::move(testGraphicsGame));
 }
 
 #endif
