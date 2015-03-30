@@ -49,7 +49,7 @@ class Graphics
 
 public:
 
-   static Graphics&     GetInstance       ();
+   static Graphics&     getInstance       ();
    void                 init              (int argc, char* argv[], const char* name, std::unique_ptr<IGraphicsGame> graphicsGame);
 
    static void          drawVector3       (const Vector3& start, const Vector3& end, const Color& color);

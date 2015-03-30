@@ -11,13 +11,13 @@ LinkConfiguration::~LinkConfiguration()
 {
 }
 
-LinkConfiguration& LinkConfiguration::GetInstance()
+LinkConfiguration& LinkConfiguration::getInstance()
 {
    static LinkConfiguration s_instance;
    return s_instance;
 }
 
-LinkConfiguration::JointSolution LinkConfiguration::Solve(const Vector3& link1StartPoint, const Vector3& link2EndPoint, float link1Length, float link2Length, Vector3& solution)
+LinkConfiguration::JointSolution LinkConfiguration::solve(const Vector3& link1StartPoint, const Vector3& link2EndPoint, float link1Length, float link2Length, Vector3& solution)
 {
    JointSolution result = JointSolution::FOUND;
 

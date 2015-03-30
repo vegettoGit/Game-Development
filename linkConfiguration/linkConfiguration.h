@@ -30,9 +30,9 @@ public:
       ERROR 
    };
 
-   static LinkConfiguration& GetInstance ();
+   static LinkConfiguration& getInstance ();
 
-   JointSolution             Solve(const Vector3& link1StartPoint, const Vector3& link2EndPoint, float link1Length, float link2Length, Vector3& solution);
+   JointSolution             solve(const Vector3& link1StartPoint, const Vector3& link2EndPoint, float link1Length, float link2Length, Vector3& solution);
 
 };
 

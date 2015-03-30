@@ -12,7 +12,7 @@ struct TestGraphicsGame : IGraphicsGame
 {
    void render() const override
    {
-      Graphics::GetInstance().drawAxis(50.0f, Color(0.0f, 1.0f, 0.0f));
+      Graphics::getInstance().drawAxis(50.0f, Color(0.0f, 1.0f, 0.0f));
    }
 };
 
@@ -20,7 +20,7 @@ void main(int argc, char* argv[])
 {
    std::unique_ptr<IGraphicsGame> testGraphicsGame = std::make_unique<TestGraphicsGame>();
 
-   Graphics::GetInstance().init(argc, argv, "Graphics example", std::move(testGraphicsGame));
+   Graphics::getInstance().init(argc, argv, "Graphics example", std::move(testGraphicsGame));
 }
 
 #endif

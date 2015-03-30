@@ -68,7 +68,7 @@ Graphics::~Graphics()
 {
 }
 
-Graphics& Graphics::GetInstance()
+Graphics& Graphics::getInstance()
 {
    static Graphics s_instance;
    return s_instance;
