@@ -5,13 +5,8 @@
 // We are using freeglut as our OpenGL Utility Toolkit: http://freeglut.sourceforge.net/
 #include "freeglut.h"
 
-
-// TODO: These are default window size constants, but we should have it configurable
-const int Graphics::s_window_width  = 1024;
-const int Graphics::s_window_height = 768;
-
 std::unique_ptr<IGraphicsGame> Graphics::s_graphicsGame = nullptr;
-
+GraphicsGameProperties Graphics::s_properties(1024, 768);
 
 Color::Color()
    : m_red(0.0f),
@@ -52,6 +47,10 @@ Color& Color::operator = (Color&& color)
    m_green = color.m_green;
    m_blue  = color.m_blue;
 
+   color.m_red   = 0.0f;
+   color.m_green = 0.0f;
+   color.m_blue  = 0.0f;
+    
    return *this;
 }
 
@@ -112,13 +111,14 @@ void Graphics::renderScene()
    glFlush();
 }
 
-void Graphics::init(int argc, char* argv[], const char* name, std::unique_ptr<IGraphicsGame> graphicsGame)
+void Graphics::init(int argc, char* argv[], const char* name, std::unique_ptr<IGraphicsGame> graphicsGame, const GraphicsGameProperties& properties)
 {
    s_graphicsGame = std::move(graphicsGame);
+   s_properties   = properties;
 
    glutInit(&argc, argv);
    glutInitDisplayMode(GLUT_SINGLE | GLUT_RGBA);
-   glutInitWindowSize(s_window_width, s_window_height);
+   glutInitWindowSize(properties.m_windowWidth, properties.m_windowHeight);
    glutCreateWindow(name);
    glutDisplayFunc(renderScene);
    glutMainLoop();

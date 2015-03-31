@@ -17,8 +17,7 @@ struct TestGraphicsGame : IGraphicsGame
 void main(int argc, char* argv[])
 {
    std::unique_ptr<IGraphicsGame> testGraphicsGame = std::make_unique<TestGraphicsGame>();
-
-   Graphics::getInstance().init(argc, argv, "Graphics example", std::move(testGraphicsGame));
+   Graphics::getInstance().init(argc, argv, "Graphics example", std::move(testGraphicsGame), GraphicsGameProperties(1024, 768));
 }
 
 #endif

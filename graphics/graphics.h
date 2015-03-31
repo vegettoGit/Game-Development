@@ -5,6 +5,7 @@
 */
 
 struct IGraphicsGame;
+struct GraphicsGameProperties;
 struct Vector3;
 
 /* 
@@ -42,15 +43,13 @@ class Graphics
    static void          renderScene       (const IGraphicsGame&);
    static void          renderScene       ();
 
-   static const int     s_window_width;
-   static const int     s_window_height;
-
    static std::unique_ptr<IGraphicsGame> s_graphicsGame;
+   static GraphicsGameProperties         s_properties;
 
 public:
 
    static Graphics&     getInstance       ();
-   void                 init              (int argc, char* argv[], const char* name, std::unique_ptr<IGraphicsGame> graphicsGame);
+   void                 init              (int argc, char* argv[], const char* name, std::unique_ptr<IGraphicsGame> graphicsGame, const GraphicsGameProperties& properties);
 
    static void          drawVector3       (const Vector3& start, const Vector3& end, const Color& color);
    static void          drawAxis          (float length, const Color& color);
