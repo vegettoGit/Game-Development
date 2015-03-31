@@ -1,7 +1,6 @@
 #include "graphics.h"
 #include "graphicsGame.h"
 #include "vector3.h"
-#include <utility>
 
 // We are using freeglut as our OpenGL Utility Toolkit: http://freeglut.sourceforge.net/
 #include "freeglut.h"

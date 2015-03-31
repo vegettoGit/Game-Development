@@ -1,6 +1,4 @@
 #include "test.h"
-#include <memory>
-#include <utility>
 
 #ifdef TEST_GRAPHICS
 
