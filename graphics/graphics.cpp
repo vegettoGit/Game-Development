@@ -6,7 +6,6 @@
 #include "freeglut.h"
 
 std::unique_ptr<IGraphicsGame> Graphics::s_graphicsGame = nullptr;
-GraphicsGameProperties Graphics::s_properties(1024, 768);
 
 Color::Color()
    : m_red(0.0f),
@@ -91,11 +90,6 @@ void Graphics::drawAxis(float length, const Color& color)
    drawVector3(origin, Vector3(0.0f, 0.0f, length), color);
 }
 
-void Graphics::renderScene(const IGraphicsGame& graphicsGame)
-{
-   graphicsGame.render();
-}
-
 void Graphics::renderScene()
 {
    glClear(GL_COLOR_BUFFER_BIT);
@@ -106,19 +100,18 @@ void Graphics::renderScene()
    gluPerspective(1.0f, 1.0f, 1.0f, 10000.0f);
    gluLookAt(-3000.0f, -3000.0f, -3000.0f, 0, 0, 0, 0.0f, 1.0f, 0.0f);
 
-   renderScene(*s_graphicsGame);
+   (*s_graphicsGame).render();
 
    glFlush();
 }
 
-void Graphics::init(int argc, char* argv[], const char* name, std::unique_ptr<IGraphicsGame> graphicsGame, const GraphicsGameProperties& properties)
+void Graphics::init(int argc, char* argv[], const char* name, std::unique_ptr<IGraphicsGame> graphicsGame)
 {
    s_graphicsGame = std::move(graphicsGame);
-   s_properties   = properties;
 
    glutInit(&argc, argv);
    glutInitDisplayMode(GLUT_SINGLE | GLUT_RGBA);
-   glutInitWindowSize(properties.m_windowWidth, properties.m_windowHeight);
+   glutInitWindowSize((*s_graphicsGame).m_properties.m_windowWidth, (*s_graphicsGame).m_properties.m_windowHeight);
    glutCreateWindow(name);
    glutDisplayFunc(renderScene);
    glutMainLoop();

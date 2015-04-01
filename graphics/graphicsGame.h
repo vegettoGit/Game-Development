@@ -1,3 +1,5 @@
+#ifndef GRAPHICS_GAME
+#define GRAPHICS_GAME
 
 /*
    Interface to be implemented by a class in charge of the game loop render frame
@@ -5,6 +7,15 @@
 
 struct GraphicsGameProperties
 {
+   static const int s_defaultWindowWidth = 1024;
+   static const int s_defaultWindowHeight = 768;
+
+   GraphicsGameProperties()
+      : m_windowWidth (s_defaultWindowWidth),
+        m_windowHeight(s_defaultWindowHeight)
+   {
+   }
+
    GraphicsGameProperties(int windowWidth, int windowHeight)
       : m_windowWidth(windowWidth),
         m_windowHeight(windowHeight)
@@ -49,6 +60,10 @@ struct IGraphicsGame
 
    virtual void render() const = 0;
 
+   GraphicsGameProperties m_properties;
+
 };
+
+#endif
 
 

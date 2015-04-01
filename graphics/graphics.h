@@ -5,7 +5,6 @@
 */
 
 struct IGraphicsGame;
-struct GraphicsGameProperties;
 struct Vector3;
 
 /* 
@@ -40,16 +39,14 @@ class Graphics
    Graphics                               (Graphics&& v) = delete;
    Graphics&            operator =        (Graphics&& v) = delete;
 
-   static void          renderScene       (const IGraphicsGame&);
    static void          renderScene       ();
 
-   static std::unique_ptr<IGraphicsGame> s_graphicsGame;
-   static GraphicsGameProperties         s_properties;
+   static std::unique_ptr<IGraphicsGame>  s_graphicsGame;
 
 public:
 
    static Graphics&     getInstance       ();
-   void                 init              (int argc, char* argv[], const char* name, std::unique_ptr<IGraphicsGame> graphicsGame, const GraphicsGameProperties& properties);
+   static void          init              (int argc, char* argv[], const char* name, std::unique_ptr<IGraphicsGame> graphicsGame);
 
    static void          drawVector3       (const Vector3& start, const Vector3& end, const Color& color);
    static void          drawAxis          (float length, const Color& color);
