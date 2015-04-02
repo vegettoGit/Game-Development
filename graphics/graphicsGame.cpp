@@ -1,12 +1,12 @@
 #include "graphicsGame.h"
 #include <utility>
 
-const int   GraphicsGameProperties::s_defaultWindowWidth = 1024;
-const int   GraphicsGameProperties::s_defaultWindowHeight = 768;
-const float GraphicsGameProperties::s_defaultFieldOfViewAngle = 1.0f;
-const float GraphicsGameProperties::s_defaultAspectRatio = 1.0f;
+const int   GraphicsGameProperties::s_defaultWindowWidth       = 1024;
+const int   GraphicsGameProperties::s_defaultWindowHeight      = 768;
+const float GraphicsGameProperties::s_defaultFieldOfViewAngle  = 1.0f;
+const float GraphicsGameProperties::s_defaultAspectRatio       = 1.33f;
 const float GraphicsGameProperties::s_defaultNearClippingPlane = 1.0f;
-const float GraphicsGameProperties::s_defaultFarClippingPlane = 10000.0f;
+const float GraphicsGameProperties::s_defaultFarClippingPlane  = 10000.0f;
 
 
 GraphicsGameProperties::GraphicsGameProperties()
