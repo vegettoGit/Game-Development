@@ -93,11 +93,12 @@ void Graphics::drawAxis(float length, const Color& color)
 void Graphics::renderScene()
 {
    glClear(GL_COLOR_BUFFER_BIT);
-
+   
    // Camera setup
-   // TODO: The following parameters should be configurable
+   const GraphicsGameProperties& properties = (*s_graphicsGame).m_properties;
+
    glLoadIdentity();
-   gluPerspective(1.0f, 1.0f, 1.0f, 10000.0f);
+   gluPerspective(properties.m_fieldOfViewAngle, properties.m_aspectRatio, properties.m_nearClippingPlane, properties.m_farClippingPlane);
    gluLookAt(-3000.0f, -3000.0f, -3000.0f, 0, 0, 0, 0.0f, 1.0f, 0.0f);
 
    (*s_graphicsGame).render();
