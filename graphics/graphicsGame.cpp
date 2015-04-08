@@ -1,15 +1,15 @@
 #include "graphicsGame.h"
 #include <utility>
 
-const Vector3 GraphicsGameProperties::s_defaultEye               = Vector3(-3000.0f, -3000.0f, -3000.0f);
+const Vector3 GraphicsGameProperties::s_defaultEye               = Vector3(-33.0f, -33.0f, -33.0f);
 const Vector3 GraphicsGameProperties::s_defaultCenter            = Vector3(0.0f, 0.0f, 0.0f);
 const Vector3 GraphicsGameProperties::s_defaultUp                = Vector3(0.0f, 1.0f, 0.0f);
 const int     GraphicsGameProperties::s_defaultWindowWidth       = 1024;
 const int     GraphicsGameProperties::s_defaultWindowHeight      = 768;
-const float   GraphicsGameProperties::s_defaultFieldOfViewAngle  = 1.0f;
+const float   GraphicsGameProperties::s_defaultFieldOfViewAngle  = 45.0f;
 const float   GraphicsGameProperties::s_defaultAspectRatio       = 1.33f;
 const float   GraphicsGameProperties::s_defaultNearClippingPlane = 1.0f;
-const float   GraphicsGameProperties::s_defaultFarClippingPlane  = 10000.0f;
+const float   GraphicsGameProperties::s_defaultFarClippingPlane  = 1000.0f;
 
 
 GraphicsGameProperties::GraphicsGameProperties()
