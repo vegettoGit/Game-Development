@@ -4,7 +4,7 @@
 
 #include "graphics.h"
 #include "graphicsGame.h"
-#include "vector3.h"
+#include "color.h"
 
 struct TestGraphicsGame : IGraphicsGame
 {
@@ -14,7 +14,7 @@ struct TestGraphicsGame : IGraphicsGame
       m_properties.m_windowHeight = height;
    }
 
-   TestGraphicsGame(int width, int height, float FOVAngleY, float aspectRatio, float zNear, float zFar)
+   TestGraphicsGame(int width, int height, float FOVAngleY, float aspectRatio, float zNear, float zFar, const Vector3& eye, const Vector3& center, const Vector3& up)
    {
       m_properties.m_windowWidth = width;
       m_properties.m_windowHeight = height;
@@ -22,6 +22,9 @@ struct TestGraphicsGame : IGraphicsGame
       m_properties.m_aspectRatio = aspectRatio;
       m_properties.m_nearClippingPlane = zNear;
       m_properties.m_farClippingPlane = zFar;
+      m_properties.m_eye = eye;
+      m_properties.m_center = center;
+      m_properties.m_up = up;
    }
 
    void render() const override
@@ -36,7 +39,7 @@ struct TestGraphicsGame : IGraphicsGame
 
 void main(int argc, char* argv[])
 {
-   std::unique_ptr<IGraphicsGame> testGraphicsGame = std::make_unique<TestGraphicsGame>(1024, 768, 1.0f, 1.33f, 1.0f, 10000.0f);
+   std::unique_ptr<IGraphicsGame> testGraphicsGame = std::make_unique<TestGraphicsGame>(1024, 768, 1.0f, 1.33f, 1.0f, 10000.0f, Vector3(-3000.0f, -3000.0f, -3000.0f), Vector3(), Vector3(0.0f, 1.0f, 0.0f));
    Graphics::getInstance().init(argc, argv, "Graphics example", std::move(testGraphicsGame));
 }
 

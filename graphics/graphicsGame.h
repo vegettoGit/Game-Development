@@ -1,11 +1,13 @@
 #ifndef GRAPHICS_GAME
 #define GRAPHICS_GAME
 
+#include "vector3.h"
+
 struct GraphicsGameProperties
 {
    GraphicsGameProperties();
    GraphicsGameProperties(int windowWidth, int windowHeight);
-   GraphicsGameProperties(int windowWidth, int windowHeight, float FOVAngle, float aspectRatio, float zNear, float zFar);
+   GraphicsGameProperties(int windowWidth, int windowHeight, float FOVAngle, float aspectRatio, float zNear, float zFar, const Vector3& eye, const Vector3& center, const Vector3& up);
    GraphicsGameProperties(const GraphicsGameProperties& graphicsGameProperties);
    GraphicsGameProperties& operator = (const GraphicsGameProperties& graphicsGameProperties);
    GraphicsGameProperties(GraphicsGameProperties&& graphicsGameProperties);
@@ -26,12 +28,23 @@ struct GraphicsGameProperties
    // Distance from the viewer to the far clipping plane (z)
    float              m_farClippingPlane;
 
-   static const int   s_defaultWindowWidth;
-   static const int   s_defaultWindowHeight;
-   static const float s_defaultFieldOfViewAngle;
-   static const float s_defaultAspectRatio;
-   static const float s_defaultNearClippingPlane;
-   static const float s_defaultFarClippingPlane;
+   Vector3            m_eye;
+
+   // Reference point (center of the scene)
+   Vector3            m_center;
+   
+   Vector3            m_up;
+
+   static const Vector3 s_defaultEye;
+   static const Vector3 s_defaultCenter;
+   static const Vector3 s_defaultUp;
+   static const int     s_defaultWindowWidth;
+   static const int     s_defaultWindowHeight;
+   static const float   s_defaultFieldOfViewAngle;
+   static const float   s_defaultAspectRatio;
+   static const float   s_defaultNearClippingPlane;
+   static const float   s_defaultFarClippingPlane;
+
 };
 
 /*

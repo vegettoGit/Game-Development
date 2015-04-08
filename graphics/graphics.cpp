@@ -1,61 +1,13 @@
 #include "graphics.h"
 #include "graphicsGame.h"
-#include "vector3.h"
+#include "color.h"
+
 
 // We are using freeglut as our OpenGL Utility Toolkit: http://freeglut.sourceforge.net/
 #include "freeglut.h"
 
+
 std::unique_ptr<IGraphicsGame> Graphics::s_graphicsGame = nullptr;
-
-Color::Color()
-   : m_red(0.0f),
-     m_green(0.0f),
-     m_blue(0.0f)
-{
-}
-
-Color::Color(float red, float green, float blue)
-   : m_red(red),
-     m_green(green),
-     m_blue(blue)
-{
-}
-
-Color::Color(const Color& color)
-{
-   *this = color;
-}
-
-Color& Color::operator = (const Color& color)
-{
-   m_red   = color.m_red;
-   m_green = color.m_green;
-   m_blue  = color.m_blue;
-
-   return *this;
-}
-
-Color::Color(Color&& color)
-{
-   *this = std::move(color);
-}
-
-Color& Color::operator = (Color&& color)
-{
-   m_red   = color.m_red;
-   m_green = color.m_green;
-   m_blue  = color.m_blue;
-
-   color.m_red   = 0.0f;
-   color.m_green = 0.0f;
-   color.m_blue  = 0.0f;
-    
-   return *this;
-}
-
-Color::~Color()
-{
-}
 
 Graphics::Graphics()
 {
@@ -98,8 +50,12 @@ void Graphics::renderScene()
    const GraphicsGameProperties& properties = (*s_graphicsGame).m_properties;
 
    glLoadIdentity();
+   
    gluPerspective(properties.m_fieldOfViewAngle, properties.m_aspectRatio, properties.m_nearClippingPlane, properties.m_farClippingPlane);
-   gluLookAt(-3000.0f, -3000.0f, -3000.0f, 0, 0, 0, 0.0f, 1.0f, 0.0f);
+
+   gluLookAt(properties.m_eye.m_x, properties.m_eye.m_y, properties.m_eye.m_z, 
+             properties.m_center.m_x, properties.m_center.m_y, properties.m_center.m_z, 
+             properties.m_up.m_x, properties.m_up.m_y, properties.m_up.m_z);
 
    (*s_graphicsGame).render();
 
