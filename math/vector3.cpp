@@ -116,3 +116,10 @@ void Vector3::normalize()
 {
    *this /= length();
 }
+
+void Vector3::reset()
+{
+   m_x = 0.0f;
+   m_y = 0.0f;
+   m_z = 0.0f;
+}

@@ -1,3 +1,6 @@
+#ifndef VECTOR3
+#define VECTOR3
+
 /*
    Simple vector using 3 axis
 
@@ -31,9 +34,12 @@ struct Vector3
 
    float    length      () const;
    void     normalize   ();
+   void     reset       ();
 
    float    m_x;
    float    m_y;
    float    m_z;
 };
+
+#endif
 
