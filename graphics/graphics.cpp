@@ -59,16 +59,44 @@ void Graphics::renderScene()
 
    (*s_graphicsGame).render();
 
-   glFlush();
+   switch (properties.m_bufferMode)
+   {
+      case GraphicsGameProperties::BufferMode::DOUBLE:
+      {
+         glutSwapBuffers();
+         break;
+      }
+      case GraphicsGameProperties::BufferMode::SINGLE:
+      {
+         glFlush();
+         break;
+      }
+   }
+   
 }
 
 void Graphics::init(int argc, char* argv[], const char* name, std::unique_ptr<IGraphicsGame> graphicsGame)
 {
    s_graphicsGame = std::move(graphicsGame);
 
+   const GraphicsGameProperties& properties = (*s_graphicsGame).m_properties;
    glutInit(&argc, argv);
-   glutInitDisplayMode(GLUT_SINGLE | GLUT_RGBA);
-   glutInitWindowSize((*s_graphicsGame).m_properties.m_windowWidth, (*s_graphicsGame).m_properties.m_windowHeight);
+   
+   switch (properties.m_bufferMode)
+   {
+      case GraphicsGameProperties::BufferMode::DOUBLE:
+      {
+         glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA);
+         break;
+      }
+      case GraphicsGameProperties::BufferMode::SINGLE:
+      {
+         glutInitDisplayMode(GLUT_SINGLE | GLUT_RGBA);
+         break;
+      }
+   }
+   
+   glutInitWindowSize(properties.m_windowWidth, properties.m_windowHeight);
    glutCreateWindow(name);
    glutDisplayFunc(renderScene);
    glutMainLoop();
