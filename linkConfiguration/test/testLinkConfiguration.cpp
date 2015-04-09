@@ -24,7 +24,7 @@ void solveAndExamineResult(const Vector3& startP1, const Vector3& endP2, float l
    return;
 }
 
-struct TestLinkConfigurationGame : public IGraphicsGame
+struct TestLinkConfigurationGame : IGraphicsGame
 {
    TestLinkConfigurationGame(int width, int height)
       : IGraphicsGame(GraphicsGameProperties(width, height))
