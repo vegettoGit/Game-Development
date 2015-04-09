@@ -29,7 +29,9 @@ public:
    static Graphics&     getInstance       ();
    static void          init              (int argc, char* argv[], const char* name, std::unique_ptr<IGraphicsGame> graphicsGame);
 
+   static void          drawPoint         (const Vector3& point, const Color& color);
    static void          drawVector3       (const Vector3& start, const Vector3& end, const Color& color);
    static void          drawAxis          (float length, const Color& color);
+   static void          drawAxis          (float length);
 };
 

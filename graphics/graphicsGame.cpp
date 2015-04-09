@@ -1,7 +1,7 @@
 #include "graphicsGame.h"
 #include <utility>
 
-const Vector3 GraphicsGameProperties::s_defaultEye               = Vector3(-33.0f, -33.0f, -33.0f);
+const Vector3 GraphicsGameProperties::s_defaultEye               = Vector3(33.0f, 33.0f, 33.0f);
 const Vector3 GraphicsGameProperties::s_defaultCenter            = Vector3(0.0f, 0.0f, 0.0f);
 const Vector3 GraphicsGameProperties::s_defaultUp                = Vector3(0.0f, 1.0f, 0.0f);
 const int     GraphicsGameProperties::s_defaultWindowWidth       = 1024;

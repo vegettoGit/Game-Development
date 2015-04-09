@@ -23,6 +23,16 @@ Graphics& Graphics::getInstance()
    return s_instance;
 }
 
+void Graphics::drawPoint(const Vector3& point, const Color& color)
+{
+   glBegin(GL_POINTS);
+
+   glColor3f(color.m_red, color.m_green, color.m_blue);
+   glVertex3f(point.m_x, point.m_y, point.m_z);
+
+   glEnd();
+}
+
 void Graphics::drawVector3(const Vector3& start, const Vector3& end, const Color& color)
 {
    glBegin(GL_LINES);
@@ -32,6 +42,14 @@ void Graphics::drawVector3(const Vector3& start, const Vector3& end, const Color
    glVertex3f(end.m_x, end.m_y, end.m_z);
    
    glEnd();
+}
+
+void Graphics::drawAxis(float length)
+{
+   Vector3 origin(0.0f, 0.0f, 0.0f);
+   drawVector3(origin, Vector3(length, 0.0f, 0.0f), Color(1.0f, 0.0f, 0.0f));
+   drawVector3(origin, Vector3(0.0f, length, 0.0f), Color(0.0f, 1.0f, 0.0f));
+   drawVector3(origin, Vector3(0.0f, 0.0f, length), Color(0.0f, 0.0f, 1.0f));
 }
 
 void Graphics::drawAxis(float length, const Color& color)
