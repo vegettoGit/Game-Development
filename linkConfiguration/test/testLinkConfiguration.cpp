@@ -24,26 +24,16 @@ void solveAndExamineResult(const Vector3& startP1, const Vector3& endP2, float l
    return;
 }
 
-struct TestLinkConfigurationGame : IGraphicsGame
+struct TestLinkConfigurationGame : public IGraphicsGame
 {
    TestLinkConfigurationGame(int width, int height)
+      : IGraphicsGame(GraphicsGameProperties(width, height))
    {
-      m_properties.m_windowWidth = width;
-      m_properties.m_windowHeight = height;
    }
 
    TestLinkConfigurationGame(const Vector3& eye, const Vector3& center, const Vector3& up, int width, int height, float FOVAngleY, float aspectRatio, float zNear, float zFar, GraphicsGameProperties::BufferMode bufferMode)
+      : IGraphicsGame(GraphicsGameProperties(eye, center, up, width, height, FOVAngleY, aspectRatio, zNear, zFar, bufferMode))
    {
-      m_properties.m_eye = eye;
-      m_properties.m_center = center;
-      m_properties.m_up = up;
-      m_properties.m_windowWidth = width;
-      m_properties.m_windowHeight = height;
-      m_properties.m_fieldOfViewAngle = FOVAngleY;
-      m_properties.m_aspectRatio = aspectRatio;
-      m_properties.m_nearClippingPlane = zNear;
-      m_properties.m_farClippingPlane = zFar;
-      m_properties.m_bufferMode = bufferMode;
    }
 
    void render() const override
@@ -61,7 +51,7 @@ struct TestLinkConfigurationGame : IGraphicsGame
 
 void main(int argc, char* argv[])
 {
-   std::unique_ptr<IGraphicsGame> linkConfigurationGame = std::make_unique<TestLinkConfigurationGame>(Vector3(20.0f, 20.0f, 20.0f), 
+   std::unique_ptr<IGraphicsGame> linkConfigurationGame = std::make_unique<TestLinkConfigurationGame>(Vector3(20.0f, 20.0f, 20.0f),
                                                                                                       Vector3(), 
                                                                                                       Vector3(0.0f, 1.0f, 0.0f), 
                                                                                                       1024, 768, 

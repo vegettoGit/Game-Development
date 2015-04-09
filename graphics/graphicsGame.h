@@ -61,11 +61,18 @@ struct GraphicsGameProperties
 */
 struct IGraphicsGame
 {
+   IGraphicsGame(const GraphicsGameProperties&);
+   virtual ~IGraphicsGame();
+
+   IGraphicsGame(const IGraphicsGame&) = delete;
+   IGraphicsGame(IGraphicsGame&&) = delete;
+
+   IGraphicsGame& operator = (const IGraphicsGame& v) = delete;
+   IGraphicsGame& operator = (IGraphicsGame&& v) = delete;
 
    virtual void render() const = 0;
 
    GraphicsGameProperties m_properties;
-
 };
 
 #endif

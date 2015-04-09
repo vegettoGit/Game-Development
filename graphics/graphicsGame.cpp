@@ -107,4 +107,13 @@ GraphicsGameProperties& GraphicsGameProperties::operator = (GraphicsGameProperti
    return *this;
 }
 
+IGraphicsGame::IGraphicsGame(const GraphicsGameProperties& graphicsGameProperties)
+   : m_properties(graphicsGameProperties)
+{
+}
+
+IGraphicsGame::~IGraphicsGame()
+{
+}
+
 
