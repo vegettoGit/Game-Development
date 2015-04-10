@@ -117,6 +117,7 @@ void Graphics::init(int argc, char* argv[], const char* name, std::unique_ptr<IG
    glutInitWindowSize(properties.m_windowWidth, properties.m_windowHeight);
    glutCreateWindow(name);
    glutDisplayFunc(updateGame);
+   glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
    glutMainLoop();
 }
 
