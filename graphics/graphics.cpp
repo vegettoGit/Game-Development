@@ -2,6 +2,8 @@
 #include "graphicsGame.h"
 #include "color.h"
 
+// OpenGL Extension Wrangler
+#include "glew.h"
 
 // We are using freeglut as our OpenGL Utility Toolkit: http://freeglut.sourceforge.net/
 #include "freeglut.h"
@@ -93,8 +95,10 @@ void Graphics::updateGame()
    
 }
 
-void Graphics::init(int argc, char* argv[], const char* name, std::unique_ptr<IGraphicsGame> graphicsGame)
+Graphics::GraphicsResult Graphics::init(int argc, char* argv[], const char* name, std::unique_ptr<IGraphicsGame> graphicsGame)
 {
+   GraphicsResult result = GraphicsResult::OK;
+
    s_graphicsGame = std::move(graphicsGame);
 
    const GraphicsGameProperties& properties = (*s_graphicsGame).m_properties;
@@ -116,9 +120,22 @@ void Graphics::init(int argc, char* argv[], const char* name, std::unique_ptr<IG
    
    glutInitWindowSize(properties.m_windowWidth, properties.m_windowHeight);
    glutCreateWindow(name);
-   glutDisplayFunc(updateGame);
-   glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-   glutMainLoop();
+
+   // Extension Wrangler
+   GLenum glew_status = glewInit();
+
+   if (glew_status == GLEW_OK)
+   {
+      glutDisplayFunc(updateGame);
+      glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+      glutMainLoop();
+   }
+   else
+   {
+      result = GraphicsResult::EXTENSION_ERROR;
+   }
+
+   return result;
 }
 
 void Graphics::update()

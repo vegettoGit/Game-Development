@@ -63,7 +63,7 @@ void main(int argc, char* argv[])
                                                                                                       1.0f, 1000.0f, 
                                                                                                       GraphicsGameProperties::BufferMode::SINGLE);
 
-   Graphics::getInstance().init(argc, argv, "Link configuration example", std::move(linkConfigurationGame));
+   Graphics::GraphicsResult result = Graphics::getInstance().init(argc, argv, "Link configuration example", std::move(linkConfigurationGame));
 }
 
 #endif
