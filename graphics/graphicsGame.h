@@ -61,7 +61,7 @@ struct GraphicsGameProperties
 */
 struct IGraphicsGame
 {
-   IGraphicsGame(const GraphicsGameProperties&);
+   explicit IGraphicsGame(const GraphicsGameProperties&);
    virtual ~IGraphicsGame();
 
    IGraphicsGame(const IGraphicsGame&) = delete;
