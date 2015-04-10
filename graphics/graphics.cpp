@@ -60,7 +60,7 @@ void Graphics::drawAxis(float length, const Color& color)
    drawVector3(origin, Vector3(0.0f, 0.0f, length), color);
 }
 
-void Graphics::renderScene()
+void Graphics::updateGame()
 {
    glClear(GL_COLOR_BUFFER_BIT);
    
@@ -75,7 +75,7 @@ void Graphics::renderScene()
              properties.m_center.m_x, properties.m_center.m_y, properties.m_center.m_z, 
              properties.m_up.m_x, properties.m_up.m_y, properties.m_up.m_z);
 
-   (*s_graphicsGame).render();
+   (*s_graphicsGame).update();
 
    switch (properties.m_bufferMode)
    {
@@ -116,6 +116,11 @@ void Graphics::init(int argc, char* argv[], const char* name, std::unique_ptr<IG
    
    glutInitWindowSize(properties.m_windowWidth, properties.m_windowHeight);
    glutCreateWindow(name);
-   glutDisplayFunc(renderScene);
+   glutDisplayFunc(updateGame);
    glutMainLoop();
+}
+
+void Graphics::update()
+{
+   glutPostRedisplay();
 }

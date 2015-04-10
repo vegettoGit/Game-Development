@@ -70,7 +70,7 @@ struct IGraphicsGame
    IGraphicsGame& operator = (const IGraphicsGame& v) = delete;
    IGraphicsGame& operator = (IGraphicsGame&& v) = delete;
 
-   virtual void render() const = 0;
+   virtual void update() const = 0;
 
    GraphicsGameProperties m_properties;
 };
