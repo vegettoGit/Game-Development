@@ -22,7 +22,7 @@ float Math::epsilon(float a, float b)
 
 bool Math::equal(float a, float b)
 {
-   return fabs(a - b) < epsilon(a, b);
+   return fabs(a - b) <= epsilon(a, b);
 }
 
 bool Math::lessThan(float a, float b)

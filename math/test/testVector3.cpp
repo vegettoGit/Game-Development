@@ -41,6 +41,16 @@ void main()
    // test2 destructor
    // test1 destructor
 
+   Vector3 test7(2.0f, 3.0f, 4.0f);
+   Vector3 test8(5.0f, 6.0f, 7.0f);
+
+   bool isPerpendicular1 = test7.isPerpendicular(test8);
+
+   Vector3 test9 = test7.cross(test8);
+
+   bool isPerpendicular2 = test7.isPerpendicular(test9);
+   bool isPerpendicular3 = test8.isPerpendicular(test9);
+
    return;
 }
 

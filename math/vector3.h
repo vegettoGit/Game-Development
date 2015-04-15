@@ -9,32 +9,34 @@
 */
 struct Vector3
 {
-   Vector3              ();
-   Vector3              (float x, float y, float z);
+   Vector3                  ();
+   Vector3                  (float x, float y, float z);
 
-   Vector3              (const Vector3& v);
-   Vector3& operator =  (const Vector3& v);
+   Vector3                  (const Vector3& v);
+   Vector3& operator =      (const Vector3& v);
 
-   Vector3              (Vector3&& v);
-   Vector3& operator =  (Vector3&& v);
+   Vector3                  (Vector3&& v);
+   Vector3& operator =      (Vector3&& v);
    
-   ~Vector3             ();
+   ~Vector3                 ();
 
    // Dot product
-   float    operator *  (const Vector3& v) const;
+   float    operator *      (const Vector3& v) const;
    
-   Vector3  operator +  (const Vector3& v) const;
-   Vector3  operator -  (const Vector3& v) const;
+   Vector3  operator +      (const Vector3& v) const;
+   Vector3  operator -      (const Vector3& v) const;
 
-   Vector3  operator *  (float) const;
+   Vector3  operator *      (float) const;
 
-   Vector3& operator += (const Vector3& v);
+   Vector3& operator +=     (const Vector3& v);
 
-   Vector3& operator /= (float scalar);
+   Vector3& operator /=     (float scalar);
 
-   float    length      () const;
-   void     normalize   ();
-   void     reset       ();
+   Vector3  cross           (const Vector3& v) const;
+   bool     isPerpendicular (const Vector3& v) const;
+   float    length          () const;
+   void     normalize       ();
+   void     reset           ();
 
    float    m_x;
    float    m_y;

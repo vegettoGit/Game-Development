@@ -1,6 +1,7 @@
 #include "vector3.h"
 #include <utility>
 #include <math.h>
+#include "math.h"
 
 
 Vector3::Vector3()
@@ -105,6 +106,22 @@ Vector3& Vector3::operator /= (float scalar)
    m_z /= scalar;
 
    return *this;
+}
+
+Vector3 Vector3::cross(const Vector3& v) const
+{
+   Vector3 result;
+
+   result.m_x = m_y * v.m_z - m_z * v.m_y;
+   result.m_y = m_z * v.m_x - m_x * v.m_z;
+   result.m_z = m_x * v.m_y - m_y * v.m_x;
+   
+   return result;
+}
+
+bool Vector3::isPerpendicular(const Vector3& v) const
+{
+   return Math::equal(0.0f, *this * v);
 }
 
 float Vector3::length() const
