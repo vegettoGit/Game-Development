@@ -51,6 +51,9 @@ void main()
    bool isPerpendicular2 = test7.isPerpendicular(test9);
    bool isPerpendicular3 = test8.isPerpendicular(test9);
 
+   // Get angle between orthogonal vectors, should be PI/2
+   float angle = test9.getAngle(test7);
+
    return;
 }
 

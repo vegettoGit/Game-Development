@@ -34,6 +34,10 @@ struct Vector3
 
    Vector3  cross           (const Vector3& v) const;
    bool     isPerpendicular (const Vector3& v) const;
+
+   // Returns the angle in radians between this vector and v
+   float    getAngle        (const Vector3& v) const;
+
    float    length          () const;
    void     normalize       ();
    void     reset           ();

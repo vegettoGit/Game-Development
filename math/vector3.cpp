@@ -124,6 +124,13 @@ bool Vector3::isPerpendicular(const Vector3& v) const
    return Math::equal(0.0f, *this * v);
 }
 
+float Vector3::getAngle(const Vector3& v) const
+{
+   float cos = 0.0f;
+   cos = (*this * v) / ((*this).length() * v.length());
+   return acos(cos);
+}
+
 float Vector3::length() const
 {
    return sqrt((*this) * (*this));
