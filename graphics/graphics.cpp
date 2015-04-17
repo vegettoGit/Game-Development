@@ -46,6 +46,11 @@ void Graphics::drawVector3(const Vector3& start, const Vector3& end, const Color
    glEnd();
 }
 
+void Graphics::drawVector3FromOrigin(const Vector3& end, const Color& color)
+{
+   drawVector3(Vector3(0.0f, 0.0f, 0.0f), end, color);
+}
+
 void Graphics::drawAxis(float length)
 {
    Vector3 origin(0.0f, 0.0f, 0.0f);

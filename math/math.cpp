@@ -14,6 +14,7 @@
 */
 
 const float Math::c_epsilon = 0.00001f;
+const float Math::c_pi      = 3.14159265359f;
 
 float Math::epsilon(float a, float b)
 {
@@ -33,4 +34,9 @@ bool Math::lessThan(float a, float b)
 bool Math::greaterThan(float a, float b)
 {
    return lessThan(b, a);
+}
+
+float Math::radiansToDegrees(float radians)
+{
+   return radians * 180.0f / c_pi;
 }

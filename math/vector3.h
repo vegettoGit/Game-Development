@@ -39,6 +39,7 @@ struct Vector3
    float    getAngle        (const Vector3& v) const;
 
    float    length          () const;
+   float    squaredLength   () const;
    void     normalize       ();
    void     reset           ();
 

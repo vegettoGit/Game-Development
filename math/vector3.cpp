@@ -1,6 +1,6 @@
 #include "vector3.h"
 #include <utility>
-#include <math.h>
+#include <cmath>
 #include "math.h"
 
 
@@ -133,7 +133,12 @@ float Vector3::getAngle(const Vector3& v) const
 
 float Vector3::length() const
 {
-   return sqrt((*this) * (*this));
+   return sqrt(squaredLength());
+}
+
+float Vector3::squaredLength() const
+{
+   return (*this) * (*this);
 }
 
 void Vector3::normalize()

@@ -1,6 +1,6 @@
 #include "linkConfiguration.h"
-#include "Vector3.h"
-#include <math.h>
+#include "vector3.h"
+#include <cmath>
 
 
 LinkConfiguration::LinkConfiguration()
