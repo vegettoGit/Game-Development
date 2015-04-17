@@ -53,18 +53,16 @@ void Graphics::drawVector3FromOrigin(const Vector3& end, const Color& color)
 
 void Graphics::drawAxis(float length)
 {
-   Vector3 origin(0.0f, 0.0f, 0.0f);
-   drawVector3(origin, Vector3(length, 0.0f, 0.0f), Color(1.0f, 0.0f, 0.0f));
-   drawVector3(origin, Vector3(0.0f, length, 0.0f), Color(0.0f, 1.0f, 0.0f));
-   drawVector3(origin, Vector3(0.0f, 0.0f, length), Color(0.0f, 0.0f, 1.0f));
+   drawVector3FromOrigin(Vector3(length, 0.0f, 0.0f), Color(1.0f, 0.0f, 0.0f));
+   drawVector3FromOrigin(Vector3(0.0f, length, 0.0f), Color(0.0f, 1.0f, 0.0f));
+   drawVector3FromOrigin(Vector3(0.0f, 0.0f, length), Color(0.0f, 0.0f, 1.0f));
 }
 
 void Graphics::drawAxis(float length, const Color& color)
 {
-   Vector3 origin(0.0f, 0.0f, 0.0f);
-   drawVector3(origin, Vector3(length, 0.0f, 0.0f), color);
-   drawVector3(origin, Vector3(0.0f, length, 0.0f), color);
-   drawVector3(origin, Vector3(0.0f, 0.0f, length), color);
+   drawVector3FromOrigin(Vector3(length, 0.0f, 0.0f), color);
+   drawVector3FromOrigin(Vector3(0.0f, length, 0.0f), color);
+   drawVector3FromOrigin(Vector3(0.0f, 0.0f, length), color);
 }
 
 void Graphics::updateGame()
