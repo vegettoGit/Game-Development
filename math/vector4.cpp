@@ -65,6 +65,14 @@ Vector4::~Vector4()
 {
 }
 
+void Vector4::set(float x, float y, float z, float w)
+{
+   m_x = x;
+   m_y = y;
+   m_z = z;
+   m_w = w;
+}
+
 void Vector4::reset()
 {
    m_x = 0.0f;

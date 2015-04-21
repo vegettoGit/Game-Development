@@ -19,6 +19,11 @@ struct Matrix
    
    ~Matrix                 ();
 
+   void    set             (const Vector4& v0, const Vector4& v1, const Vector4& v2, const Vector4& v3);
+
+   Matrix  operator +      (const Matrix &m) const;
+   void    operator +=     (const Matrix &m);
+
    union
    {
       struct

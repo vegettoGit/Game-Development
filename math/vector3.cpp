@@ -61,33 +61,29 @@ float Vector3::operator * (const Vector3& v) const
 
 Vector3 Vector3::operator * (float scalar) const
 {
-   Vector3 result(*this);
-
-   result.m_x *= scalar;
-   result.m_y *= scalar;
-   result.m_z *= scalar;
-
-   return result;
+   return Vector3(
+      m_x * scalar,
+      m_y * scalar,
+      m_z * scalar
+   );
 }
 
 Vector3 Vector3::operator + (const Vector3& v) const
 {
-   Vector3 result(*this);
-
-   result += v;
-
-   return result;
+   return Vector3(
+      m_x + v.m_x,
+      m_y + v.m_y,
+      m_z + v.m_z
+   );
 }
 
 Vector3 Vector3::operator - (const Vector3& v) const
 {
-   Vector3 result(*this);
-
-   result.m_x -= v.m_x;
-   result.m_y -= v.m_y;
-   result.m_z -= v.m_z;
-
-   return result;
+   return Vector3(
+      m_x - v.m_x,
+      m_y - v.m_y,
+      m_z - v.m_z
+   );
 }
 
 Vector3& Vector3::operator += (const Vector3& v)
@@ -110,13 +106,11 @@ Vector3& Vector3::operator /= (float scalar)
 
 Vector3 Vector3::cross(const Vector3& v) const
 {
-   Vector3 result;
-
-   result.m_x = m_y * v.m_z - m_z * v.m_y;
-   result.m_y = m_z * v.m_x - m_x * v.m_z;
-   result.m_z = m_x * v.m_y - m_y * v.m_x;
-   
-   return result;
+   return Vector3(
+      m_y * v.m_z - m_z * v.m_y,
+      m_z * v.m_x - m_x * v.m_z,
+      m_x * v.m_y - m_y * v.m_x
+   );
 }
 
 bool Vector3::isPerpendicular(const Vector3& v) const

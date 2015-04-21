@@ -18,6 +18,7 @@ struct Vector4
    
    ~Vector4                 ();
 
+   void    set              (float x, float y, float z, float w);
    void    reset            ();
 
    float    m_x;
