@@ -8,8 +8,16 @@
 */
 struct Matrix
 {
+   enum class RotationType
+   {
+      X,
+      Y,
+      Z
+   };
+
    Matrix                  ();
    Matrix                  (const Vector4& v0, const Vector4& v1, const Vector4& v2, const Vector4& v3);
+   Matrix                  (RotationType rotationType, float angle);
 
    Matrix                  (const Matrix& v);
    Matrix& operator =      (const Matrix& v);

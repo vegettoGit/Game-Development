@@ -1,5 +1,6 @@
 #include "matrix.h"
 #include <utility>
+#include <cmath>
 
 
 Matrix::Matrix()
@@ -12,6 +13,69 @@ Matrix::Matrix(const Vector4& v0, const Vector4& v1, const Vector4& v2, const Ve
      m_v2(v2),
      m_v3(v3)
 {
+}
+
+Matrix::Matrix(RotationType rotationType, float angle)
+{
+   float cos = cosf(angle);
+   float sin = sinf(angle);
+
+   switch (rotationType)
+   {
+      case RotationType::X:
+      {
+         m_v0.set(1.0f, 0.0f, 0.0f, 0.0f);
+
+         m_m4 = 0.0f;
+         m_m5 = cos;
+         m_m6 = sin;
+         m_m7 = 0.0f;
+
+         m_m8 = 0.0f;
+         m_m9 = -sin;
+         m_m10 = cos;
+         m_m11 = 0.0f;
+
+         m_v3.set(0.0f, 0.0f, 0.0f, 1.0f);
+
+         break;
+      }
+      case RotationType::Y:
+      {
+         m_m0 = cos;
+         m_m1 = 0.0f;
+         m_m2 = -sin;
+         m_m3 = 0.0f;
+
+         m_v1.set(0.0f, 1.0f, 0.0f, 0.0f);
+
+         m_m8 = sin;
+         m_m9 = 0.0f;
+         m_m10 = cos;
+         m_m11 = 0.0f;
+
+         m_v3.set(0.0f, 0.0f, 0.0f, 1.0f);
+         
+         break;
+      }
+      case RotationType::Z:
+      {
+         m_m0 = cos;
+         m_m1 = sin;
+         m_m2 = 0.0f;
+         m_m3 = 0.0f;
+
+         m_m4 = -sin;
+         m_m5 = cos;
+         m_m6 = 0.0f;
+         m_m7 = 0.0f;
+
+         m_v2.set(0.0f, 0.0f, 1.0f, 0.0f);
+         m_v3.set(0.0f, 0.0f, 0.0f, 1.0f);
+      }
+
+      break;
+   }
 }
 
 Matrix::Matrix(const Matrix& m)
@@ -88,7 +152,7 @@ Matrix Matrix::operator - (const Matrix &m) const
       Vector4(m_m4 - m.m_m4,   m_m5 - m.m_m5,   m_m6 - m.m_m6,   m_m7 - m.m_m7),
       Vector4(m_m8 - m.m_m8,   m_m9 - m.m_m9,   m_m10 - m.m_m10, m_m11 - m.m_m11),
       Vector4(m_m12 - m.m_m12, m_m13 - m.m_m13, m_m14 - m.m_m14, m_m15 - m.m_m15)
-      );
+   );
 }
 Matrix& Matrix::operator -= (const Matrix &m)
 {
@@ -158,7 +222,7 @@ Matrix Matrix::operator * (float s) const
       Vector4(s * m_m4, s * m_m5, s * m_m6, s * m_m7),
       Vector4(s * m_m8, s * m_m9, s * m_m10, s * m_m11),
       Vector4(s * m_m12, s * m_m13, s * m_m14, s * m_m15)
-      );
+   );
 }
 
 Matrix& Matrix::operator *= (float s)
