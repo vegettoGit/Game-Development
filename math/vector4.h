@@ -1,6 +1,8 @@
 #ifndef VECTOR4
 #define VECTOR4
 
+struct Matrix; 
+
 /*
    Vector4: Vector using homogeneous coordinates
 */
@@ -18,8 +20,11 @@ struct Vector4
    
    ~Vector4                 ();
 
-   void    set              (float x, float y, float z, float w);
-   void    reset            ();
+   void     set             (float x, float y, float z, float w);
+   void     reset           ();
+
+   Vector4  operator *      (Matrix &m) const;
+   Vector4& operator *=     (Matrix &m);
 
    float    m_x;
    float    m_y;
