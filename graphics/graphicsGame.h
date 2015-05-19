@@ -11,12 +11,12 @@ struct Camera
       DEFAULT_ROTATION_Y
    };
 
-   Camera                       ();
-   Camera                       (const Camera& camera) = default;
-   Camera&          operator  = (const Camera& camera) = default;
-   Camera                       (Camera&&      camera) = default;
-   Camera&          operator  = (Camera&&      camera) = default;
-   ~Camera                      ()                     = default;
+   Camera                 ();
+   Camera                 (const Camera& camera) = default;
+   Camera&    operator  = (const Camera& camera) = default;
+   Camera                 (Camera&&      camera) = default;
+   Camera&    operator  = (Camera&&      camera) = default;
+   ~Camera                ()                     = default;
 
    CameraMode m_cameraMode;
 };
@@ -82,16 +82,16 @@ struct IGraphicsGame
    explicit IGraphicsGame(const GraphicsGameProperties&);
    virtual ~IGraphicsGame();
 
-   IGraphicsGame(const IGraphicsGame&) = delete;
-   IGraphicsGame(IGraphicsGame&&) = delete;
+   IGraphicsGame             (const IGraphicsGame&)   = delete;
+   IGraphicsGame             (IGraphicsGame&&)        = delete;
 
    IGraphicsGame& operator = (const IGraphicsGame& v) = delete;
-   IGraphicsGame& operator = (IGraphicsGame&& v) = delete;
+   IGraphicsGame& operator = (IGraphicsGame&& v)      = delete;
 
-   virtual void gameUpdate() = 0;
+   virtual void   gameUpdate() = 0;
 
-   void         update();
-   void         setCameraMode(Camera::CameraMode cameraMode);
+   void           update();
+   void           setCameraMode(Camera::CameraMode cameraMode);
 
    GraphicsGameProperties m_properties;
    Camera                 m_camera;

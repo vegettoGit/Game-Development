@@ -142,9 +142,9 @@ void Vector3::normalize()
 
 void Vector3::set(float x, float y, float z)
 {
-	m_x = x;
-	m_y = y;
-	m_z = z;
+   m_x = x;
+   m_y = y;
+   m_z = z;
 }
 
 void Vector3::reset()
