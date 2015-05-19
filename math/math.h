@@ -12,6 +12,7 @@ struct Math
    static bool  greaterThan      (float a, float b);
 
    static float radiansToDegrees (float radians);
+   static float degreesToRadians (float radians);
 
 private:
 

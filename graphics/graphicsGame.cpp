@@ -1,4 +1,6 @@
 #include "graphicsGame.h"
+#include "matrix.h"
+#include "math.h"
 #include <utility>
 
 const Vector3 GraphicsGameProperties::s_defaultEye               = Vector3(33.0f, 33.0f, 33.0f);
@@ -11,6 +13,10 @@ const float   GraphicsGameProperties::s_defaultAspectRatio       = 1.33f;
 const float   GraphicsGameProperties::s_defaultNearClippingPlane = 1.0f;
 const float   GraphicsGameProperties::s_defaultFarClippingPlane  = 1000.0f;
 
+Camera::Camera()
+   :  m_cameraMode(CameraMode::NONE)
+{
+}
 
 GraphicsGameProperties::GraphicsGameProperties()
    :  m_eye(s_defaultEye),
@@ -116,4 +122,31 @@ IGraphicsGame::~IGraphicsGame()
 {
 }
 
+void IGraphicsGame::update()
+{
+   switch (m_camera.m_cameraMode)
+   {
+   case Camera::CameraMode::DEFAULT_ROTATION_Y:
+   {
+      Vector4 eye(m_properties.m_eye.m_x, m_properties.m_eye.m_y, m_properties.m_eye.m_z);
+      Matrix  rotationY(Matrix::RotationType::Y, Math::degreesToRadians(0.01f));
+      Vector4 rotatedEye = eye * rotationY;
+
+      m_properties.m_eye.set(rotatedEye.m_x, rotatedEye.m_y, rotatedEye.m_z);
+
+      break;
+   }
+   default:
+   {
+      break;
+   }
+   }
+
+   gameUpdate();
+}
+
+void IGraphicsGame::setCameraMode(Camera::CameraMode cameraMode)
+{
+   m_camera.m_cameraMode = cameraMode;
+}
 

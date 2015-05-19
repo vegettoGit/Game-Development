@@ -40,3 +40,8 @@ float Math::radiansToDegrees(float radians)
 {
    return radians * 180.0f / c_pi;
 }
+
+float Math::degreesToRadians(float degrees)
+{
+   return degrees * c_pi / 180.0f;
+}

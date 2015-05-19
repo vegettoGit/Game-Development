@@ -69,7 +69,6 @@ void Graphics::updateGame()
 {
    glClear(GL_COLOR_BUFFER_BIT);
    
-   // Camera setup
    const GraphicsGameProperties& properties = (*s_graphicsGame).m_properties;
 
    glLoadIdentity();

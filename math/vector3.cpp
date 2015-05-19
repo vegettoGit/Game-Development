@@ -140,6 +140,13 @@ void Vector3::normalize()
    *this /= length();
 }
 
+void Vector3::set(float x, float y, float z)
+{
+	m_x = x;
+	m_y = y;
+	m_z = z;
+}
+
 void Vector3::reset()
 {
    m_x = 0.0f;

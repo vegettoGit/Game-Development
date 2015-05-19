@@ -18,7 +18,7 @@ struct TestGraphicsGame : IGraphicsGame
    {
    }
 
-   void update() const override
+   void gameUpdate() override
    {
       Graphics::getInstance().drawAxis(30.0f, Color(1.0f, 1.0f, 1.0f));
 
@@ -34,12 +34,15 @@ struct TestGraphicsGame : IGraphicsGame
       Graphics::getInstance().drawVector3(Vector3(0.0f, 0.0f, 0.0f), test1, Color(0.0f, 0.0f, 1.0f));
       Graphics::getInstance().drawVector3(Vector3(0.0f, 0.0f, 0.0f), test2, Color(0.0f, 1.0f, 0.0f));
       Graphics::getInstance().drawVector3(Vector3(0.0f, 0.0f, 0.0f), test3, Color(1.0f, 0.0f, 0.0f));
+
+      Graphics::getInstance().update();
    }
 };
 
 void main(int argc, char* argv[])
 {
    std::unique_ptr<IGraphicsGame> testGraphicsGame = std::make_unique<TestGraphicsGame>(Vector3(40.0f, 40.0f, 40.0f), Vector3(), Vector3(0.0f, 1.0f, 0.0f), 1024, 768, 45.0f, 1.33f, 1.0f, 1000.0f, GraphicsGameProperties::BufferMode::DOUBLE);
+   testGraphicsGame->setCameraMode(Camera::CameraMode::DEFAULT_ROTATION_Y);
    Graphics::getInstance().init(argc, argv, "Graphics example", std::move(testGraphicsGame));
 }
 

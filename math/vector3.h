@@ -41,6 +41,7 @@ struct Vector3
    float    length          () const;
    float    squaredLength   () const;
    void     normalize       ();
+   void     set             (float x, float y, float z);
    void     reset           ();
 
    float    m_x;

@@ -3,6 +3,24 @@
 
 #include "vector3.h"
 
+struct Camera
+{
+   enum class CameraMode
+   {
+      NONE,
+      DEFAULT_ROTATION_Y
+   };
+
+   Camera                       ();
+   Camera                       (const Camera& camera) = default;
+   Camera&          operator  = (const Camera& camera) = default;
+   Camera                       (Camera&&      camera) = default;
+   Camera&          operator  = (Camera&&      camera) = default;
+   ~Camera                      ()                     = default;
+
+   CameraMode m_cameraMode;
+};
+
 struct GraphicsGameProperties
 {
    enum class BufferMode
@@ -70,9 +88,13 @@ struct IGraphicsGame
    IGraphicsGame& operator = (const IGraphicsGame& v) = delete;
    IGraphicsGame& operator = (IGraphicsGame&& v) = delete;
 
-   virtual void update() const = 0;
+   virtual void gameUpdate() = 0;
+
+   void         update();
+   void         setCameraMode(Camera::CameraMode cameraMode);
 
    GraphicsGameProperties m_properties;
+   Camera                 m_camera;
 };
 
 #endif
