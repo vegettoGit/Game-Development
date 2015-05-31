@@ -12,13 +12,11 @@ struct Vector4
    Vector4                  (float x, float y, float z);
    Vector4                  (float x, float y, float z, float w);
 
-   Vector4                  (const Vector4& v);
-   Vector4& operator =      (const Vector4& v);
-
-   Vector4                  (Vector4&& v);
-   Vector4& operator =      (Vector4&& v);
-   
-   ~Vector4                 ();
+   Vector4                  (const Vector4& v)   = default;
+   Vector4& operator =      (const Vector4& v)   = default;
+   Vector4                  (Vector4&& v)        = default;
+   Vector4& operator =      (Vector4&& v)        = default;
+   ~Vector4                 ()                   = default;
 
    void     set             (float x, float y, float z, float w);
    void     reset           ();
