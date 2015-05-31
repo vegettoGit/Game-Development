@@ -95,6 +95,8 @@ struct IGraphicsGame
 
    GraphicsGameProperties m_properties;
    Camera                 m_camera;
+
+   static const float     s_defaultRotationY;
 };
 
 #endif

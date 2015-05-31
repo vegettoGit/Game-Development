@@ -1,6 +1,8 @@
 #ifndef VECTOR3
 #define VECTOR3
 
+struct Matrix;
+
 /*
    Simple vector using 3 axis
 
@@ -26,10 +28,11 @@ struct Vector3
    Vector3  operator +      (const Vector3& v) const;
    Vector3  operator -      (const Vector3& v) const;
 
-   Vector3  operator *      (float) const;
-
    Vector3& operator +=     (const Vector3& v);
 
+   Vector3& operator *=     (Matrix &m);
+
+   Vector3  operator *      (float) const;
    Vector3& operator /=     (float scalar);
 
    Vector3  cross           (const Vector3& v) const;

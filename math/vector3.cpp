@@ -1,4 +1,5 @@
 #include "vector3.h"
+#include "matrix.h"
 #include <utility>
 #include <cmath>
 #include "math.h"
@@ -100,6 +101,15 @@ Vector3& Vector3::operator /= (float scalar)
    m_x /= scalar;
    m_y /= scalar;
    m_z /= scalar;
+
+   return *this;
+}
+
+Vector3& Vector3::operator *= (Matrix &m)
+{
+   Vector4 v4(m_x, m_y, m_z);
+   Vector4 transformed = v4 * m;
+   set(transformed.m_x, transformed.m_y, transformed.m_z);
 
    return *this;
 }

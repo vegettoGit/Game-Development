@@ -3,6 +3,8 @@
 #include "math.h"
 #include <utility>
 
+const float   IGraphicsGame::s_defaultRotationY                  = 0.01f;
+
 const Vector3 GraphicsGameProperties::s_defaultEye               = Vector3(33.0f, 33.0f, 33.0f);
 const Vector3 GraphicsGameProperties::s_defaultCenter            = Vector3(0.0f, 0.0f, 0.0f);
 const Vector3 GraphicsGameProperties::s_defaultUp                = Vector3(0.0f, 1.0f, 0.0f);
@@ -128,11 +130,8 @@ void IGraphicsGame::update()
    {
    case Camera::CameraMode::DEFAULT_ROTATION_Y:
    {
-      Vector4 eye(m_properties.m_eye.m_x, m_properties.m_eye.m_y, m_properties.m_eye.m_z);
-      Matrix  rotationY(Matrix::RotationType::Y, Math::degreesToRadians(0.01f));
-      Vector4 rotatedEye = eye * rotationY;
-
-      m_properties.m_eye.set(rotatedEye.m_x, rotatedEye.m_y, rotatedEye.m_z);
+      Matrix rotationY(Matrix::RotationType::Y, Math::degreesToRadians(s_defaultRotationY));
+      m_properties.m_eye *= rotationY;
 
       break;
    }
