@@ -108,8 +108,8 @@ Vector3& Vector3::operator /= (float scalar)
 Vector3& Vector3::operator *= (Matrix &m)
 {
    Vector4 v4(m_x, m_y, m_z);
-   Vector4 transformed = v4 * m;
-   set(transformed.m_x, transformed.m_y, transformed.m_z);
+   v4 *= m;
+   set(v4.m_x, v4.m_y, v4.m_z);
 
    return *this;
 }

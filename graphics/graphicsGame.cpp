@@ -62,59 +62,6 @@ GraphicsGameProperties::GraphicsGameProperties(const Vector3& eye, const Vector3
 {
 }
 
-GraphicsGameProperties::GraphicsGameProperties(const GraphicsGameProperties& graphicsGameProperties)
-{
-   *this = graphicsGameProperties;
-}
-
-GraphicsGameProperties& GraphicsGameProperties::operator = (const GraphicsGameProperties& graphicsGameProperties)
-{
-   m_eye               = graphicsGameProperties.m_eye;
-   m_center            = graphicsGameProperties.m_center;
-   m_up                = graphicsGameProperties.m_up;
-   m_windowWidth       = graphicsGameProperties.m_windowWidth;
-   m_windowHeight      = graphicsGameProperties.m_windowHeight;
-   m_fieldOfViewAngle  = graphicsGameProperties.m_fieldOfViewAngle;
-   m_aspectRatio       = graphicsGameProperties.m_aspectRatio;
-   m_nearClippingPlane = graphicsGameProperties.m_nearClippingPlane;
-   m_farClippingPlane  = graphicsGameProperties.m_farClippingPlane;
-   m_bufferMode        = graphicsGameProperties.m_bufferMode;
-
-   return *this;
-}
-
-GraphicsGameProperties::GraphicsGameProperties(GraphicsGameProperties&& graphicsGameProperties)
-{
-   *this = std::move(graphicsGameProperties);
-}
-
-GraphicsGameProperties& GraphicsGameProperties::operator = (GraphicsGameProperties&& graphicsGameProperties)
-{
-   m_eye               = graphicsGameProperties.m_eye;
-   m_center            = graphicsGameProperties.m_center;
-   m_up                = graphicsGameProperties.m_up;
-   m_windowWidth       = graphicsGameProperties.m_windowWidth;
-   m_windowHeight      = graphicsGameProperties.m_windowHeight;
-   m_fieldOfViewAngle  = graphicsGameProperties.m_fieldOfViewAngle;
-   m_aspectRatio       = graphicsGameProperties.m_aspectRatio;
-   m_nearClippingPlane = graphicsGameProperties.m_nearClippingPlane;
-   m_farClippingPlane  = graphicsGameProperties.m_farClippingPlane;
-   m_bufferMode        = graphicsGameProperties.m_bufferMode;
-
-   graphicsGameProperties.m_eye.reset();
-   graphicsGameProperties.m_center.reset();
-   graphicsGameProperties.m_up.reset();
-   graphicsGameProperties.m_windowWidth       = 0;
-   graphicsGameProperties.m_windowHeight      = 0;
-   graphicsGameProperties.m_fieldOfViewAngle  = 0.0f;
-   graphicsGameProperties.m_aspectRatio       = 0.0f;
-   graphicsGameProperties.m_nearClippingPlane = 0.0f;
-   graphicsGameProperties.m_farClippingPlane  = 0.0f;
-   graphicsGameProperties.m_bufferMode        = BufferMode::DOUBLE;
-
-   return *this;
-}
-
 IGraphicsGame::IGraphicsGame(const GraphicsGameProperties& graphicsGameProperties)
    : m_properties(graphicsGameProperties)
 {

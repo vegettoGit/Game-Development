@@ -32,10 +32,12 @@ struct GraphicsGameProperties
    GraphicsGameProperties();
    GraphicsGameProperties(int windowWidth, int windowHeight);
    GraphicsGameProperties(const Vector3& eye, const Vector3& center, const Vector3& up, int windowWidth, int windowHeight, float FOVAngle, float aspectRatio, float zNear, float zFar, BufferMode bufferMode);
-   GraphicsGameProperties(const GraphicsGameProperties& graphicsGameProperties);
-   GraphicsGameProperties& operator = (const GraphicsGameProperties& graphicsGameProperties);
-   GraphicsGameProperties(GraphicsGameProperties&& graphicsGameProperties);
-   GraphicsGameProperties& operator = (GraphicsGameProperties&& graphicsGameProperties);
+   
+   GraphicsGameProperties             (const GraphicsGameProperties& graphicsGameProperties)  = default;
+   GraphicsGameProperties& operator = (const GraphicsGameProperties& graphicsGameProperties)  = default;
+   GraphicsGameProperties             (GraphicsGameProperties&& graphicsGameProperties)       = default;
+   GraphicsGameProperties& operator = (GraphicsGameProperties&& graphicsGameProperties)       = default;
+   ~GraphicsGameProperties            ()                                                      = default;
 
    Vector3              m_eye;
 
