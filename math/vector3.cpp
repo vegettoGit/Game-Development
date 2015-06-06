@@ -19,42 +19,6 @@ Vector3::Vector3(float x, float y, float z)
 {
 }
 
-Vector3::Vector3(const Vector3& v)
-{
-   *this = v;
-}
-
-Vector3& Vector3::operator = (const Vector3& v)
-{
-   m_x = v.m_x;
-   m_y = v.m_y;
-   m_z = v.m_z;
-
-   return *this;
-}
-
-Vector3::Vector3(Vector3&& v)
-{
-   *this = std::move(v);
-}
-
-Vector3& Vector3::operator = (Vector3&& v)
-{
-   m_x = v.m_x;
-   m_y = v.m_y;
-   m_z = v.m_z;
-
-   v.m_x = 0.0f;
-   v.m_y = 0.0f;
-   v.m_z = 0.0f;
-
-   return *this;
-}
-
-Vector3::~Vector3()
-{
-}
-
 float Vector3::operator * (const Vector3& v) const
 {
    return (m_x * v.m_x + m_y * v.m_y + m_z * v.m_z);

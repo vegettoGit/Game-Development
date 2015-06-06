@@ -2,8 +2,23 @@
 #include <utility>
 #include <cmath>
 
-
 Matrix::Matrix()
+   : m_m0(0.0f),
+     m_m1(0.0f),
+     m_m2(0.0f),
+     m_m3(0.0f),
+     m_m4(0.0f),
+     m_m5(0.0f),
+     m_m6(0.0f),
+     m_m7(0.0f),
+     m_m8(0.0f),
+     m_m9(0.0f),
+     m_m10(0.0f),
+     m_m11(0.0f),
+     m_m12(0.0f),
+     m_m13(0.0f),
+     m_m14(0.0f),
+     m_m15(0.0f)
 {
 }
 
@@ -76,45 +91,6 @@ Matrix::Matrix(RotationType rotationType, float angle)
 
       break;
    }
-}
-
-Matrix::Matrix(const Matrix& m)
-{
-   *this = m;
-}
-
-Matrix& Matrix::operator = (const Matrix& m)
-{
-   m_v0 = m.m_v0;
-   m_v1 = m.m_v1;
-   m_v2 = m.m_v2;
-   m_v3 = m.m_v3;
-
-   return *this;
-}
-
-Matrix::Matrix(Matrix&& m)
-{
-   *this = std::move(m);
-}
-
-Matrix& Matrix::operator = (Matrix&& m)
-{
-   m_v0 = std::move(m.m_v0);
-   m_v1 = std::move(m.m_v1);
-   m_v2 = std::move(m.m_v2);
-   m_v3 = std::move(m.m_v3);
-
-   m.m_v0.reset();
-   m.m_v1.reset();
-   m.m_v2.reset();
-   m.m_v3.reset();
-
-   return *this;
-}
-
-Matrix::~Matrix()
-{
 }
 
 void Matrix::set(const Vector4& v0, const Vector4& v1, const Vector4& v2, const Vector4& v3)
