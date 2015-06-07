@@ -65,12 +65,27 @@ void Graphics::drawAxis(float length, const Color& color)
    drawVector3FromOrigin(Vector3(0.0f, 0.0f, length), color);
 }
 
+void Graphics::drawText(float x, float y, const Color& color, const char* text)
+{
+   const GraphicsGameProperties& properties = (*s_graphicsGame).m_properties;
+
+   glMatrixMode(GL_PROJECTION);
+   glLoadIdentity();
+   glOrtho(0, properties.m_windowWidth, properties.m_windowHeight, 0, -1, 1);
+
+   glColor3f(color.m_red, color.m_green, color.m_blue);
+   glRasterPos2f(x, y);
+
+   glutBitmapString(GLUT_BITMAP_HELVETICA_18, (const unsigned char*) text);
+}
+
 void Graphics::updateGame()
 {
    glClear(GL_COLOR_BUFFER_BIT);
    
    const GraphicsGameProperties& properties = (*s_graphicsGame).m_properties;
 
+   glMatrixMode(GL_PROJECTION);
    glLoadIdentity();
    
    gluPerspective(properties.m_fieldOfViewAngle, properties.m_aspectRatio, properties.m_nearClippingPlane, properties.m_farClippingPlane);

@@ -44,6 +44,7 @@ public:
    static void            drawVector3FromOrigin (const Vector3& end, const Color& color);
    static void            drawAxis              (float length, const Color& color);
    static void            drawAxis              (float length);
+   static void            drawText              (float x, float y, const Color& color, const char* text);
 
 };
 
