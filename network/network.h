@@ -5,18 +5,42 @@
      asynchronous manner.
 */
 
-#include <winsock2.h>
+#include "socket.h"
 
 class Network
 {
 
 public:
 
+   enum class NetworkAddressType
+   {
+      IPv4,
+      IPv6
+   };
+
+   enum class NetworkProtocol
+   {
+      TCP,
+      UDP
+   };
+
    enum class NetworkError
    {
       NONE,
+      ERROR_NETWORK_UNINITIALIZED,
+      ERROR_NETWORK_ALREADY_INITIALIZED,
       ERROR_INITIALIZATION_SOCKETS,
+      ERROR_WRONG_GET_ADDRESS_INFO_INPUT,
+      ERROR_GET_ADDRESS_INFO,
+      ERROR_CREATE_SOCKET,
+      ERROR_BIND_SOCKET,
       UNKNOWN_ERROR
+   };
+
+   enum class NetworkLayerState
+   {
+      NONE,
+      INITIALIZED
    };
 
    struct NetworkResult
@@ -31,21 +55,26 @@ public:
       int          m_internalError;
    };
 
-   static Network& getInstance ();
-   NetworkResult   initialize  ();
+   static Network&   getInstance          ();
+   NetworkResult     initialize           ();
+   NetworkResult     createSocket         (const char* hostName, const char* serviceName, NetworkAddressType addressType, NetworkProtocol protocol, Socket& outSocket);
 
 private:
 
-   Network                     ()                         ;
+   Network                                ()                         ;
 
-   Network                     (const Network& )  = delete;
-   Network&        operator =  (const Network& v) = delete;
+   Network                                (const Network& )  = delete;
+   Network&          operator =           (const Network& v) = delete;
 
-   Network                     (Network&& )       = delete;
-   Network&        operator =  (Network&& v)      = delete;
+   Network                                (Network&& )       = delete;
+   Network&          operator =           (Network&& v)      = delete;
 
-   ~Network                    ();
+   ~Network                               ();
+   
+   NetworkResult     getAddressInfo       (const char* hostName, const char* serviceName, NetworkAddressType addressType, NetworkProtocol protocol, struct addrinfo*& outAddressInfo);
+   NetworkError      buildAddressInfo     (NetworkAddressType addressType, NetworkProtocol protocol, struct addrinfo& outAddressInfo);
 
-   WSADATA         m_wsaData;
+   WSADATA           m_wsaData;
+   NetworkLayerState m_networkLayerState;
 
 };
