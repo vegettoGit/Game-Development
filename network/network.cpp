@@ -76,37 +76,14 @@ Network::NetworkError Network::buildAddressInfo(NetworkAddressType addressType, 
 
    switch (addressType)
    {
-   case NetworkAddressType::IPv4:
-   {
-      outAddressInfo.ai_family = AF_INET;
-      break;
-   }
-   case NetworkAddressType::IPv6:
-   {
-      outAddressInfo.ai_family = AF_INET6;
-      break;
-   }
-   default:
-   {
-      result = NetworkError::ERROR_WRONG_GET_ADDRESS_INFO_INPUT;
-      break;
-   }
-   }
-
-   if (result == NetworkError::NONE)
-   {
-      switch (protocol)
+      case NetworkAddressType::IPv4:
       {
-      case NetworkProtocol::TCP:
-      {
-         outAddressInfo.ai_socktype = SOCK_STREAM;
-         outAddressInfo.ai_protocol = IPPROTO_TCP;
+         outAddressInfo.ai_family = AF_INET;
          break;
       }
-      case NetworkProtocol::UDP:
+      case NetworkAddressType::IPv6:
       {
-         outAddressInfo.ai_socktype = SOCK_DGRAM;
-         outAddressInfo.ai_protocol = IPPROTO_UDP;
+         outAddressInfo.ai_family = AF_INET6;
          break;
       }
       default:
@@ -114,6 +91,29 @@ Network::NetworkError Network::buildAddressInfo(NetworkAddressType addressType, 
          result = NetworkError::ERROR_WRONG_GET_ADDRESS_INFO_INPUT;
          break;
       }
+   }
+
+   if (result == NetworkError::NONE)
+   {
+      switch (protocol)
+      {
+         case NetworkProtocol::TCP:
+         {
+            outAddressInfo.ai_socktype = SOCK_STREAM;
+            outAddressInfo.ai_protocol = IPPROTO_TCP;
+            break;
+         }
+         case NetworkProtocol::UDP:
+         {
+            outAddressInfo.ai_socktype = SOCK_DGRAM;
+            outAddressInfo.ai_protocol = IPPROTO_UDP;
+            break;
+         }
+         default:
+         {
+            result = NetworkError::ERROR_WRONG_GET_ADDRESS_INFO_INPUT;
+            break;
+         }
       }
    }
 
@@ -134,25 +134,21 @@ Network::NetworkResult Network::createSocket(const char* hostName, const char* s
    struct addrinfo* addressInfo = nullptr;
    result = Network::getInstance().getAddressInfo(hostName, serviceName, addressType, protocol, addressInfo);
 
-   if (result.m_error == Network::NetworkError::NONE)
+   if (result.m_error == NetworkError::NONE)
    {
-      outSocket.m_socket = socket(addressInfo->ai_family, addressInfo->ai_socktype, addressInfo->ai_protocol);
-      if (outSocket.m_socket == INVALID_SOCKET)
+      Socket::SocketResult socketResult = Socket::createSocket(*addressInfo, outSocket);
+      if (socketResult.m_error != Socket::SocketError::NONE)
       {
-         result.m_error         = NetworkError::ERROR_CREATE_SOCKET;
-         result.m_internalError = WSAGetLastError();
-      }
-      else
-      {
-         int bindResult = bind(outSocket.m_socket, addressInfo->ai_addr, addressInfo->ai_addrlen);
-         if (bindResult == SOCKET_ERROR)
+         result.m_error = NetworkError::ERROR_SOCKET_CREATION;
+
+         if (socketResult.m_error == Socket::SocketError::ERROR_BIND)
          {
-            result.m_error         = NetworkError::ERROR_BIND_SOCKET;
-            result.m_internalError = WSAGetLastError();
-            closesocket(outSocket.m_socket);
+            result.m_error = NetworkError::ERROR_SOCKET_BINDING;
          }
+
+         result.m_internalError = socketResult.m_internalError;
       }
-         
+      
       freeaddrinfo(addressInfo);
    }
 

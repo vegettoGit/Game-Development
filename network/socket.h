@@ -11,6 +11,35 @@
 */
 struct Socket
 {
+   enum class SocketError
+   {
+      NONE,
+      ERROR_CREATE,
+      ERROR_BIND,
+      ERROR_LISTEN,
+      UNKNOWN_ERROR
+   };
+
+   struct SocketResult
+   {
+      SocketResult()
+         : m_error(SocketError::NONE),
+           m_internalError(0)
+      {
+      }
+
+      SocketError m_error;
+      int         m_internalError;
+   };
+
+   enum class SocketState
+   {
+      UNINITIALIZED,
+      BINDED,
+      LISTENING,
+      CONNECTED
+   };
+
    Socket             ();
 
    Socket             (const Socket& )  = delete;
@@ -21,7 +50,11 @@ struct Socket
 
    ~Socket            ();
 
-   SOCKET  m_socket;
+   static SocketResult createSocket(struct addrinfo& addressInfo, Socket& outSocket);
+   SocketResult        listenIncomingConnection();
+
+   SOCKET       m_socket;
+   SocketState  m_socketState;
 };
 
 #endif
