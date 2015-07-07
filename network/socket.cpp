@@ -1,7 +1,8 @@
 #include "socket.h"
 
 Socket::Socket()
-   : m_socketState(SocketState::UNINITIALIZED)
+   : m_socket(NULL),
+     m_socketState(SocketState::UNINITIALIZED)
 {
 }
 
@@ -42,9 +43,36 @@ Socket::SocketResult Socket::listenIncomingConnection()
    int result = listen(m_socket, SOMAXCONN);
    if (result == SOCKET_ERROR)
    {
-      socketResult.m_error = SocketError::ERROR_LISTEN;
+      socketResult.m_error         = SocketError::ERROR_LISTEN;
       socketResult.m_internalError = WSAGetLastError();
       closesocket(m_socket);
+   }
+
+   return socketResult;
+}
+
+Socket::SocketResult Socket::acceptIncomingConnection()
+{
+   SocketResult socketResult;
+   SOCKET previousInternalSocket = m_socket;
+
+   SOCKET clientsocket = accept(m_socket, nullptr, nullptr);
+   if (clientsocket == INVALID_SOCKET)
+   {
+      socketResult.m_error         = SocketError::ERROR_LISTEN;
+      socketResult.m_internalError = WSAGetLastError();
+      m_socket = NULL;
+      m_socketState = SocketState::UNINITIALIZED;
+   }
+   else
+   {
+      m_socket      = clientsocket;
+      m_socketState = SocketState::CONNECTED;
+   }
+
+   if (previousInternalSocket)
+   {
+      closesocket(previousInternalSocket);
    }
 
    return socketResult;

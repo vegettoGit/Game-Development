@@ -17,6 +17,7 @@ struct Socket
       ERROR_CREATE,
       ERROR_BIND,
       ERROR_LISTEN,
+      ERROR_ACCEPT,
       UNKNOWN_ERROR
    };
 
@@ -49,12 +50,18 @@ struct Socket
    Socket& operator = (Socket&& v)      = delete;
 
    ~Socket            ();
-
-   static SocketResult createSocket(struct addrinfo& addressInfo, Socket& outSocket);
-   SocketResult        listenIncomingConnection();
+   
+   SocketResult listenIncomingConnection ();
+   SocketResult acceptIncomingConnection ();
 
    SOCKET       m_socket;
    SocketState  m_socketState;
+
+
+private:
+
+   friend class Network;
+   static SocketResult createSocket(struct addrinfo& addressInfo, Socket& outSocket);
 };
 
 #endif
