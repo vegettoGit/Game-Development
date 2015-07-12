@@ -18,6 +18,7 @@ struct Socket
       ERROR_BIND,
       ERROR_LISTEN,
       ERROR_ACCEPT,
+      ERROR_RECEIVE,
       UNKNOWN_ERROR
    };
 
@@ -53,6 +54,8 @@ struct Socket
    
    SocketResult listenIncomingConnection ();
    SocketResult acceptIncomingConnection ();
+
+   SocketResult receiveBytes(char* buffer, int bufferLength, int& outNumberReceivedBytes);
 
    SOCKET       m_socket;
    SocketState  m_socketState;

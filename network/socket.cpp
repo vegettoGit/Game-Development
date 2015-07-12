@@ -46,6 +46,12 @@ Socket::SocketResult Socket::listenIncomingConnection()
       socketResult.m_error         = SocketError::ERROR_LISTEN;
       socketResult.m_internalError = WSAGetLastError();
       closesocket(m_socket);
+      m_socket      = NULL;
+      m_socketState = SocketState::UNINITIALIZED;
+   }
+   else
+   {
+      m_socketState = SocketState::LISTENING;
    }
 
    return socketResult;
@@ -73,6 +79,28 @@ Socket::SocketResult Socket::acceptIncomingConnection()
    if (previousInternalSocket)
    {
       closesocket(previousInternalSocket);
+   }
+
+   return socketResult;
+}
+
+Socket::SocketResult Socket::receiveBytes(char* buffer, int bufferLength, int& outNumberReceivedBytes)
+{
+   SocketResult socketResult;
+   outNumberReceivedBytes = 0;
+
+   socketResult.m_internalError = recv(m_socket, buffer, bufferLength, 0);
+
+   if (socketResult.m_internalError < 0)
+   {
+      socketResult.m_error = SocketError::ERROR_RECEIVE;
+      closesocket(m_socket);
+      m_socket      = NULL;
+      m_socketState = SocketState::UNINITIALIZED;
+   }
+   else
+   {
+      outNumberReceivedBytes = socketResult.m_internalError;
    }
 
    return socketResult;
