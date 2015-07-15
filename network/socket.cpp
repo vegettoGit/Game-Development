@@ -89,9 +89,9 @@ Socket::SocketResult Socket::receiveBytes(char* buffer, int bufferLength, int& o
    SocketResult socketResult;
    outNumberReceivedBytes = 0;
 
-   int recvResult = recv(m_socket, buffer, bufferLength, 0);
+   socketResult.m_internalError = recv(m_socket, buffer, bufferLength, 0);
 
-   if (recvResult == SOCKET_ERROR)
+   if (socketResult.m_internalError == SOCKET_ERROR)
    {
       socketResult.m_error         = SocketError::ERROR_RECEIVE;
       socketResult.m_internalError = WSAGetLastError();
@@ -101,7 +101,7 @@ Socket::SocketResult Socket::receiveBytes(char* buffer, int bufferLength, int& o
    }
    else
    {
-      outNumberReceivedBytes = recvResult;
+      outNumberReceivedBytes = socketResult.m_internalError;
    }
 
    return socketResult;
@@ -112,9 +112,9 @@ Socket::SocketResult Socket::sendBytes(char* buffer, int bufferLength, int& outN
    SocketResult socketResult;
    outNumberSentBytes = 0;
 
-   int sendResult = send(m_socket, buffer, bufferLength, 0);
+   socketResult.m_internalError = send(m_socket, buffer, bufferLength, 0);
 
-   if (sendResult == SOCKET_ERROR)
+   if (socketResult.m_internalError == SOCKET_ERROR)
    {
       socketResult.m_error         = SocketError::ERROR_SEND;
       socketResult.m_internalError = WSAGetLastError();
@@ -124,7 +124,7 @@ Socket::SocketResult Socket::sendBytes(char* buffer, int bufferLength, int& outN
    }
    else
    {
-      outNumberSentBytes = sendResult;
+      outNumberSentBytes = socketResult.m_internalError;
    }
 
    return socketResult;
