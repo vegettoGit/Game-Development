@@ -45,9 +45,7 @@ Socket::SocketResult Socket::listenIncomingConnection()
    {
       socketResult.m_error         = SocketError::ERROR_LISTEN;
       socketResult.m_internalError = WSAGetLastError();
-      closesocket(m_socket);
-      m_socket      = NULL;
-      m_socketState = SocketState::UNINITIALIZED;
+      close();
    }
    else
    {
@@ -95,9 +93,7 @@ Socket::SocketResult Socket::receiveBytes(char* buffer, int bufferLength, int& o
    {
       socketResult.m_error         = SocketError::ERROR_RECEIVE;
       socketResult.m_internalError = WSAGetLastError();
-      closesocket(m_socket);
-      m_socket      = NULL;
-      m_socketState = SocketState::UNINITIALIZED;
+      close();
    }
    else
    {
@@ -118,14 +114,66 @@ Socket::SocketResult Socket::sendBytes(char* buffer, int bufferLength, int& outN
    {
       socketResult.m_error         = SocketError::ERROR_SEND;
       socketResult.m_internalError = WSAGetLastError();
-      closesocket(m_socket);
-      m_socket = NULL;
-      m_socketState = SocketState::UNINITIALIZED;
+      close();
    }
    else
    {
       outNumberSentBytes = sendResult;
    }
+
+   return socketResult;
+}
+
+Socket::SocketResult Socket::shutdownOperation(SocketOperation socketOperation)
+{
+   SocketResult socketResult;
+
+   int operation = SD_RECEIVE;
+
+   switch (socketOperation)
+   {
+      case SocketOperation::SEND:
+      {
+         operation = SD_SEND;
+         break;
+      }
+      case SocketOperation::SEND_AND_RECEIVE:
+      {
+         operation = SD_BOTH;
+         break;
+      }
+   }
+
+   int shutdownResult = shutdown(m_socket, operation);
+
+   if (shutdownResult == SOCKET_ERROR)
+   {
+      socketResult.m_error         = SocketError::ERROR_SHUTDOWN;
+      socketResult.m_internalError = WSAGetLastError();
+      close();
+   }
+   else
+   {
+      m_socketState = SocketState::SHUTDOWN;
+   }
+
+   return socketResult;
+}
+
+Socket::SocketResult Socket::close()
+{
+   SocketResult socketResult;
+
+   int closeResult = closesocket(m_socket);
+
+   if (closeResult == SOCKET_ERROR)
+   {
+      socketResult.m_error         = SocketError::ERROR_CLOSE;
+      socketResult.m_internalError = WSAGetLastError();
+   }
+
+   m_socket = NULL;
+   m_socketState = SocketState::UNINITIALIZED;
 
    return socketResult;
 }

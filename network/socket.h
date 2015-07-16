@@ -20,6 +20,8 @@ struct Socket
       ERROR_ACCEPT,
       ERROR_RECEIVE,
       ERROR_SEND,
+      ERROR_SHUTDOWN,
+      ERROR_CLOSE,
       UNKNOWN_ERROR
    };
 
@@ -40,7 +42,16 @@ struct Socket
       UNINITIALIZED,
       BINDED,
       LISTENING,
-      CONNECTED
+      CONNECTED,
+      SHUTDOWN
+   };
+
+   enum class SocketOperation
+   {
+      NONE,
+      SEND,
+      RECEIVE,
+      SEND_AND_RECEIVE
    };
 
    Socket             ();
@@ -58,6 +69,9 @@ struct Socket
 
    SocketResult receiveBytes(char* buffer, int bufferLength, int& outNumberReceivedBytes);
    SocketResult sendBytes   (char* buffer, int bufferLength, int& outNumberSentBytes);
+
+   SocketResult shutdownOperation(SocketOperation operation);
+   SocketResult close            ();
 
    SOCKET       m_socket;
    SocketState  m_socketState;
