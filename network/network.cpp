@@ -45,7 +45,7 @@ Network::NetworkResult Network::initialize()
    return result;
 }
 
-Network::NetworkResult Network::getAddressInfo(const char* hostName, const char* serviceName, NetworkAddressType addressType, NetworkProtocol protocol, struct addrinfo*& outAddressInfo)
+Network::NetworkResult Network::getAddressInfo(const char* hostName, const char* serviceName, NetworkAddressType addressType, NetworkProtocol protocol, Socket::SocketCreationType socketCreationType, struct addrinfo*& outAddressInfo)
 {
    NetworkResult result;
    
@@ -55,10 +55,22 @@ Network::NetworkResult Network::getAddressInfo(const char* hostName, const char*
 
    if (result.m_error == NetworkError::NONE)
    {
-      hints.ai_flags = AI_PASSIVE;
+      switch (socketCreationType)
+      {
+         case Socket::SocketCreationType::ACCEPT_INCOMING_CONNECTIONS:
+         {
+            hints.ai_flags = AI_PASSIVE;
+            break;
+         }
+         case Socket::SocketCreationType::CONNECT:
+         default:
+         {
+            break;
+         }
+      }
 
       // Resolve the server address and port
-      result.m_internalError = getaddrinfo(NULL, serviceName, &hints, &outAddressInfo);
+      result.m_internalError = getaddrinfo(hostName, serviceName, &hints, &outAddressInfo);
       if (result.m_internalError != 0)
       {
          result.m_error = NetworkError::ERROR_GET_ADDRESS_INFO;
@@ -67,6 +79,7 @@ Network::NetworkResult Network::getAddressInfo(const char* hostName, const char*
 
    return result;
 }
+
 
 Network::NetworkError Network::buildAddressInfo(NetworkAddressType addressType, NetworkProtocol protocol, struct addrinfo& outAddressInfo)
 {
@@ -120,7 +133,7 @@ Network::NetworkError Network::buildAddressInfo(NetworkAddressType addressType, 
    return result;
 }
 
-Network::NetworkResult Network::createSocket(const char* hostName, const char* serviceName, NetworkAddressType addressType, NetworkProtocol protocol, Socket& outSocket)
+Network::NetworkResult Network::createSocket(const char* hostName, const char* serviceName, NetworkAddressType addressType, NetworkProtocol protocol, Socket::SocketCreationType socketCreationType, Socket& outSocket)
 {
    NetworkResult result;
 
@@ -132,8 +145,9 @@ Network::NetworkResult Network::createSocket(const char* hostName, const char* s
 
    // Resolve the server address and port
    struct addrinfo* addressInfo = nullptr;
-   result = Network::getInstance().getAddressInfo(hostName, serviceName, addressType, protocol, addressInfo);
+   result = Network::getInstance().getAddressInfo(hostName, serviceName, addressType, protocol, socketCreationType, addressInfo);
 
+   // TODO: For now only supporting "accept incoming connections" socket creation type
    if (result.m_error == NetworkError::NONE)
    {
       Socket::SocketResult socketResult = Socket::createSocket(*addressInfo, outSocket);

@@ -57,7 +57,7 @@ public:
 
    static Network&   getInstance          ();
    NetworkResult     initialize           ();
-   NetworkResult     createSocket         (const char* hostName, const char* serviceName, NetworkAddressType addressType, NetworkProtocol protocol, Socket& outSocket);
+   NetworkResult     createSocket         (const char* hostName, const char* serviceName, NetworkAddressType addressType, NetworkProtocol protocol, Socket::SocketCreationType socketCreationType, Socket& outSocket);
 
 private:
 
@@ -71,7 +71,7 @@ private:
 
    ~Network                               ();
    
-   NetworkResult     getAddressInfo       (const char* hostName, const char* serviceName, NetworkAddressType addressType, NetworkProtocol protocol, struct addrinfo*& outAddressInfo);
+   NetworkResult     getAddressInfo       (const char* hostName, const char* serviceName, NetworkAddressType addressType, NetworkProtocol protocol, Socket::SocketCreationType socketCreationType, struct addrinfo*& outAddressInfo);
    NetworkError      buildAddressInfo     (NetworkAddressType addressType, NetworkProtocol protocol, struct addrinfo& outAddressInfo);
 
    WSADATA           m_wsaData;

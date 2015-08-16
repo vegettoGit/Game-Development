@@ -37,6 +37,12 @@ struct Socket
       int         m_internalError;
    };
 
+   enum class SocketCreationType
+   {
+      ACCEPT_INCOMING_CONNECTIONS,
+      CONNECT
+   };
+
    enum class SocketState
    {
       UNINITIALIZED,
