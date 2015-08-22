@@ -150,11 +150,10 @@ Network::NetworkResult Network::createSocket(const char* hostName, const char* s
       return result;
    }
 
-   // Resolve the server address and port
+   // Resolve the host address and port
    struct addrinfo* addressInfo = nullptr;
    result = Network::getInstance().getAddressInfo(hostName, serviceName, addressType, protocol, socketCreationType, addressInfo);
 
-   // TODO: For now only supporting "accept incoming connections" socket creation type
    if (result.m_error == NetworkError::NONE)
    {
       Socket::SocketResult socketResult = Socket::createSocket(socketCreationType, addressInfo, outSocket);

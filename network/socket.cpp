@@ -10,10 +10,10 @@ Socket::~Socket()
 {
 }
 
-Socket::SocketResult Socket::createSocket(struct addrinfo* addressInfo, Socket& outSocket)
+Socket::SocketResult Socket::createSocket(struct addrinfo& addressInfo, Socket& outSocket)
 {
    SocketResult socketResult;
-   outSocket.m_socket = socket(addressInfo->ai_family, addressInfo->ai_socktype, addressInfo->ai_protocol);
+   outSocket.m_socket = socket(addressInfo.ai_family, addressInfo.ai_socktype, addressInfo.ai_protocol);
    if (outSocket.m_socket == INVALID_SOCKET)
    {
       socketResult.m_error = SocketError::ERROR_CREATE;
@@ -29,7 +29,7 @@ Socket::SocketResult Socket::createSocket(SocketCreationType socketCreationType,
    {
       case SocketCreationType::ACCEPT_INCOMING_CONNECTIONS:
       {
-         socketResult = createSocket(addressInfo, outSocket);
+         socketResult = createSocket(*addressInfo, outSocket);
          if (outSocket.m_socket != INVALID_SOCKET)
          {
             int bindResult = bind(outSocket.m_socket, addressInfo->ai_addr, addressInfo->ai_addrlen);
@@ -54,7 +54,7 @@ Socket::SocketResult Socket::createSocket(SocketCreationType socketCreationType,
          for (currentAddressInfo = addressInfo; currentAddressInfo != nullptr; currentAddressInfo = currentAddressInfo->ai_next)
          {
             // Create a SOCKET for connecting
-            socketResult = createSocket(currentAddressInfo, outSocket);
+            socketResult = createSocket(*currentAddressInfo, outSocket);
             if (outSocket.m_socket != INVALID_SOCKET)
             {
                int connectResult = connect(outSocket.m_socket, currentAddressInfo->ai_addr, (int)currentAddressInfo->ai_addrlen);

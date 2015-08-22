@@ -88,7 +88,7 @@ private:
 
    friend class Network;
    static SocketResult createSocket(SocketCreationType socketCreationType, struct addrinfo* addressInfo, Socket& outSocket);
-   static SocketResult createSocket(struct addrinfo* addressInfo, Socket& outSocket);
+   static SocketResult createSocket(struct addrinfo& addressInfo, Socket& outSocket);
 };
 
 #endif
