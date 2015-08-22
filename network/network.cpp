@@ -51,24 +51,10 @@ Network::NetworkResult Network::getAddressInfo(const char* hostName, const char*
    
    struct addrinfo hints;
 
-   result.m_error = buildAddressInfo(addressType, protocol, hints);
+   result.m_error = buildAddressInfo(addressType, protocol, socketCreationType, hints);
 
    if (result.m_error == NetworkError::NONE)
    {
-      switch (socketCreationType)
-      {
-         case Socket::SocketCreationType::ACCEPT_INCOMING_CONNECTIONS:
-         {
-            hints.ai_flags = AI_PASSIVE;
-            break;
-         }
-         case Socket::SocketCreationType::CONNECT:
-         default:
-         {
-            break;
-         }
-      }
-
       // Resolve the server address and port
       result.m_internalError = getaddrinfo(hostName, serviceName, &hints, &outAddressInfo);
       if (result.m_internalError != 0)
@@ -81,7 +67,7 @@ Network::NetworkResult Network::getAddressInfo(const char* hostName, const char*
 }
 
 
-Network::NetworkError Network::buildAddressInfo(NetworkAddressType addressType, NetworkProtocol protocol, struct addrinfo& outAddressInfo)
+Network::NetworkError Network::buildAddressInfo(NetworkAddressType addressType, NetworkProtocol protocol, Socket::SocketCreationType socketCreationType, struct addrinfo& outAddressInfo)
 {
    NetworkError result = NetworkError::NONE;
 
@@ -120,6 +106,27 @@ Network::NetworkError Network::buildAddressInfo(NetworkAddressType addressType, 
          {
             outAddressInfo.ai_socktype = SOCK_DGRAM;
             outAddressInfo.ai_protocol = IPPROTO_UDP;
+            break;
+         }
+         default:
+         {
+            result = NetworkError::ERROR_WRONG_GET_ADDRESS_INFO_INPUT;
+            break;
+         }
+      }
+   }
+
+   if (result == NetworkError::NONE)
+   {
+      switch (socketCreationType)
+      {
+         case Socket::SocketCreationType::ACCEPT_INCOMING_CONNECTIONS:
+         {
+            outAddressInfo.ai_flags = AI_PASSIVE;
+            break;
+         }
+         case Socket::SocketCreationType::CONNECT:
+         {
             break;
          }
          default:
