@@ -157,14 +157,23 @@ Network::NetworkResult Network::createSocket(const char* hostName, const char* s
    // TODO: For now only supporting "accept incoming connections" socket creation type
    if (result.m_error == NetworkError::NONE)
    {
-      Socket::SocketResult socketResult = Socket::createSocket(*addressInfo, outSocket);
+      Socket::SocketResult socketResult = Socket::createSocket(socketCreationType, addressInfo, outSocket);
       if (socketResult.m_error != Socket::SocketError::NONE)
       {
          result.m_error = NetworkError::ERROR_SOCKET_CREATION;
 
-         if (socketResult.m_error == Socket::SocketError::ERROR_BIND)
+         switch (socketResult.m_error)
          {
-            result.m_error = NetworkError::ERROR_SOCKET_BINDING;
+            case Socket::SocketError::ERROR_BIND:
+            {
+               result.m_error = NetworkError::ERROR_SOCKET_BINDING;
+               break;
+            }
+            case Socket::SocketError::ERROR_CONNECT:
+            {
+               result.m_error = NetworkError::ERROR_SOCKET_CONNECTING;
+               break;
+            }
          }
 
          result.m_internalError = socketResult.m_internalError;

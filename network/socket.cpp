@@ -10,29 +10,71 @@ Socket::~Socket()
 {
 }
 
-Socket::SocketResult Socket::createSocket(struct addrinfo& addressInfo, Socket& outSocket)
+Socket::SocketResult Socket::createSocket(struct addrinfo* addressInfo, Socket& outSocket)
 {
    SocketResult socketResult;
-
-   outSocket.m_socket = socket(addressInfo.ai_family, addressInfo.ai_socktype, addressInfo.ai_protocol);
+   outSocket.m_socket = socket(addressInfo->ai_family, addressInfo->ai_socktype, addressInfo->ai_protocol);
    if (outSocket.m_socket == INVALID_SOCKET)
    {
       socketResult.m_error = SocketError::ERROR_CREATE;
       socketResult.m_internalError = WSAGetLastError();
    }
-   else
-   {
-      int bindResult = bind(outSocket.m_socket, addressInfo.ai_addr, addressInfo.ai_addrlen);
-      if (bindResult == SOCKET_ERROR)
-      {
-         socketResult.m_error = SocketError::ERROR_BIND;
-         socketResult.m_internalError = WSAGetLastError();
-         closesocket(outSocket.m_socket);
-      }
+   return socketResult;
+}
 
-      outSocket.m_socketState = Socket::SocketState::BINDED;
+Socket::SocketResult Socket::createSocket(SocketCreationType socketCreationType, struct addrinfo* addressInfo, Socket& outSocket)
+{
+   SocketResult socketResult;
+   switch (socketCreationType)
+   {
+      case SocketCreationType::ACCEPT_INCOMING_CONNECTIONS:
+      {
+         socketResult = createSocket(addressInfo, outSocket);
+         if (outSocket.m_socket != INVALID_SOCKET)
+         {
+            int bindResult = bind(outSocket.m_socket, addressInfo->ai_addr, addressInfo->ai_addrlen);
+            if (bindResult == SOCKET_ERROR)
+            {
+               socketResult.m_error = SocketError::ERROR_BIND;
+               socketResult.m_internalError = WSAGetLastError();
+               closesocket(outSocket.m_socket);
+            }
+
+            outSocket.m_socketState = Socket::SocketState::BINDED;
+         }
+
+         break;
+      }
+      case SocketCreationType::CONNECT:
+      default:
+      {
+         struct addrinfo *currentAddressInfo = nullptr;
+
+         // Attempt to connect to an address until one succeeds
+         for (currentAddressInfo = addressInfo; currentAddressInfo != nullptr; currentAddressInfo = currentAddressInfo->ai_next)
+         {
+            // Create a SOCKET for connecting
+            socketResult = createSocket(currentAddressInfo, outSocket);
+            if (outSocket.m_socket != INVALID_SOCKET)
+            {
+               int connectResult = connect(outSocket.m_socket, currentAddressInfo->ai_addr, (int)currentAddressInfo->ai_addrlen);
+               if (connectResult == SOCKET_ERROR)
+               {
+                  socketResult.m_error = SocketError::ERROR_CONNECT;
+                  socketResult.m_internalError = WSAGetLastError();
+                  closesocket(outSocket.m_socket);
+                  continue;
+               }
+               outSocket.m_socketState = Socket::SocketState::CONNECTED;
+            }
+            break;
+         }
+
+         break;
+      }
    }
 
+   
    return socketResult;
 }
 

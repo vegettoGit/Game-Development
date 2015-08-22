@@ -16,6 +16,7 @@ struct Socket
       NONE,
       ERROR_CREATE,
       ERROR_BIND,
+      ERROR_CONNECT,
       ERROR_LISTEN,
       ERROR_ACCEPT,
       ERROR_RECEIVE,
@@ -86,7 +87,8 @@ struct Socket
 private:
 
    friend class Network;
-   static SocketResult createSocket(struct addrinfo& addressInfo, Socket& outSocket);
+   static SocketResult createSocket(SocketCreationType socketCreationType, struct addrinfo* addressInfo, Socket& outSocket);
+   static SocketResult createSocket(struct addrinfo* addressInfo, Socket& outSocket);
 };
 
 #endif
