@@ -4,6 +4,11 @@
 
 */
 
+#include "jobQueue.h"
+#include <atomic>
+#include <thread>
+#include <vector>
+
 class ThreadPool
 {
    ThreadPool();
@@ -15,9 +20,15 @@ class ThreadPool
    ThreadPool               (ThreadPool&& threadPool)      = delete;
    ThreadPool&  operator =  (ThreadPool&& threadPool)      = delete;
 
-   const unsigned  m_threadsCount;
+   void runThread           (unsigned numberThread);
+
+   const unsigned            m_threadsCount { std::thread::hardware_concurrency() };
+   std::vector<std::thread>  m_threads;
+   std::vector<JobQueue>     m_jobQueue     { m_threadsCount };
+   std::atomic<unsigned>     m_jobIndex     { 0 };
 
 public:
 
    static ThreadPool&  getInstance();
 };
+
