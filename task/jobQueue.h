@@ -21,11 +21,16 @@ class JobQueue
    std::deque<std::function<void()>> m_jobs;
    std::mutex                        m_mutex;
    std::condition_variable           m_ready;
+   bool                              m_done { false };
 
 public:
 
    JobQueue();
    ~JobQueue();
+   
+   void done();
+
+   bool pop(std::function<void()>& job);
 
    template<typename F>
    void push(F&& job) 

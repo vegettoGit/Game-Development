@@ -24,7 +24,7 @@ class ThreadPool
 
    const unsigned            m_threadsCount { std::thread::hardware_concurrency() };
    std::vector<std::thread>  m_threads;
-   std::vector<JobQueue>     m_jobQueue     { m_threadsCount };
+   std::vector<JobQueue>     m_jobQueues    { m_threadsCount };
    std::atomic<unsigned>     m_jobIndex     { 0 };
 
 public:

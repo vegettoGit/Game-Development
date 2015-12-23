@@ -10,6 +10,11 @@ ThreadPool::ThreadPool()
 
 ThreadPool::~ThreadPool()
 {
+   for (auto& jobQueue : m_jobQueues)
+   {
+      jobQueue.done();
+   }
+
    for (auto& t : m_threads)
    {
       t.join();
