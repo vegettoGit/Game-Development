@@ -30,7 +30,11 @@ public:
    
    void done();
 
+   // Blocking. Attempts to pop a job and if there isn't any, then wait until we can get one.
    bool pop(std::function<void()>& job);
+
+   // Non Blocking. If there aren't any jobs or the lock is locked, then just return.
+   bool attempt_pop(std::function<void()>& job);
 
    template<typename F>
    void push(F&& job) 

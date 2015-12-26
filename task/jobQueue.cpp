@@ -37,5 +37,20 @@ bool JobQueue::pop(std::function<void()>& job)
    return true;
 }
 
+bool JobQueue::attempt_pop(std::function<void()>& job)
+{
+   std::unique_lock<std::mutex> lock{ m_mutex, std::try_to_lock };
+   
+   if (!lock || m_jobs.empty())
+   {
+      return false;
+   }
+
+   job = std::move(m_jobs.front());
+   m_jobs.pop_front();
+
+   return true;
+}
+
 
 
