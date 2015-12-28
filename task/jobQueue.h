@@ -36,6 +36,7 @@ public:
    // Non Blocking. If there aren't any jobs or the lock is locked, then just return.
    bool attempt_pop(std::function<void()>& job);
 
+   // Blocking
    template<typename F>
    void push(F&& job) 
    {
@@ -44,5 +45,21 @@ public:
          m_jobs.emplace_back(std::forward<F>(job));
       }
       m_ready.notify_one();
+   }
+
+   // Non Blocking
+   template<typename F>
+   bool attempt_push(F&& job)
+   {
+      {
+         std::unique_lock<std::mutex> lock{ m_mutex, std::try_to_lock };
+         if (!lock)
+         {
+            return false;
+         }
+         m_jobs.emplace_back(std::forward<F>(job));
+      }
+      m_ready.notify_one();
+      return true;
    }
 };
