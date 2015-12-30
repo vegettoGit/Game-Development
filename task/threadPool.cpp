@@ -1,5 +1,6 @@
 #include "threadpool.h"
 
+
 ThreadPool::ThreadPool()
 {
    for (unsigned i = 0; i != m_threadsCount; ++i)
@@ -31,7 +32,23 @@ void ThreadPool::runThread(unsigned numberThread)
 {
    while (true) 
    {
-      // TODO: Attempt to grab a job from the job queue
+      // Attempt to grab a job from a job queue, then do the job
+      std::function<void()> job;
+
+      for (unsigned i = 0; i != m_threadsCount * 32; ++i) 
+      {
+         if (m_jobQueues[(numberThread + i) % m_threadsCount].attempt_pop(job))
+         {
+            break;
+         }
+      }
+
+      if (!job && !m_jobQueues[numberThread].pop(job))
+      {
+         break;
+      }
+
+      job();
    }
 }
 
