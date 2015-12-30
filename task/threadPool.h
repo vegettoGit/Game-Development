@@ -30,5 +30,23 @@ class ThreadPool
 public:
 
    static ThreadPool&  getInstance();
+
+   template <typename F>
+   void async_(F&& job)
+   {
+      auto currentJobIndex = m_jobIndex ++;
+
+      // Attempt to push a job in a job queue
+      for (unsigned i = 0; i != m_threadsCount; ++ i)
+      {
+         if (m_jobQueues[(currentJobIndex + i) % m_threadsCount].attempt_push(std::forward<F>(job)))
+         {
+            return;
+         }
+      }
+
+      m_jobQueues[currentJobIndex % m_threadsCount].push(std::forward<F>(job));
+   }
+
 };
 
