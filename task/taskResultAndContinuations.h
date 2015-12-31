@@ -32,4 +32,14 @@ public:
    virtual ~TaskResultAndContinuations() 
    {
    }
+
+   const R& get() 
+   {
+      std::unique_lock<std::mutex> lock{ m_mutex };
+      while (m_result.empty())
+      {
+         m_ready.wait(lock);
+      }
+      return m_result.back();
+   }
 };
