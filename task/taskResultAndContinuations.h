@@ -33,6 +33,31 @@ public:
    {
    }
 
+   template <typename F>
+   void then(F&& continuation)
+   {
+      bool resolved{ false };
+      {
+         std::unique_lock<std::mutex> lock{ m_mutex };
+
+         // If the task is not completed yet, push a continuation
+         if (m_result.empty())
+         {
+            m_then.push_back(std::forward<F>(continuation));
+         }
+         else
+         {
+            resolved = true;
+         }
+      }
+      
+      // If the task is completed, then we can push a job directly to the thread pool
+      if (resolved)
+      {
+         ThreadPool::getInstance().async_(std::move(continuation));
+      }
+   }
+
    const R& get() 
    {
       std::unique_lock<std::mutex> lock{ m_mutex };
