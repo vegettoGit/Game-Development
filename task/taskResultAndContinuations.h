@@ -33,6 +33,24 @@ public:
    {
    }
 
+   void set(R&& taskResult)
+   {
+      // Set the task result
+      std::vector<std::function<void()>> then;
+      {
+         std::unique_lock<std::mutex> lock{ m_mutex };
+         m_result.push_back(std::move(taskResult));
+         swap(m_then, then);
+      }
+      m_ready.notify_all();
+      
+      // Then push all the task continuations into the thread pool
+      for (const auto& job : then)
+      {
+         ThreadPool::getInstance().async_(std::move(job));
+      }
+   }
+
    template <typename F>
    void then(F&& continuation)
    {
