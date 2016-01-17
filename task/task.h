@@ -9,6 +9,7 @@
 #include "taskResultAndContinuations.h"
 
 template <typename> class Task;
+template <typename> class PackagedTask;
 
 template <typename R, typename... Args>
 class Task<R(Args...)> : TaskResultAndContinuations<R> 
@@ -28,6 +29,26 @@ public:
    {
       this->set(m_job(std::forward<A>(args)...));
       m_job = nullptr;
+   }
+};
+
+template<typename R, typename ...Args >
+class PackagedTask<R(Args...)>
+{
+   std::weak_ptr<Task<R(Args...)>> m_task;
+
+public:
+
+   PackagedTask() = default;
+
+   template <typename... A>
+   void operator()(A&&... args) const 
+   {
+      auto task = m_task.lock();
+      if (task)
+      {
+         (*task)(std::forward<A>(args)...);
+      }
    }
 };
 
