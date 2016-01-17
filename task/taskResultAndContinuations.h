@@ -86,3 +86,18 @@ public:
       return m_result.back();
    }
 };
+
+template <typename R>
+class Future
+{
+   std::shared_ptr<TaskResultAndContinuations<R>> m_taskResultAndContinuations;
+
+public:
+
+   Future() = default;
+
+   const R& get() const 
+   { 
+      return m_taskResultAndContinuations->get();
+   }
+};
