@@ -22,5 +22,12 @@ public:
       : m_job(std::forward<F>(job))
    {
    }
+
+   template <typename... A>
+   void operator()(A&&... args) 
+   {
+      this->set(m_job(std::forward<A>(args)...));
+      m_job = nullptr;
+   }
 };
 
