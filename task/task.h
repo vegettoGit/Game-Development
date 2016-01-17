@@ -8,8 +8,23 @@
 
 #include "taskResultAndContinuations.h"
 
+
 template <typename> class Task;
 template <typename> class PackagedTask;
+template <typename> class Future;
+
+template <typename> struct ResultOf;
+
+template <typename R, typename... Args>
+struct ResultOf<R(Args...)>
+{
+   using type = R;
+};
+
+template <typename F> using ResultOfT = typename ResultOf<F>::type;
+
+template <typename S, typename F>
+auto Package(F&& f)->std::pair<PackagedTask<S>, Future<ResultOfT<S>>>;
 
 
 /*
@@ -37,21 +52,42 @@ public:
 };
 
 
-/* 
-   Package 
+/*
+   Future
 */
-template <typename> struct ResultOf;
+template <typename R>
+class Future
+{
+   std::shared_ptr<TaskResultAndContinuations<R>> m_taskResultAndContinuations;
 
-template <typename R, typename... Args>
-struct ResultOf<R(Args...)> 
-{ 
-   using type = R; 
+   template <typename S, typename F>
+   friend auto Package(F&& f)->std::pair<PackagedTask<S>, Future<ResultOfT<S>>>;
+
+   explicit Future(std::shared_ptr<TaskResultAndContinuations<R>> taskResultAndContinuations)
+      : m_taskResultAndContinuations(std::move(taskResultAndContinuations))
+   {
+   }
+
+public:
+
+   Future() = default;
+
+   template <typename F>
+   auto then(F&& f)
+   {
+      auto pack = Package<ResultOfT<F(R)>()>([taskResultAndContinuations = m_taskResultAndContinuations, continuation = std::forward<F>(f)]()
+      {
+         return continuation(taskResultAndContinuations->m_result.back());
+      });
+      m_taskResultAndContinuations->then(std::move(pack.first));
+      return pack.second;
+   }
+
+   const R& get() const
+   {
+      return m_taskResultAndContinuations->get();
+   }
 };
-
-template <typename F> using ResultOfT = typename ResultOf<F>::type;
-
-template <typename S, typename F>
-auto Package(F&& f)->std::pair<PackagedTask<S>, Future<ResultOfT<S>>>;
 
 
 /*
@@ -61,6 +97,14 @@ template<typename R, typename ...Args >
 class PackagedTask<R(Args...)>
 {
    std::weak_ptr<Task<R(Args...)>> m_task;
+
+   template <typename S, typename F>
+   friend auto Package(F&& f)->std::pair<PackagedTask<S>, Future<ResultOfT<S>>>;
+
+   explicit PackagedTask(std::weak_ptr<Task<R(Args...)>> task) 
+      : m_task(std::move(task)) 
+   {
+   }
 
 public:
 
@@ -76,4 +120,15 @@ public:
       }
    }
 };
+
+
+/* 
+    Package
+*/
+template <typename S, typename F>
+auto Package(F&& f) -> std::pair<PackagedTask<S>, Future<ResultOfT<S>>>
+{
+   auto task = std::make_shared<Task<S>>(std::forward<F>(f));
+   return make_pair(PackagedTask<S>(task), Future<ResultOfT<S>>(task));
+}
 
