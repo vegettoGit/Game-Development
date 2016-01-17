@@ -11,6 +11,10 @@
 template <typename> class Task;
 template <typename> class PackagedTask;
 
+
+/*
+   Task
+*/
 template <typename R, typename... Args>
 class Task<R(Args...)> : TaskResultAndContinuations<R> 
 {
@@ -32,6 +36,27 @@ public:
    }
 };
 
+
+/* 
+   Package 
+*/
+template <typename> struct ResultOf;
+
+template <typename R, typename... Args>
+struct ResultOf<R(Args...)> 
+{ 
+   using type = R; 
+};
+
+template <typename F> using ResultOfT = typename ResultOf<F>::type;
+
+template <typename S, typename F>
+auto Package(F&& f)->std::pair<PackagedTask<S>, Future<ResultOfT<S>>>;
+
+
+/*
+   PackagedTask
+*/
 template<typename R, typename ...Args >
 class PackagedTask<R(Args...)>
 {

@@ -87,6 +87,10 @@ public:
    }
 };
 
+
+/*
+   Future
+*/
 template <typename R>
 class Future
 {
