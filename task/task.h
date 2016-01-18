@@ -24,7 +24,7 @@ struct ResultOf<R(Args...)>
 template <typename F> using ResultOfT = typename ResultOf<F>::type;
 
 template <typename S, typename F>
-auto Package(F&& f)->std::pair<PackagedTask<S>, Future<ResultOfT<S>>>;
+auto Package(F&& job)->std::pair<PackagedTask<S>, Future<ResultOfT<S>>>;
 
 
 /*
@@ -61,7 +61,7 @@ class Future
    std::shared_ptr<TaskResultAndContinuations<R>> m_taskResultAndContinuations;
 
    template <typename S, typename F>
-   friend auto Package(F&& f)->std::pair<PackagedTask<S>, Future<ResultOfT<S>>>;
+   friend auto Package(F&& job)->std::pair<PackagedTask<S>, Future<ResultOfT<S>>>;
 
    explicit Future(std::shared_ptr<TaskResultAndContinuations<R>> taskResultAndContinuations)
       : m_taskResultAndContinuations(std::move(taskResultAndContinuations))
@@ -73,9 +73,9 @@ public:
    Future() = default;
 
    template <typename F>
-   auto then(F&& f)
+   auto then(F&& job)
    {
-      auto pack = Package<ResultOfT<F(R)>()>([taskResultAndContinuations = m_taskResultAndContinuations, continuation = std::forward<F>(f)]()
+      auto pack = Package<ResultOfT<F(R)>()>([taskResultAndContinuations = m_taskResultAndContinuations, continuation = std::forward<F>(job)]()
       {
          return continuation(taskResultAndContinuations->m_result.back());
       });
@@ -99,7 +99,7 @@ class PackagedTask<R(Args...)>
    std::weak_ptr<Task<R(Args...)>> m_task;
 
    template <typename S, typename F>
-   friend auto Package(F&& f)->std::pair<PackagedTask<S>, Future<ResultOfT<S>>>;
+   friend auto Package(F&& job)->std::pair<PackagedTask<S>, Future<ResultOfT<S>>>;
 
    explicit PackagedTask(std::weak_ptr<Task<R(Args...)>> task) 
       : m_task(std::move(task)) 
@@ -126,9 +126,9 @@ public:
     Package
 */
 template <typename S, typename F>
-auto Package(F&& f) -> std::pair<PackagedTask<S>, Future<ResultOfT<S>>>
+auto Package(F&& job) -> std::pair<PackagedTask<S>, Future<ResultOfT<S>>>
 {
-   auto task = std::make_shared<Task<S>>(std::forward<F>(f));
+   auto task = std::make_shared<Task<S>>(std::forward<F>(job));
    return make_pair(PackagedTask<S>(task), Future<ResultOfT<S>>(task));
 }
 
