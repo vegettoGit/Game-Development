@@ -129,6 +129,22 @@ template <typename S, typename F>
 auto Package(F&& job) -> std::pair<PackagedTask<S>, Future<ResultOfT<S>>>
 {
    auto task = std::make_shared<Task<S>>(std::forward<F>(job));
-   return make_pair(PackagedTask<S>(task), Future<ResultOfT<S>>(task));
+   return std::make_pair(PackagedTask<S>(task), Future<ResultOfT<S>>(task));
+}
+
+
+/*
+   Async
+*/
+template <typename F, typename ...Args>
+auto async(F&& job, Args&&... args)
+{
+   using resultType = ResultOfT<F(Args...)>;
+
+   auto pack = Package<resultType()>(std::bind(std::forward<F>(job), std::forward<Args>(args)...));
+
+   ThreadPool::getInstance().async_(std::move(std::get<0>(pack)));
+
+   return std::get<1>(pack);
 }
 
