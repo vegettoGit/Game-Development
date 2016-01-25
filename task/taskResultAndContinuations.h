@@ -11,10 +11,11 @@
 
 */
 
+#include "threadPool.h"
+
 template <typename R>
 class TaskResultAndContinuations
 {
-   std::vector<R>                     m_result;
    std::mutex                         m_mutex;
    std::condition_variable            m_ready;
    std::vector<std::function<void()>> m_then;
@@ -26,6 +27,8 @@ class TaskResultAndContinuations
    TaskResultAndContinuations&  operator =  (TaskResultAndContinuations&& taskResultAndContinuations) = delete;
 
 public:
+
+   std::vector<R>                     m_result;
 
    TaskResultAndContinuations() = default;
 
