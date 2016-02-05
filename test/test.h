@@ -1,4 +1,7 @@
 // #define TEST_VECTOR3
+// #define TEST_GRAPHICS
 // #define TEST_LINK_CONFIGURATION
-#define TEST_GRAPHICS
+// #define TEST_THREAD_POOL
+#define TEST_NETWORK_SERVER
+
 
