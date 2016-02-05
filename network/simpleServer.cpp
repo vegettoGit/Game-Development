@@ -143,12 +143,12 @@ void SimpleServer::createServerWork()
    });
 }
 
-SimpleServer::ServerState SimpleServer::getServerState()
+SimpleServer::ServerState SimpleServer::getServerState() const
 {
    return m_serverState;
 }
 
-char* SimpleServer::getErrorText()
+const char* SimpleServer::getErrorText() const
 {
    return m_errorText;
 }

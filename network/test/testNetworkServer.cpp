@@ -21,13 +21,13 @@ struct TestNetworkServer : IGraphicsGame
    {
    }
 
-   void displayText(const char* text, TextType textType = TextType::NONE)
+   void displayText(const char* text, TextType textType = TextType::NONE) const
    {
       Color color = (textType == TextType::TEXT_ERROR) ? Color(1.0f, 0.0f, 0.0f) : Color(1.0f, 1.0f, 1.0f) ;
       Graphics::getInstance().drawText(15.0f, 30.0f, color, text);
    }
 
-   void displayServerFeedBack()
+   void displayServerFeedBack() const
    {
       switch (m_simpleServer.getServerState())
       {

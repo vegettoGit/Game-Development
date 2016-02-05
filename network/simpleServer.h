@@ -33,8 +33,8 @@ public:
    ~SimpleServer();
 
    void        createServerWork();
-   ServerState getServerState  ();
-   char*       getErrorText    ();
+   ServerState getServerState  () const;
+   const char* getErrorText    () const;
 
 private:
 
