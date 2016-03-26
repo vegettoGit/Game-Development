@@ -11,19 +11,18 @@
 
 class JobQueue
 {
-
-   JobQueue               (const JobQueue& jobQueue) = delete;
-   JobQueue&  operator =  (const JobQueue& jobQueue) = delete;
-
-   JobQueue               (JobQueue&& jobQueue)      = delete;
-   JobQueue&  operator =  (JobQueue&& jobQueue)      = delete;
-
    std::deque<std::function<void()>> m_jobs;
    std::mutex                        m_mutex;
    std::condition_variable           m_ready;
    bool                              m_done { false };
 
 public:
+
+   JobQueue               (const JobQueue& jobQueue) = delete;
+   JobQueue&  operator =  (const JobQueue& jobQueue) = delete;
+
+   JobQueue               (JobQueue&& jobQueue)      = delete;
+   JobQueue&  operator =  (JobQueue&& jobQueue)      = delete;
 
    JobQueue();
    ~JobQueue();

@@ -14,12 +14,6 @@ class ThreadPool
    ThreadPool();
    ~ThreadPool();
 
-   ThreadPool               (const ThreadPool& threadPool) = delete;
-   ThreadPool&  operator =  (const ThreadPool& threadPool) = delete;
-
-   ThreadPool               (ThreadPool&& threadPool)      = delete;
-   ThreadPool&  operator =  (ThreadPool&& threadPool)      = delete;
-
    void runThread           (unsigned numberThread);
 
    const unsigned            m_threadsCount { std::thread::hardware_concurrency() };
@@ -30,6 +24,12 @@ class ThreadPool
 public:
 
    static ThreadPool&  getInstance();
+
+   ThreadPool               (const ThreadPool& threadPool) = delete;
+   ThreadPool&  operator =  (const ThreadPool& threadPool) = delete;
+
+   ThreadPool               (ThreadPool&& threadPool)      = delete;
+   ThreadPool&  operator =  (ThreadPool&& threadPool)      = delete;
 
    template <typename F>
    void async_(F&& job)

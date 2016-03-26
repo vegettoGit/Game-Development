@@ -14,12 +14,6 @@ class LinkConfiguration
    LinkConfiguration                     ();
    ~LinkConfiguration                    ();
 
-   LinkConfiguration                     (const LinkConfiguration& v)   = delete;
-   LinkConfiguration&       operator =   (const LinkConfiguration& v)   = delete;
-
-   LinkConfiguration                     (LinkConfiguration&& v)        = delete;
-   LinkConfiguration&       operator =   (LinkConfiguration&& v)        = delete;
-
 public:
 
    enum class JointSolution
@@ -30,9 +24,15 @@ public:
       ERROR 
    };
 
+   LinkConfiguration                     (const LinkConfiguration& v) = delete;
+   LinkConfiguration&       operator =   (const LinkConfiguration& v) = delete;
+
+   LinkConfiguration                     (LinkConfiguration&& v)      = delete;
+   LinkConfiguration&       operator =   (LinkConfiguration&& v)      = delete;
+
    static LinkConfiguration& getInstance ();
 
-   JointSolution             solve(const Vector3& link1StartPoint, const Vector3& link2EndPoint, float link1Length, float link2Length, Vector3& solution);
+   JointSolution             solve       (const Vector3& link1StartPoint, const Vector3& link2EndPoint, float link1Length, float link2Length, Vector3& solution);
 
 };
 

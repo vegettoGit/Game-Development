@@ -32,17 +32,17 @@ public:
    SimpleServer();
    ~SimpleServer();
 
-   void        createServerWork();
-   ServerState getServerState  () const;
-   const char* getErrorText    () const;
-
-private:
-
    SimpleServer             (const SimpleServer& server) = delete;
    SimpleServer& operator = (const SimpleServer& server) = delete;
 
    SimpleServer             (SimpleServer&& server)      = delete;
    SimpleServer& operator = (SimpleServer&& server)      = delete;
+
+   void        createServerWork();
+   ServerState getServerState  () const;
+   const char* getErrorText    () const;
+
+private:
 
    void setErrorState       (const char* text, int error);
 

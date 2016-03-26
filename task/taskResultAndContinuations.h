@@ -20,19 +20,19 @@ class TaskResultAndContinuations
    std::condition_variable            m_ready;
    std::vector<std::function<void()>> m_then;
 
-   TaskResultAndContinuations               (const TaskResultAndContinuations& taskResultAndContinuations) = delete;
-   TaskResultAndContinuations&  operator =  (const TaskResultAndContinuations& taskResultAndContinuations) = delete;
-
-   TaskResultAndContinuations               (TaskResultAndContinuations&& taskResultAndContinuations) = delete;
-   TaskResultAndContinuations&  operator =  (TaskResultAndContinuations&& taskResultAndContinuations) = delete;
-
 public:
 
    std::vector<R>                     m_result;
 
-   TaskResultAndContinuations() = default;
+   TaskResultAndContinuations               ()                                                             = default;
 
-   virtual ~TaskResultAndContinuations() 
+   TaskResultAndContinuations               (const TaskResultAndContinuations& taskResultAndContinuations) = delete;
+   TaskResultAndContinuations&  operator =  (const TaskResultAndContinuations& taskResultAndContinuations) = delete;
+
+   TaskResultAndContinuations               (TaskResultAndContinuations&& taskResultAndContinuations)      = delete;
+   TaskResultAndContinuations&  operator =  (TaskResultAndContinuations&& taskResultAndContinuations)      = delete;
+
+   virtual ~TaskResultAndContinuations      () 
    {
    }
 

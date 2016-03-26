@@ -15,14 +15,7 @@ class Graphics
    Graphics();
    ~Graphics();
 
-   Graphics                                     (const Graphics& v) = delete;
-   Graphics&              operator =            (const Graphics& v) = delete;
-
-   Graphics                                     (Graphics&& v) = delete;
-   Graphics&              operator =            (Graphics&& v) = delete;
-
    static void            updateGame            ();
-
 
    static std::unique_ptr<IGraphicsGame>  s_graphicsGame;
 
@@ -34,6 +27,12 @@ public:
       EXTENSION_ERROR,
       ERROR
    };
+
+   Graphics                                     (const Graphics& v) = delete;
+   Graphics&              operator =            (const Graphics& v) = delete;
+
+   Graphics                                     (Graphics&& v)      = delete;
+   Graphics&              operator =            (Graphics&& v)      = delete;
 
    static Graphics&       getInstance           ();
    static GraphicsResult  init                  (int argc, char* argv[], const char* name, std::unique_ptr<IGraphicsGame> graphicsGame);

@@ -56,6 +56,12 @@ public:
       int          m_internalError;
    };
 
+   Network                                (const Network&)   = delete;
+   Network&          operator =           (const Network& v) = delete;
+
+   Network                                (Network&&)        = delete;
+   Network&          operator =           (Network&& v)      = delete;
+
    static Network&   getInstance          ();
    NetworkResult     initialize           ();
    NetworkResult     createSocket         (const char* hostName, const char* serviceName, NetworkAddressType addressType, NetworkProtocol protocol, Socket::SocketCreationType socketCreationType, Socket& outSocket);
@@ -63,13 +69,6 @@ public:
 private:
 
    Network                                ()                         ;
-
-   Network                                (const Network& )  = delete;
-   Network&          operator =           (const Network& v) = delete;
-
-   Network                                (Network&& )       = delete;
-   Network&          operator =           (Network&& v)      = delete;
-
    ~Network                               ();
    
    NetworkResult     getAddressInfo       (const char* hostName, const char* serviceName, NetworkAddressType addressType, NetworkProtocol protocol, Socket::SocketCreationType socketCreationType, struct addrinfo*& outAddressInfo);
