@@ -46,6 +46,7 @@ private:
    Future<Network::NetworkResult> m_initializeTask;
    Future<Socket::SocketResult>   m_sendTask;
 
+   Socket      m_socket;
    ClientState m_clientState;
    char        m_errorText[64];
 

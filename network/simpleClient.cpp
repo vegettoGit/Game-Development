@@ -15,9 +15,8 @@ SimpleClient::~SimpleClient()
 void SimpleClient::createClientWork()
 {
    m_clientState = ClientState::INITIALIZE;
-   Socket socket;
 
-   // Initialize the network and create a socket for connection to the server
+   // Initialize the network and create a socket for connecting to the server
    m_initializeTask = async([&]
    { 
       Network::NetworkResult networkResult = Network::getInstance().initialize();
@@ -34,7 +33,7 @@ void SimpleClient::createClientWork()
                                                              NetworkProperties::s_networkAddressType, 
                                                              Network::NetworkProtocol::TCP, 
                                                              Socket::SocketCreationType::CONNECT, 
-                                                             socket);
+                                                             m_socket);
 
          if (networkResult.m_error != Network::NetworkError::NONE)
          {
@@ -56,7 +55,7 @@ void SimpleClient::createClientWork()
          m_clientState = ClientState::SEND;
 
          int numberSentBytes = 0;
-         socketResult = socket.sendBytes(sendbuf, (int)strlen(sendbuf), numberSentBytes);
+         socketResult = m_socket.sendBytes(sendbuf, (int)strlen(sendbuf), numberSentBytes);
          if (numberSentBytes == 0)
          {
             setErrorState("Error sending bytes to the server", socketResult.m_internalError);
@@ -64,7 +63,7 @@ void SimpleClient::createClientWork()
          else
          {
             m_clientState = ClientState::SHUT_DOWN;
-            socketResult = socket.shutdownOperation(Socket::SocketOperation::SEND);
+            socketResult = m_socket.shutdownOperation(Socket::SocketOperation::SEND);
             if (socketResult.m_error != Socket::SocketError::NONE)
             {
                setErrorState("Error shutting down sending operation", socketResult.m_internalError);
@@ -77,11 +76,11 @@ void SimpleClient::createClientWork()
                int numberReceivedBytes = 0;
                do
                {
-                  socketResult = socket.receiveBytes(recvbuf, recvbuflen, numberReceivedBytes);
+                  socketResult = m_socket.receiveBytes(recvbuf, recvbuflen, numberReceivedBytes);
                   if (numberReceivedBytes == 0)
                   {
                      m_clientState = ClientState::CLOSE;
-                     socketResult = socket.close();
+                     socketResult = m_socket.close();
                      if (socketResult.m_error != Socket::SocketError::NONE)
                      {
                         setErrorState("Error closing socket", socketResult.m_internalError);

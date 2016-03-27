@@ -50,6 +50,7 @@ private:
    Future<Socket::SocketResult>   m_listenTask;
    Future<Socket::SocketResult>   m_receiveTask;
 
+   Socket      m_socket;
    ServerState m_serverState;
    char        m_errorText[64];
 

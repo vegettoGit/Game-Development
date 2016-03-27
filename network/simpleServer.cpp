@@ -17,7 +17,6 @@ SimpleServer::~SimpleServer()
 void SimpleServer::createServerWork()
 {
    m_serverState = ServerState::INITIALIZE;
-   Socket socket;
 
    // Initialize the network and create a socket
    m_initializeTask = async([&]
@@ -35,7 +34,7 @@ void SimpleServer::createServerWork()
                                                              NetworkProperties::s_networkAddressType, 
                                                              Network::NetworkProtocol::TCP, 
                                                              Socket::SocketCreationType::ACCEPT_INCOMING_CONNECTIONS, 
-                                                             socket);
+                                                             m_socket);
 
          if (networkResult.m_error != Network::NetworkError::NONE)
          {
@@ -54,7 +53,7 @@ void SimpleServer::createServerWork()
       if (networkResult.m_error == Network::NetworkError::NONE)
       {
          m_serverState = ServerState::LISTEN;
-         socketResult = socket.listenIncomingConnection();
+         socketResult = m_socket.listenIncomingConnection();
          if (socketResult.m_error != Socket::SocketError::NONE)
          {
             setErrorState("Listen failed with error", socketResult.m_internalError);
@@ -62,7 +61,7 @@ void SimpleServer::createServerWork()
          else
          {
             m_serverState = ServerState::ACCEPT;
-            socketResult = socket.acceptIncomingConnection();
+            socketResult = m_socket.acceptIncomingConnection();
 
             if (socketResult.m_error != Socket::SocketError::NONE)
             {
@@ -87,14 +86,14 @@ void SimpleServer::createServerWork()
          int numberReceivedBytes = 0;
          do
          {
-            socketResult = socket.receiveBytes(recvbuf, recvbuflen, numberReceivedBytes);
+            socketResult = m_socket.receiveBytes(recvbuf, recvbuflen, numberReceivedBytes);
             if (numberReceivedBytes > 0)
             {
                m_serverState = ServerState::RECEIVE;
 
                // Echo the buffer back to the sender
                int numberSentBytes = 0;
-               socketResult = socket.sendBytes(recvbuf, recvbuflen, numberSentBytes);
+               socketResult = m_socket.sendBytes(recvbuf, recvbuflen, numberSentBytes);
                if (numberSentBytes == 0)
                {
                   setErrorState("Send echo failed with error", socketResult.m_internalError);
@@ -112,16 +111,16 @@ void SimpleServer::createServerWork()
             }
          } while (numberReceivedBytes > 0);
 
-
          m_serverState = ServerState::SHUT_DOWN;
-         socketResult = socket.shutdownOperation(Socket::SocketOperation::SEND);
+         socketResult = m_socket.shutdownOperation(Socket::SocketOperation::SEND);
+
          if (socketResult.m_error != Socket::SocketError::NONE)
          {
-            setErrorState("shutdown failed with error", socketResult.m_internalError);
+            setErrorState("Shutdown failed with error", socketResult.m_internalError);
          }
          else
          {
-            socketResult = socket.close();
+            socketResult = m_socket.close();
             if (socketResult.m_error != Socket::SocketError::NONE)
             {
                setErrorState("Error closing socket", socketResult.m_internalError);
