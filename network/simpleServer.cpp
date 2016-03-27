@@ -2,10 +2,8 @@
 #include "simpleServer.h"
 #include "networkProperties.h"
 
-
-const char* NetworkProperties::s_defaultPort   = "27015";
+const char* NetworkProperties::s_defaultPort = "27015";
 const char* NetworkProperties::s_serverAddress = "127.0.0.1";
-
 
 SimpleServer::SimpleServer()
    : m_serverState(ServerState::NONE)
@@ -14,14 +12,6 @@ SimpleServer::SimpleServer()
 
 SimpleServer::~SimpleServer()
 {
-}
-   
-void SimpleServer::setErrorState(const char* text, int error)
-{
-   std::string errorString = text + std::string(" %d");
-   sprintf_s(m_errorText, errorString.c_str(), error);
-
-   m_serverState = ServerState::SERVER_ERROR;
 }
 
 void SimpleServer::createServerWork()
@@ -141,6 +131,14 @@ void SimpleServer::createServerWork()
 
       return socketResult;
    });
+}
+
+void SimpleServer::setErrorState(const char* text, int error)
+{
+   std::string errorString = text + std::string(" %d");
+   sprintf_s(m_errorText, errorString.c_str(), error);
+
+   m_serverState = ServerState::SERVER_ERROR;
 }
 
 SimpleServer::ServerState SimpleServer::getServerState() const
