@@ -4,49 +4,14 @@
 
 #include "graphics.h"
 #include "graphicsGame.h"
-#include "color.h"
 #include "simpleClient.h"
-
+#include "debugUIHelpers.h"
 
 struct TestNetworkClient : IGraphicsGame
 {
-   enum class TextType
-   {
-      NONE,
-      TEXT_ERROR
-   };
-
    TestNetworkClient(int width, int height)
       : IGraphicsGame(GraphicsGameProperties(width, height))
    {
-   }
-
-   void displayText(const char* text, TextType textType = TextType::NONE)
-   {
-      Color color = textType == TextType::TEXT_ERROR ? Color(1.0f, 0.0f, 0.0f) : Color(1.0f, 1.0f, 1.0f);
-      Graphics::getInstance().drawText(15.0f, 30.0f, color, text);
-   }
-
-   void displayClientFeedBack()
-   {
-      switch (m_simpleClient.getClientState())
-      {
-      case SimpleClient::ClientState::CREATE:
-         displayText("Creating socket for connection");
-         break;
-      case SimpleClient::ClientState::SEND:
-         displayText("Sending bytes");
-         break;
-      case SimpleClient::ClientState::SHUT_DOWN:
-         displayText("Shutting down socket sending operation");
-         break;
-      case SimpleClient::ClientState::CLOSE:
-         displayText("Closing connection");
-         break;
-      case SimpleClient::ClientState::CLIENT_ERROR:
-         displayText(m_simpleClient.getErrorText(), TextType::TEXT_ERROR);
-         break;
-      }
    }
 
    void gameUpdate(int millisecondsSinceGameStart) override
@@ -56,9 +21,41 @@ struct TestNetworkClient : IGraphicsGame
          m_simpleClient.createClientWork();
       }
 
-      displayClientFeedBack();
+      displayClientFeedBack(millisecondsSinceGameStart);
 
       Graphics::getInstance().update();
+   }
+
+private:
+
+   void displayClientFeedBack(int millisecondsSinceGameStart)
+   {
+      std::string displayMessageText;
+
+      switch (m_simpleClient.getClientState())
+      {
+      case SimpleClient::ClientState::CREATE:
+         displayMessageText = "Creating socket for connection";
+         break;
+      case SimpleClient::ClientState::SEND:
+         displayMessageText = "Sending bytes";
+         break;
+      case SimpleClient::ClientState::SHUT_DOWN:
+         displayMessageText = "Shutting down socket sending operation";
+         break;
+      case SimpleClient::ClientState::CLOSE:
+         displayMessageText = "Closing connection";
+         break;
+      case SimpleClient::ClientState::CLIENT_ERROR:
+         DebugUIHelpers::displayText(m_simpleClient.getErrorText(), DebugUIHelpers::TextType::TEXT_ERROR);
+         break;
+      }
+
+      if (displayMessageText.size() > 0)
+      {
+         displayMessageText += DebugUIHelpers::getUIDotsFromTime(millisecondsSinceGameStart);
+         DebugUIHelpers::displayText(displayMessageText.c_str());
+      }
    }
 
    SimpleClient m_simpleClient;

@@ -4,55 +4,14 @@
 
 #include "graphics.h"
 #include "graphicsGame.h"
-#include "color.h"
 #include "simpleServer.h"
+#include "debugUIHelpers.h"
 
 struct TestNetworkServer : IGraphicsGame
 {
-
-   enum class TextType
-   {
-      NONE,
-      TEXT_ERROR
-   };
-
    TestNetworkServer(int width, int height)
-      :  IGraphicsGame(GraphicsGameProperties(width, height))
+      : IGraphicsGame(GraphicsGameProperties(width, height))
    {
-   }
-
-   void displayText(const char* text, TextType textType = TextType::NONE) const
-   {
-      Color color = (textType == TextType::TEXT_ERROR) ? Color(1.0f, 0.0f, 0.0f) : Color(1.0f, 1.0f, 1.0f) ;
-      Graphics::getInstance().drawText(15.0f, 30.0f, color, text);
-   }
-
-   void displayServerFeedBack() const
-   {
-      switch (m_simpleServer.getServerState())
-      {
-      case SimpleServer::ServerState::CREATE:
-         displayText("Creating listen socket");
-         break;
-      case SimpleServer::ServerState::LISTEN:
-         displayText("Listening");
-         break;
-      case SimpleServer::ServerState::ACCEPT:
-         displayText("Accepting");
-         break;
-      case SimpleServer::ServerState::RECEIVE:
-         displayText("Receiving and echoing bytes");
-         break;
-      case SimpleServer::ServerState::CLOSE:
-         displayText("Connection closing");
-         break;
-      case SimpleServer::ServerState::SHUT_DOWN:
-         displayText("Shutting down");
-         break;
-      case SimpleServer::ServerState::SERVER_ERROR:
-         displayText(m_simpleServer.getErrorText(), TextType::TEXT_ERROR);
-         break;
-      }
    }
 
    void gameUpdate(int millisecondsSinceGameStart) override
@@ -62,9 +21,48 @@ struct TestNetworkServer : IGraphicsGame
          m_simpleServer.createServerWork();
       }
 
-      displayServerFeedBack();
+      displayServerFeedBack(millisecondsSinceGameStart);
 
       Graphics::getInstance().update();
+   }
+
+private:
+
+   void displayServerFeedBack(int millisecondsSinceGameStart) const
+   {
+      std::string displayMessageText;
+
+      switch (m_simpleServer.getServerState())
+      {
+      case SimpleServer::ServerState::CREATE:
+         displayMessageText = "Creating listen socket";
+         break;
+      case SimpleServer::ServerState::LISTEN:
+         displayMessageText = "Listening";
+         break;
+      case SimpleServer::ServerState::ACCEPT:
+         displayMessageText = "Accepting";
+         break;
+      case SimpleServer::ServerState::RECEIVE:
+         displayMessageText = "Receiving and echoing bytes";
+         break;
+      case SimpleServer::ServerState::CLOSE:
+         displayMessageText = "Connection closing";
+         break;
+      case SimpleServer::ServerState::SHUT_DOWN:
+         displayMessageText = "Shutting down";
+         break;
+      case SimpleServer::ServerState::SERVER_ERROR:
+         DebugUIHelpers::displayText(m_simpleServer.getErrorText(), DebugUIHelpers::TextType::TEXT_ERROR);
+         break;
+      }
+
+      if (displayMessageText.size() > 0)
+      {
+         displayMessageText += DebugUIHelpers::getUIDotsFromTime(millisecondsSinceGameStart);
+         DebugUIHelpers::displayText(displayMessageText.c_str());
+      }
+      
    }
 
    SimpleServer m_simpleServer;
