@@ -49,7 +49,7 @@ struct TestNetworkClient : IGraphicsGame
       }
    }
 
-   void gameUpdate() override
+   void gameUpdate(int millisecondsSinceGameStart) override
    {
       if (m_simpleClient.getClientState() == SimpleClient::ClientState::NONE)
       {

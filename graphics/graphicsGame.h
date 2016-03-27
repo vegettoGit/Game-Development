@@ -90,9 +90,9 @@ struct IGraphicsGame
    IGraphicsGame& operator = (const IGraphicsGame& v) = delete;
    IGraphicsGame& operator = (IGraphicsGame&& v)      = delete;
 
-   virtual void   gameUpdate() = 0;
+   virtual void   gameUpdate(int millisecondsSinceGameStart) = 0;
 
-   void           update();
+   void           update(int millisecondsSinceGameStart);
    void           setCameraMode(Camera::CameraMode cameraMode);
 
    GraphicsGameProperties m_properties;

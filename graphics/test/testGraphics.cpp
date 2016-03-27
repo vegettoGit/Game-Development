@@ -18,7 +18,7 @@ struct TestGraphicsGame : IGraphicsGame
    {
    }
 
-   void gameUpdate() override
+   void gameUpdate(int millisecondsSinceGameStart) override
    {
       Graphics& graphics = Graphics::getInstance();
       graphics.drawAxis(30.0f, Color(1.0f, 1.0f, 1.0f));

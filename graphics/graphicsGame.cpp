@@ -71,7 +71,7 @@ IGraphicsGame::~IGraphicsGame()
 {
 }
 
-void IGraphicsGame::update()
+void IGraphicsGame::update(int millisecondsSinceGameStart)
 {
    switch (m_camera.m_cameraMode)
    {
@@ -88,7 +88,7 @@ void IGraphicsGame::update()
    }
    }
 
-   gameUpdate();
+   gameUpdate(millisecondsSinceGameStart);
 }
 
 void IGraphicsGame::setCameraMode(Camera::CameraMode cameraMode)

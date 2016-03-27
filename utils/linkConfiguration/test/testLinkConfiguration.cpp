@@ -36,7 +36,7 @@ struct TestLinkConfigurationGame : IGraphicsGame
    {
    }
 
-   void gameUpdate() override
+   void gameUpdate(int millisecondsSinceGameStart) override
    {
       Graphics::getInstance().drawAxis(13.0f, Color(0.0f, 1.0f, 0.0f));
 

@@ -55,7 +55,7 @@ struct TestNetworkServer : IGraphicsGame
       }
    }
 
-   void gameUpdate() override
+   void gameUpdate(int millisecondsSinceGameStart) override
    {
       if (m_simpleServer.getServerState() == SimpleServer::ServerState::NONE)
       {
