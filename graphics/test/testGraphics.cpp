@@ -41,6 +41,10 @@ struct TestGraphicsGame : IGraphicsGame
       graphics.update();
    }
 
+   void initialize() override
+   {
+   }
+
    static const char* s_textExample;
 };
 

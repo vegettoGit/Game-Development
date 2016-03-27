@@ -90,6 +90,7 @@ struct IGraphicsGame
    IGraphicsGame& operator = (const IGraphicsGame& v) = delete;
    IGraphicsGame& operator = (IGraphicsGame&& v)      = delete;
 
+   virtual void   initialize()                               = 0;
    virtual void   gameUpdate(int millisecondsSinceGameStart) = 0;
 
    void           update(int millisecondsSinceGameStart);

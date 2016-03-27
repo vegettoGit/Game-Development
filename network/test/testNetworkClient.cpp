@@ -16,14 +16,14 @@ struct TestNetworkClient : IGraphicsGame
 
    void gameUpdate(int millisecondsSinceGameStart) override
    {
-      if (m_simpleClient.getClientState() == SimpleClient::ClientState::NONE)
-      {
-         m_simpleClient.createClientWork();
-      }
-
       displayClientFeedBack(millisecondsSinceGameStart);
 
       Graphics::getInstance().update();
+   }
+
+   void initialize() override
+   {
+      m_simpleClient.createClientWork();
    }
 
 private:

@@ -109,7 +109,6 @@ void Graphics::updateGame()
          break;
       }
    }
-   
 }
 
 Graphics::GraphicsResult Graphics::init(int argc, char* argv[], const char* name, std::unique_ptr<IGraphicsGame> graphicsGame)
@@ -143,6 +142,8 @@ Graphics::GraphicsResult Graphics::init(int argc, char* argv[], const char* name
 
    if (glew_status == GLEW_OK)
    {
+      (*s_graphicsGame).initialize();
+
       glutDisplayFunc(updateGame);
       glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
       glutMainLoop();

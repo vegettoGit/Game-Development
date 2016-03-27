@@ -16,14 +16,14 @@ struct TestNetworkServer : IGraphicsGame
 
    void gameUpdate(int millisecondsSinceGameStart) override
    {
-      if (m_simpleServer.getServerState() == SimpleServer::ServerState::NONE)
-      {
-         m_simpleServer.createServerWork();
-      }
-
       displayServerFeedBack(millisecondsSinceGameStart);
 
       Graphics::getInstance().update();
+   }
+
+   void initialize() override
+   {
+      m_simpleServer.createServerWork();
    }
 
 private:

@@ -21,7 +21,6 @@ void solveAndExamineResult(const Vector3& startP1, const Vector3& endP2, float l
       Graphics::getInstance().drawVector3(startP1, result, color);
       Graphics::getInstance().drawVector3(result, endP2, color);
    }
-   return;
 }
 
 struct TestLinkConfigurationGame : IGraphicsGame
@@ -49,6 +48,10 @@ struct TestLinkConfigurationGame : IGraphicsGame
 
       // Enable if we want to update every frame even if things don't change
       // Graphics::getInstance().update();
+   }
+
+   void initialize() override
+   {
    }
 };
 
