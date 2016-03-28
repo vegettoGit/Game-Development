@@ -2,12 +2,13 @@
 #include "graphicsGame.h"
 #include "color.h"
 
+#include "input.h"
+
 // OpenGL Extension Wrangler
 #include "glew.h"
 
 // We are using freeglut as our OpenGL Utility Toolkit: http://freeglut.sourceforge.net/
 #include "freeglut.h"
-
 
 std::unique_ptr<IGraphicsGame> Graphics::s_graphicsGame = nullptr;
 
@@ -145,6 +146,7 @@ Graphics::GraphicsResult Graphics::init(int argc, char* argv[], const char* name
       (*s_graphicsGame).initialize();
 
       glutDisplayFunc(updateGame);
+      glutKeyboardFunc(Input::onKeyPressed);
       glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
       glutMainLoop();
    }
