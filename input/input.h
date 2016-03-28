@@ -5,7 +5,18 @@
 class Input
 {   
 
+   Input();
+   ~Input();
+
 public:
 
-   static void onKeyPressed(unsigned char charASCII, int mouseX, int mouseY);
+   Input                          (const Input& input) = delete;
+   Input&          operator =     (const Input& input) = delete;
+
+   Input                          (Input&& input)      = delete;
+   Input&          operator =     (Input&& input)      = delete;
+
+   static Input&   getInstance();
+
+   static void     onKeyPressed   (unsigned char charASCII, int mouseX, int mouseY);
 };
