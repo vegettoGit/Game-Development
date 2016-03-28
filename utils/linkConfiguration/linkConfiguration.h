@@ -24,11 +24,11 @@ public:
       ERROR 
    };
 
-   LinkConfiguration                     (const LinkConfiguration& v) = delete;
-   LinkConfiguration&       operator =   (const LinkConfiguration& v) = delete;
+   LinkConfiguration                     (const LinkConfiguration& linkConfiguration) = delete;
+   LinkConfiguration&       operator =   (const LinkConfiguration& linkConfiguration) = delete;
 
-   LinkConfiguration                     (LinkConfiguration&& v)      = delete;
-   LinkConfiguration&       operator =   (LinkConfiguration&& v)      = delete;
+   LinkConfiguration                     (LinkConfiguration&& linkConfiguration)      = delete;
+   LinkConfiguration&       operator =   (LinkConfiguration&& linkConfiguration)      = delete;
 
    static LinkConfiguration& getInstance ();
 

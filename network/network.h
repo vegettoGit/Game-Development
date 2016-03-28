@@ -57,10 +57,10 @@ public:
    };
 
    Network                                (const Network&)   = delete;
-   Network&          operator =           (const Network& v) = delete;
+   Network&          operator =           (const Network&)   = delete;
 
    Network                                (Network&&)        = delete;
-   Network&          operator =           (Network&& v)      = delete;
+   Network&          operator =           (Network&&)        = delete;
 
    static Network&   getInstance          ();
    NetworkResult     initialize           ();

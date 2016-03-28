@@ -29,11 +29,11 @@ public:
    SimpleClient();
    ~SimpleClient();
 
-   SimpleClient             (const SimpleClient& server) = delete;
-   SimpleClient& operator = (const SimpleClient& server) = delete;
+   SimpleClient             (const SimpleClient& client) = delete;
+   SimpleClient& operator = (const SimpleClient& client) = delete;
 
-   SimpleClient             (SimpleClient&& server)      = delete;
-   SimpleClient& operator = (SimpleClient&& server)      = delete;
+   SimpleClient             (SimpleClient&& client)      = delete;
+   SimpleClient& operator = (SimpleClient&& client)      = delete;
 
    void        createClientWork();
    ClientState getClientState  () const;

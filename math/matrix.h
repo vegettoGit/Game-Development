@@ -19,11 +19,11 @@ struct Matrix
    Matrix                  (const Vector4& v0, const Vector4& v1, const Vector4& v2, const Vector4& v3);
    Matrix                  (RotationType rotationType, float angle);
 
-   Matrix                  (const Matrix& v)     = default;
-   Matrix& operator =      (const Matrix& v)     = default;
+   Matrix                  (const Matrix& m)     = default;
+   Matrix& operator =      (const Matrix& m)     = default;
 
-   Matrix                  (Matrix&& v)          = default;
-   Matrix& operator =      (Matrix&& v)          = default;
+   Matrix                  (Matrix&& m)          = default;
+   Matrix& operator =      (Matrix&& m)          = default;
    
    ~Matrix                 ()                    = default;
 
