@@ -28,11 +28,11 @@ public:
       ERROR
    };
 
-   Graphics                                     (const Graphics& v) = delete;
-   Graphics&              operator =            (const Graphics& v) = delete;
+   Graphics                                     (const Graphics& graphics) = delete;
+   Graphics&              operator =            (const Graphics& graphics) = delete;
 
-   Graphics                                     (Graphics&& v)      = delete;
-   Graphics&              operator =            (Graphics&& v)      = delete;
+   Graphics                                     (Graphics&& graphics)      = delete;
+   Graphics&              operator =            (Graphics&& graphics)      = delete;
 
    static Graphics&       getInstance           ();
    static GraphicsResult  init                  (int argc, char* argv[], const char* name, std::unique_ptr<IGraphicsGame> graphicsGame);

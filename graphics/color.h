@@ -6,11 +6,11 @@ struct Color
    Color              ();
    Color              (float red, float green, float blue);
 
-   Color              (const Color& );
-   Color& operator =  (const Color& v);
+   Color              (const Color&);
+   Color& operator =  (const Color&);
 
-   Color              (Color&& );
-   Color& operator =  (Color&& v);
+   Color              (Color&&);
+   Color& operator =  (Color&&);
 
    ~Color             ();
 
