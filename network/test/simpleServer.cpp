@@ -178,12 +178,10 @@ const char* SimpleServer::getLastReceivedText() const
 
 void SimpleServer::setLastSentText(const char* text, int size)
 {
-   m_lastSentText = text;
-   m_lastSentText.at(size) = '\0';
+   m_lastSentText.append(text, size);
 }
 
 void SimpleServer::setLastReceivedText(const char* text, int size)
 {
-   m_lastReceivedText = text;
-   m_lastReceivedText.at(size) = '\0';
+   m_lastReceivedText.append(text, size);
 }
