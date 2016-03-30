@@ -171,7 +171,7 @@ const char* SimpleServer::getLastReceivedText() const
    const char* returnString = nullptr;
    if (m_lastReceivedText.size() > 0)
    {
-      returnString = m_lastSentText.c_str();
+      returnString = m_lastReceivedText.c_str();
    }
    return returnString;
 }

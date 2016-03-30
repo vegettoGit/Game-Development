@@ -66,18 +66,11 @@ private:
 
       const char* lastSentText = m_simpleServer.getLastSentText();
       const char* lastReceivedText = m_simpleServer.getLastReceivedText();
+      std::string lastSent = (lastSentText != nullptr) ? "Last Sent: " + std::string(lastSentText) : "Last Sent: None";
+      std::string receivedText = (lastReceivedText != nullptr) ? "Last Received: " + std::string(lastReceivedText) : "Last Received: None";
 
-      if (lastSentText != nullptr)
-      {
-         std::string sentText = "Last Sent: " + std::string(lastSentText);
-         DebugUIHelpers::displayText(sentText.c_str(), Color(0.0f, 1.0f, 0.0f), s_LastSentPositionX, s_LastSentPositionY);
-      }
-      
-      if (lastReceivedText != nullptr)
-      {
-         std::string receivedText = "Last Received: " + std::string(lastReceivedText);
-         DebugUIHelpers::displayText(receivedText.c_str(), Color(0.0f, 1.0f, 1.0f), s_LastReceivedPositionX, s_LastReceivedPositionY);
-      }
+      DebugUIHelpers::displayText(lastSent.c_str(),     Color(0.0f, 1.0f, 0.0f), s_LastSentPositionX,     s_LastSentPositionY);
+      DebugUIHelpers::displayText(receivedText.c_str(), Color(0.0f, 1.0f, 1.0f), s_LastReceivedPositionX, s_LastReceivedPositionY);
    }
 
    SimpleServer m_simpleServer;
