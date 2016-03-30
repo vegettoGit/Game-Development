@@ -2,7 +2,7 @@
 #include "simpleServer.h"
 #include "networkProperties.h"
 
-const char* NetworkProperties::s_defaultPort = "27015";
+const char* NetworkProperties::s_defaultPort   = "27015";
 const char* NetworkProperties::s_serverAddress = "127.0.0.1";
 
 SimpleServer::SimpleServer()
@@ -82,6 +82,8 @@ void SimpleServer::createServerWork()
       {
          char recvbuf[NetworkProperties::s_defaultSocketBufferLength];
          int  recvbuflen = NetworkProperties::s_defaultSocketBufferLength;
+         
+         m_serverState = ServerState::RECEIVE;
 
          int numberReceivedBytes = 0;
          do
@@ -89,8 +91,8 @@ void SimpleServer::createServerWork()
             socketResult = m_socket.receiveBytes(recvbuf, recvbuflen, numberReceivedBytes);
             if (numberReceivedBytes > 0)
             {
-               m_serverState = ServerState::RECEIVE;
-
+               setLastReceivedText(recvbuf, numberReceivedBytes);
+               
                // Echo the buffer back to the sender
                int numberSentBytes = 0;
                socketResult = m_socket.sendBytes(recvbuf, recvbuflen, numberSentBytes);
@@ -98,6 +100,10 @@ void SimpleServer::createServerWork()
                {
                   setErrorState("Send echo failed with error", socketResult.m_internalError);
                   return socketResult;
+               }
+               else
+               {
+                  setLastSentText(recvbuf, numberReceivedBytes);
                }
             }
             else if (numberReceivedBytes == 0)
@@ -132,6 +138,11 @@ void SimpleServer::createServerWork()
    });
 }
 
+SimpleServer::ServerState SimpleServer::getServerState() const
+{
+   return m_serverState;
+}
+
 void SimpleServer::setErrorState(const char* text, int error)
 {
    std::string errorString = text + std::string(" %d");
@@ -140,12 +151,39 @@ void SimpleServer::setErrorState(const char* text, int error)
    m_serverState = ServerState::SERVER_ERROR;
 }
 
-SimpleServer::ServerState SimpleServer::getServerState() const
-{
-   return m_serverState;
-}
-
 const char* SimpleServer::getErrorText() const
 {
    return m_errorText;
+}
+
+const char* SimpleServer::getLastSentText() const
+{
+   const char* returnString = nullptr;
+   if (m_lastSentText.size() > 0)
+   {
+      returnString = m_lastSentText.c_str();
+   }
+   return returnString;
+}
+
+const char* SimpleServer::getLastReceivedText() const
+{
+   const char* returnString = nullptr;
+   if (m_lastReceivedText.size() > 0)
+   {
+      returnString = m_lastSentText.c_str();
+   }
+   return returnString;
+}
+
+void SimpleServer::setLastSentText(const char* text, int size)
+{
+   m_lastSentText = text;
+   m_lastSentText.at(size) = '\0';
+}
+
+void SimpleServer::setLastReceivedText(const char* text, int size)
+{
+   m_lastReceivedText = text;
+   m_lastReceivedText.at(size) = '\0';
 }

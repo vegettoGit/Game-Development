@@ -38,18 +38,24 @@ public:
    SimpleServer             (SimpleServer&& server)      = delete;
    SimpleServer& operator = (SimpleServer&& server)      = delete;
 
-   void        createServerWork();
-   ServerState getServerState  () const;
-   const char* getErrorText    () const;
+   void        createServerWork   ();
+   ServerState getServerState     () const;
+   const char* getErrorText       () const;
+   const char* getLastSentText    () const;
+   const char* getLastReceivedText() const;
 
 private:
 
    void setErrorState       (const char* text, int error);
+   void setLastSentText     (const char* text, int size);
+   void setLastReceivedText (const char* text, int size);
 
    Future<Network::NetworkResult> m_initializeTask;
    Future<Socket::SocketResult>   m_listenTask;
    Future<Socket::SocketResult>   m_receiveTask;
 
+   std::string m_lastSentText;
+   std::string m_lastReceivedText;
    Socket      m_socket;
    ServerState m_serverState;
    char        m_errorText[64];

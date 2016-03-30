@@ -3,6 +3,7 @@
 #ifdef TEST_NETWORK_SERVER
 
 #include "graphics.h"
+#include "color.h"
 #include "graphicsGame.h"
 #include "simpleServer.h"
 #include "debugUIHelpers.h"
@@ -53,21 +54,49 @@ private:
          displayMessageText = "Shutting down";
          break;
       case SimpleServer::ServerState::SERVER_ERROR:
-         DebugUIHelpers::displayText(m_simpleServer.getErrorText(), DebugUIHelpers::TextType::TEXT_ERROR);
+         DebugUIHelpers::displayText(m_simpleServer.getErrorText(), s_StatusPositionX, s_StatusPositionY, DebugUIHelpers::TextType::TEXT_ERROR);
          break;
       }
 
       if (displayMessageText.size() > 0)
       {
          displayMessageText += DebugUIHelpers::getUIDotsFromTime(millisecondsSinceGameStart);
-         DebugUIHelpers::displayText(displayMessageText.c_str());
+         DebugUIHelpers::displayText(displayMessageText.c_str(), s_StatusPositionX, s_StatusPositionY);
+      }
+
+      const char* lastSentText = m_simpleServer.getLastSentText();
+      const char* lastReceivedText = m_simpleServer.getLastReceivedText();
+
+      if (lastSentText != nullptr)
+      {
+         std::string sentText = "Last Sent: " + std::string(lastSentText);
+         DebugUIHelpers::displayText(sentText.c_str(), Color(0.0f, 1.0f, 0.0f), s_LastSentPositionX, s_LastSentPositionY);
       }
       
+      if (lastReceivedText != nullptr)
+      {
+         std::string receivedText = "Last Received: " + std::string(lastReceivedText);
+         DebugUIHelpers::displayText(receivedText.c_str(), Color(0.0f, 1.0f, 1.0f), s_LastReceivedPositionX, s_LastReceivedPositionY);
+      }
    }
 
    SimpleServer m_simpleServer;
 
+   static const float s_StatusPositionX;
+   static const float s_StatusPositionY;
+   static const float s_LastSentPositionX;
+   static const float s_LastSentPositionY;
+   static const float s_LastReceivedPositionX;
+   static const float s_LastReceivedPositionY;
+
 };
+
+const float TestNetworkServer::s_StatusPositionX       = 15.0f;
+const float TestNetworkServer::s_StatusPositionY       = 30.0f;
+const float TestNetworkServer::s_LastSentPositionX     = 15.0f;
+const float TestNetworkServer::s_LastSentPositionY     = 60.0f;
+const float TestNetworkServer::s_LastReceivedPositionX = 15.0f;
+const float TestNetworkServer::s_LastReceivedPositionY = 90.0f;
 
 int main(int argc, char* argv[])
 {

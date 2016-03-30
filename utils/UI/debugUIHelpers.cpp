@@ -2,10 +2,15 @@
 #include "graphics.h"
 #include "color.h"
 
-void DebugUIHelpers::displayText(const char* text, TextType textType)
+void DebugUIHelpers::displayText(const char* text, float x, float y, TextType textType)
 {
    Color color = (textType == TextType::TEXT_ERROR) ? Color(1.0f, 0.0f, 0.0f) : Color(1.0f, 1.0f, 1.0f);
-   Graphics::getInstance().drawText(15.0f, 30.0f, color, text);
+   Graphics::getInstance().drawText(x, y, color, text);
+}
+
+void DebugUIHelpers::displayText(const char* text, const Color& color, float x, float y, TextType textType)
+{
+   Graphics::getInstance().drawText(x, y, color, text);
 }
 
 std::string DebugUIHelpers::getUIDotsFromTime(int millisecondsSinceGameStart)
