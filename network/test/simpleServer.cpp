@@ -92,7 +92,7 @@ void SimpleServer::createWork()
                
                // Echo the buffer back to the sender
                int numberSentBytes = 0;
-               socketResult = m_socket.sendBytes(recvbuf, recvbuflen, numberSentBytes);
+               socketResult = m_socket.sendBytes(recvbuf, numberReceivedBytes, numberSentBytes);
                if (numberSentBytes == 0)
                {
                   setError("Send echo failed with error", socketResult.m_internalError);
