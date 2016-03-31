@@ -6,7 +6,7 @@
 #include "color.h"
 #include "graphicsGame.h"
 #include "simpleServer.h"
-#include "debugUIHelpers.h"
+#include "testNetworkDisplay.h"
 
 struct TestNetworkServer : IGraphicsGame
 {
@@ -31,65 +31,42 @@ private:
 
    void displayServerFeedBack(int millisecondsSinceGameStart) const
    {
-      std::string displayMessageText;
+      std::string stateText;
+
+      bool bError = false;
 
       switch (m_simpleServer.getServerState())
       {
       case SimpleServer::ServerState::CREATE:
-         displayMessageText = "Creating listen socket";
+         stateText = "Creating listen socket";
          break;
       case SimpleServer::ServerState::LISTEN:
-         displayMessageText = "Listening";
+         stateText = "Listening";
          break;
       case SimpleServer::ServerState::ACCEPT:
-         displayMessageText = "Accepting";
+         stateText = "Accepting";
          break;
       case SimpleServer::ServerState::RECEIVE:
-         displayMessageText = "Receiving and echoing bytes";
+         stateText = "Receiving and echoing bytes";
          break;
       case SimpleServer::ServerState::CLOSE:
-         displayMessageText = "Connection closing";
+         stateText = "Connection closing";
          break;
       case SimpleServer::ServerState::SHUT_DOWN:
-         displayMessageText = "Shutting down";
+         stateText = "Shutting down";
          break;
       case SimpleServer::ServerState::SERVER_ERROR:
-         DebugUIHelpers::displayText(m_simpleServer.getErrorText(), s_StatusPositionX, s_StatusPositionY, DebugUIHelpers::TextType::TEXT_ERROR);
+         stateText = m_simpleServer.getErrorText();
+         bError = true;
          break;
       }
 
-      if (displayMessageText.size() > 0)
-      {
-         displayMessageText += DebugUIHelpers::getUIDotsFromTime(millisecondsSinceGameStart);
-         DebugUIHelpers::displayText(displayMessageText.c_str(), s_StatusPositionX, s_StatusPositionY);
-      }
-
-      const char* lastSentText = m_simpleServer.getLastSentText();
-      const char* lastReceivedText = m_simpleServer.getLastReceivedText();
-      std::string lastSent     = (lastSentText != nullptr)     ? "Last Sent: "     + std::string(lastSentText)     : "Last Sent: None";
-      std::string lastReceived = (lastReceivedText != nullptr) ? "Last Received: " + std::string(lastReceivedText) : "Last Received: None";
-
-      DebugUIHelpers::displayText(lastSent.c_str(),     Color(0.0f, 1.0f, 0.0f), s_LastSentPositionX,     s_LastSentPositionY);
-      DebugUIHelpers::displayText(lastReceived.c_str(), Color(0.0f, 1.0f, 1.0f), s_LastReceivedPositionX, s_LastReceivedPositionY);
+      m_testNetworkDisplay.displayNetworkText(millisecondsSinceGameStart, stateText.c_str(), m_simpleServer.getLastSentText(), m_simpleServer.getLastReceivedText(), bError);
    }
 
-   SimpleServer m_simpleServer;
-
-   static const float s_StatusPositionX;
-   static const float s_StatusPositionY;
-   static const float s_LastSentPositionX;
-   static const float s_LastSentPositionY;
-   static const float s_LastReceivedPositionX;
-   static const float s_LastReceivedPositionY;
-
+   SimpleServer       m_simpleServer;
+   TestNetworkDisplay m_testNetworkDisplay;
 };
-
-const float TestNetworkServer::s_StatusPositionX       = 15.0f;
-const float TestNetworkServer::s_StatusPositionY       = 30.0f;
-const float TestNetworkServer::s_LastSentPositionX     = 15.0f;
-const float TestNetworkServer::s_LastSentPositionY     = 60.0f;
-const float TestNetworkServer::s_LastReceivedPositionX = 15.0f;
-const float TestNetworkServer::s_LastReceivedPositionY = 90.0f;
 
 int main(int argc, char* argv[])
 {

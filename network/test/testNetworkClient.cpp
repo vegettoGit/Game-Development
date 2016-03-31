@@ -5,7 +5,7 @@
 #include "graphics.h"
 #include "graphicsGame.h"
 #include "simpleClient.h"
-#include "debugUIHelpers.h"
+#include "testNetworkDisplay.h"
 
 struct TestNetworkClient : IGraphicsGame
 {
@@ -23,42 +23,42 @@ struct TestNetworkClient : IGraphicsGame
 
    void initialize() override
    {
-      m_simpleClient.createClientWork();
+      m_simpleClient.createWork();
    }
 
 private:
 
    void displayClientFeedBack(int millisecondsSinceGameStart)
    {
-      std::string displayMessageText;
+      std::string stateText;
+
+      bool bError = false;
 
       switch (m_simpleClient.getClientState())
       {
       case SimpleClient::ClientState::CREATE:
-         displayMessageText = "Creating socket for connection";
+         stateText = "Creating socket for connection";
          break;
       case SimpleClient::ClientState::SEND:
-         displayMessageText = "Sending bytes";
+         stateText = "Sending bytes";
          break;
       case SimpleClient::ClientState::SHUT_DOWN:
-         displayMessageText = "Shutting down socket sending operation";
+         stateText = "Shutting down socket sending operation";
          break;
       case SimpleClient::ClientState::CLOSE:
-         displayMessageText = "Closing connection";
+         stateText = "Closing connection";
          break;
       case SimpleClient::ClientState::CLIENT_ERROR:
-         DebugUIHelpers::displayText(m_simpleClient.getErrorText(), DebugUIHelpers::TextType::TEXT_ERROR);
+         stateText = m_simpleClient.getErrorText();
+         bError = true;
          break;
       }
 
-      if (displayMessageText.size() > 0)
-      {
-         displayMessageText += DebugUIHelpers::getUIDotsFromTime(millisecondsSinceGameStart);
-         DebugUIHelpers::displayText(displayMessageText.c_str());
-      }
+      m_testNetworkDisplay.displayNetworkText(millisecondsSinceGameStart, stateText.c_str(), m_simpleClient.getLastSentText(), m_simpleClient.getLastReceivedText(), bError);
    }
 
    SimpleClient m_simpleClient;
+   TestNetworkDisplay m_testNetworkDisplay;
 };
 
 int main(int argc, char* argv[])

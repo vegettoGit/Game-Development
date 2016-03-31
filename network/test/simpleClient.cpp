@@ -61,6 +61,7 @@ void SimpleClient::createWork()
          }
          else
          {
+            setLastSentText(sendbuf, numberSentBytes);
             m_clientState = ClientState::SHUT_DOWN;
             socketResult = m_socket.shutdownOperation(Socket::SocketOperation::SEND);
             if (socketResult.m_error != Socket::SocketError::NONE)
@@ -90,6 +91,10 @@ void SimpleClient::createWork()
                   {
                      setError("Error receiving echo bytes from the server", socketResult.m_internalError);
                      break;
+                  }
+                  else
+                  {
+                     setLastReceivedText(recvbuf, numberReceivedBytes);
                   }
                } while (numberReceivedBytes > 0);
             }

@@ -9,12 +9,12 @@ struct DebugUIHelpers
 {
    enum class TextType
    {
-      NONE,
+      NORMAL,
       TEXT_ERROR
    };
 
-   static void displayText(const char* text, float x, float y, TextType textType = TextType::NONE);
-   static void displayText(const char* text, const Color& color, float x, float y, TextType textType = TextType::NONE);
+   static void displayText(const char* text, float x, float y, TextType textType = TextType::NORMAL);
+   static void displayText(const char* text, const Color& color, float x, float y, TextType textType = TextType::NORMAL);
    static std::string getUIDotsFromTime(int millisecondsSinceGameStart);
 };
 
