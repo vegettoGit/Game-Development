@@ -1,6 +1,6 @@
 
 #include "task.h"
-#include "network.h"
+#include "simplePeer.h"
 
 /*
 
@@ -10,7 +10,7 @@
    - Sends all the data to the server, when it finishes then we shut down the network.
 
 */
-class SimpleClient
+class SimpleClient : public ISimplePeer
 {
 
 public:
@@ -26,29 +26,20 @@ public:
       CLIENT_ERROR
    };
 
-   SimpleClient();
-   ~SimpleClient();
+   SimpleClient              ();
+   ~SimpleClient             ();
 
-   SimpleClient             (const SimpleClient& client) = delete;
-   SimpleClient& operator = (const SimpleClient& client) = delete;
-
-   SimpleClient             (SimpleClient&& client)      = delete;
-   SimpleClient& operator = (SimpleClient&& client)      = delete;
-
-   void        createClientWork();
-   ClientState getClientState  () const;
-   const char* getErrorText    () const;
+   void        createWork    ()                          override;
+   ClientState getClientState()                          const;
 
 private:
 
-   void setErrorState       (const char* text, int error);
+   void setError           (const char* text, int error) override;
 
    Future<Network::NetworkResult> m_initializeTask;
    Future<Socket::SocketResult>   m_sendTask;
 
-   Socket      m_socket;
    ClientState m_clientState;
-   char        m_errorText[64];
 
 };
 

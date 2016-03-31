@@ -1,6 +1,5 @@
-
 #include "task.h"
-#include "network.h"
+#include "simplePeer.h"
 
 /*
 
@@ -11,7 +10,7 @@
    - Receives all the data from the client, when the client finishes then we shut down the network.
 
 */
-class SimpleServer
+class SimpleServer : public ISimplePeer
 {
 
 public:
@@ -32,33 +31,17 @@ public:
    SimpleServer();
    ~SimpleServer();
 
-   SimpleServer             (const SimpleServer& server) = delete;
-   SimpleServer& operator = (const SimpleServer& server) = delete;
-
-   SimpleServer             (SimpleServer&& server)      = delete;
-   SimpleServer& operator = (SimpleServer&& server)      = delete;
-
-   void        createServerWork   ();
-   ServerState getServerState     () const;
-   const char* getErrorText       () const;
-   const char* getLastSentText    () const;
-   const char* getLastReceivedText() const;
+   void          createWork    ()                            override;
+   ServerState   getServerState()                            const;
 
 private:
 
-   void setErrorState       (const char* text, int error);
-   void setLastSentText     (const char* text, int size);
-   void setLastReceivedText (const char* text, int size);
+   void          setError      (const char* text, int error) override;
 
    Future<Network::NetworkResult> m_initializeTask;
    Future<Socket::SocketResult>   m_listenTask;
    Future<Socket::SocketResult>   m_receiveTask;
 
-   std::string m_lastSentText;
-   std::string m_lastReceivedText;
-   Socket      m_socket;
    ServerState m_serverState;
-   char        m_errorText[64];
-
 };
 

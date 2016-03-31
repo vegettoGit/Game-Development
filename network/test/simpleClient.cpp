@@ -2,7 +2,6 @@
 #include "simpleClient.h"
 #include "networkProperties.h"
 
-
 SimpleClient::SimpleClient()
    : m_clientState(ClientState::NONE)
 {
@@ -12,7 +11,7 @@ SimpleClient::~SimpleClient()
 {
 }
 
-void SimpleClient::createClientWork()
+void SimpleClient::createWork()
 {
    m_clientState = ClientState::INITIALIZE;
 
@@ -22,7 +21,7 @@ void SimpleClient::createClientWork()
       Network::NetworkResult networkResult = Network::getInstance().initialize();
       if (networkResult.m_error != Network::NetworkError::NONE)
       {
-         setErrorState("Initialization of Network Layer failed with error", networkResult.m_internalError);
+         setError("Initialization of Network Layer failed with error", networkResult.m_internalError);
       }
       else
       {
@@ -37,7 +36,7 @@ void SimpleClient::createClientWork()
 
          if (networkResult.m_error != Network::NetworkError::NONE)
          {
-            setErrorState("Error creating or binding socket for connecting to server", networkResult.m_internalError);
+            setError("Error creating or binding socket for connecting to server", networkResult.m_internalError);
          }
       }
 
@@ -58,7 +57,7 @@ void SimpleClient::createClientWork()
          socketResult = m_socket.sendBytes(sendbuf, (int)strlen(sendbuf), numberSentBytes);
          if (numberSentBytes == 0)
          {
-            setErrorState("Error sending bytes to the server", socketResult.m_internalError);
+            setError("Error sending bytes to the server", socketResult.m_internalError);
          }
          else
          {
@@ -66,7 +65,7 @@ void SimpleClient::createClientWork()
             socketResult = m_socket.shutdownOperation(Socket::SocketOperation::SEND);
             if (socketResult.m_error != Socket::SocketError::NONE)
             {
-               setErrorState("Error shutting down sending operation", socketResult.m_internalError);
+               setError("Error shutting down sending operation", socketResult.m_internalError);
             }
             else
             {
@@ -83,13 +82,13 @@ void SimpleClient::createClientWork()
                      socketResult = m_socket.close();
                      if (socketResult.m_error != Socket::SocketError::NONE)
                      {
-                        setErrorState("Error closing socket", socketResult.m_internalError);
+                        setError("Error closing socket", socketResult.m_internalError);
                         break;
                      }
                   }
                   else if (numberReceivedBytes < 0)
                   {
-                     setErrorState("Error receiving echo bytes from the server", socketResult.m_internalError);
+                     setError("Error receiving echo bytes from the server", socketResult.m_internalError);
                      break;
                   }
                } while (numberReceivedBytes > 0);
@@ -101,10 +100,9 @@ void SimpleClient::createClientWork()
    });
 }
 
-void SimpleClient::setErrorState(const char* text, int error)
+void SimpleClient::setError(const char* text, int error)
 {
-   std::string errorString = text + std::string(" %d");
-   sprintf_s(m_errorText, errorString.c_str(), error);
+   ISimplePeer::setError(text, error);
 
    m_clientState = ClientState::CLIENT_ERROR;
 }
@@ -114,7 +112,3 @@ SimpleClient::ClientState SimpleClient::getClientState() const
    return m_clientState;
 }
 
-const char* SimpleClient::getErrorText() const
-{
-   return m_errorText;
-}

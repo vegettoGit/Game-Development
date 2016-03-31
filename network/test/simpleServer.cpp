@@ -2,9 +2,6 @@
 #include "simpleServer.h"
 #include "networkProperties.h"
 
-const char* NetworkProperties::s_defaultPort   = "27015";
-const char* NetworkProperties::s_serverAddress = "127.0.0.1";
-
 SimpleServer::SimpleServer()
    : m_serverState(ServerState::NONE)
 {
@@ -14,7 +11,7 @@ SimpleServer::~SimpleServer()
 {
 }
 
-void SimpleServer::createServerWork()
+void SimpleServer::createWork()
 {
    m_serverState = ServerState::INITIALIZE;
 
@@ -24,7 +21,7 @@ void SimpleServer::createServerWork()
       Network::NetworkResult networkResult = Network::getInstance().initialize();
       if (networkResult.m_error != Network::NetworkError::NONE)
       {
-         setErrorState("Initialization of Network Layer failed with error", networkResult.m_internalError);
+         setError("Initialization of Network Layer failed with error", networkResult.m_internalError);
       }
       else
       {
@@ -38,7 +35,7 @@ void SimpleServer::createServerWork()
 
          if (networkResult.m_error != Network::NetworkError::NONE)
          {
-            setErrorState("Error creating or binding socket", networkResult.m_internalError);
+            setError("Error creating or binding socket", networkResult.m_internalError);
          }
       }
 
@@ -56,7 +53,7 @@ void SimpleServer::createServerWork()
          socketResult = m_socket.listenIncomingConnection();
          if (socketResult.m_error != Socket::SocketError::NONE)
          {
-            setErrorState("Listen failed with error", socketResult.m_internalError);
+            setError("Listen failed with error", socketResult.m_internalError);
          }
          else
          {
@@ -65,7 +62,7 @@ void SimpleServer::createServerWork()
 
             if (socketResult.m_error != Socket::SocketError::NONE)
             {
-               setErrorState("Accept failed with error", socketResult.m_internalError);
+               setError("Accept failed with error", socketResult.m_internalError);
             }
          }
       }
@@ -98,7 +95,7 @@ void SimpleServer::createServerWork()
                socketResult = m_socket.sendBytes(recvbuf, recvbuflen, numberSentBytes);
                if (numberSentBytes == 0)
                {
-                  setErrorState("Send echo failed with error", socketResult.m_internalError);
+                  setError("Send echo failed with error", socketResult.m_internalError);
                   return socketResult;
                }
                else
@@ -112,7 +109,7 @@ void SimpleServer::createServerWork()
             }
             else
             {
-               setErrorState("Receive failed with error", socketResult.m_internalError);
+               setError("Receive failed with error", socketResult.m_internalError);
                return socketResult;
             }
          } while (numberReceivedBytes > 0);
@@ -122,14 +119,14 @@ void SimpleServer::createServerWork()
 
          if (socketResult.m_error != Socket::SocketError::NONE)
          {
-            setErrorState("Shutdown failed with error", socketResult.m_internalError);
+            setError("Shutdown failed with error", socketResult.m_internalError);
          }
          else
          {
             socketResult = m_socket.close();
             if (socketResult.m_error != Socket::SocketError::NONE)
             {
-               setErrorState("Error closing socket", socketResult.m_internalError);
+               setError("Error closing socket", socketResult.m_internalError);
             }
          }
       }
@@ -143,45 +140,9 @@ SimpleServer::ServerState SimpleServer::getServerState() const
    return m_serverState;
 }
 
-void SimpleServer::setErrorState(const char* text, int error)
+void SimpleServer::setError(const char* text, int error)
 {
-   std::string errorString = text + std::string(" %d");
-   sprintf_s(m_errorText, errorString.c_str(), error);
+   ISimplePeer::setError(text, error);
 
    m_serverState = ServerState::SERVER_ERROR;
-}
-
-const char* SimpleServer::getErrorText() const
-{
-   return m_errorText;
-}
-
-const char* SimpleServer::getLastSentText() const
-{
-   const char* returnString = nullptr;
-   if (m_lastSentText.size() > 0)
-   {
-      returnString = m_lastSentText.c_str();
-   }
-   return returnString;
-}
-
-const char* SimpleServer::getLastReceivedText() const
-{
-   const char* returnString = nullptr;
-   if (m_lastReceivedText.size() > 0)
-   {
-      returnString = m_lastReceivedText.c_str();
-   }
-   return returnString;
-}
-
-void SimpleServer::setLastSentText(const char* text, int size)
-{
-   m_lastSentText.append(text, size);
-}
-
-void SimpleServer::setLastReceivedText(const char* text, int size)
-{
-   m_lastReceivedText.append(text, size);
 }

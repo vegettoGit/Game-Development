@@ -24,7 +24,7 @@ struct TestNetworkServer : IGraphicsGame
 
    void initialize() override
    {
-      m_simpleServer.createServerWork();
+      m_simpleServer.createWork();
    }
 
 private:
