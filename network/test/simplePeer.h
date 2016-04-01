@@ -7,7 +7,7 @@ class ISimplePeer
 
 public:
 
-   ISimplePeer()                                                    = default;
+   ISimplePeer()                                                             ;
    ~ISimplePeer()                                                   = default;
 
    ISimplePeer                       (const ISimplePeer& server)    = delete;
@@ -21,6 +21,8 @@ public:
    const char*   getLastSentText     ()                             const;
    const char*   getLastReceivedText ()                             const;
 
+   std::string   s_connectionEndText;
+
 protected:
 
    virtual void  setError            (const char* text, int error);
@@ -31,6 +33,5 @@ protected:
    std::string   m_lastReceivedText;
    Socket        m_socket;
    char          m_errorText[64];
-
 };
 

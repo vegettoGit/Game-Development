@@ -145,7 +145,7 @@ Socket::SocketResult Socket::receiveBytes(char* buffer, int bufferLength, int& o
    return socketResult;
 }
 
-Socket::SocketResult Socket::sendBytes(char* buffer, int bufferLength, int& outNumberSentBytes)
+Socket::SocketResult Socket::sendBytes(const char* buffer, int bufferLength, int& outNumberSentBytes)
 {
    SocketResult socketResult;
    outNumberSentBytes = 0;

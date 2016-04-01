@@ -105,24 +105,30 @@ void SimpleServer::createWork()
             }
             else if (numberReceivedBytes == 0)
             {
-               m_serverState = ServerState::CLOSE;
+               m_serverState = ServerState::SHUT_DOWN;
             }
             else
             {
                setError("Receive failed with error", socketResult.m_internalError);
                return socketResult;
             }
+
+            if (m_lastReceivedText == s_connectionEndText)
+            {
+               break;
+            }
+
          } while (numberReceivedBytes > 0);
 
-         m_serverState = ServerState::SHUT_DOWN;
+         
          socketResult = m_socket.shutdownOperation(Socket::SocketOperation::SEND);
-
          if (socketResult.m_error != Socket::SocketError::NONE)
          {
             setError("Shutdown failed with error", socketResult.m_internalError);
          }
          else
          {
+            m_serverState = ServerState::CLOSE;
             socketResult = m_socket.close();
             if (socketResult.m_error != Socket::SocketError::NONE)
             {

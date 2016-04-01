@@ -5,6 +5,10 @@
 const char* NetworkProperties::s_defaultPort   = "27015";
 const char* NetworkProperties::s_serverAddress = "127.0.0.1";
 
+ISimplePeer::ISimplePeer()
+{
+   s_connectionEndText.append("End Text");
+}
 
 const char* ISimplePeer::getErrorText() const
 {
@@ -39,10 +43,12 @@ const char* ISimplePeer::getLastReceivedText() const
 
 void ISimplePeer::setLastSentText(const char* text, int size)
 {
+   m_lastSentText.clear();
    m_lastSentText.append(text, size);
 }
 
 void ISimplePeer::setLastReceivedText(const char* text, int size)
 {
+   m_lastReceivedText.clear();
    m_lastReceivedText.append(text, size);
 }

@@ -19,4 +19,12 @@ public:
    static Input&   getInstance();
 
    static void     onKeyPressed   (unsigned char charASCII, int mouseX, int mouseY);
+
+   static bool     extractKey     (unsigned char& charASCII);
+
+private:
+
+   static bool          m_availableKey;
+   static unsigned char m_key;
+
 };

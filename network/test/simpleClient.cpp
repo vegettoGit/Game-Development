@@ -49,45 +49,33 @@ void SimpleClient::createWork()
       Socket::SocketResult socketResult;
       if (networkResult.m_error == Network::NetworkError::NONE)
       {
-         char *sendbuf = "This is a test";
+         m_textToSend.append("This is a test");
 
          m_clientState = ClientState::SEND;
 
-         int numberSentBytes = 0;
-         socketResult = m_socket.sendBytes(sendbuf, (int)strlen(sendbuf), numberSentBytes);
-         if (numberSentBytes == 0)
+         while (m_clientState == ClientState::SEND)
          {
-            setError("Error sending bytes to the server", socketResult.m_internalError);
-         }
-         else
-         {
-            setLastSentText(sendbuf, numberSentBytes);
-            m_clientState = ClientState::SHUT_DOWN;
-            socketResult = m_socket.shutdownOperation(Socket::SocketOperation::SEND);
-            if (socketResult.m_error != Socket::SocketError::NONE)
+            if (m_textToSend.size() > 0)
             {
-               setError("Error shutting down sending operation", socketResult.m_internalError);
-            }
-            else
-            {
-               char recvbuf[NetworkProperties::s_defaultSocketBufferLength];
-               int  recvbuflen = NetworkProperties::s_defaultSocketBufferLength;
-
-               int numberReceivedBytes = 0;
-               do
+               int numberSentBytes = 0;
+               socketResult = m_socket.sendBytes(m_textToSend.c_str(), m_textToSend.size(), numberSentBytes);
+               if (numberSentBytes == 0)
                {
+                  setError("Error sending bytes to the server", socketResult.m_internalError);
+                  break;
+               }
+               else
+               {
+                  setLastSentText(m_textToSend.c_str(), numberSentBytes);
+                  
+                  char recvbuf[NetworkProperties::s_defaultSocketBufferLength];
+                  int  recvbuflen = NetworkProperties::s_defaultSocketBufferLength;
+
+                  int numberReceivedBytes = 0;
+
                   socketResult = m_socket.receiveBytes(recvbuf, recvbuflen, numberReceivedBytes);
-                  if (numberReceivedBytes == 0)
-                  {
-                     m_clientState = ClientState::CLOSE;
-                     socketResult = m_socket.close();
-                     if (socketResult.m_error != Socket::SocketError::NONE)
-                     {
-                        setError("Error closing socket", socketResult.m_internalError);
-                        break;
-                     }
-                  }
-                  else if (numberReceivedBytes < 0)
+                  
+                  if (numberReceivedBytes < 0)
                   {
                      setError("Error receiving echo bytes from the server", socketResult.m_internalError);
                      break;
@@ -96,7 +84,30 @@ void SimpleClient::createWork()
                   {
                      setLastReceivedText(recvbuf, numberReceivedBytes);
                   }
-               } while (numberReceivedBytes > 0);
+               }
+
+               if (m_textToSend == s_connectionEndText)
+               {
+                  break;
+               }
+
+               m_textToSend.clear();
+            }
+         }
+
+         m_clientState = ClientState::SHUT_DOWN;
+         socketResult = m_socket.shutdownOperation(Socket::SocketOperation::SEND);
+         if (socketResult.m_error != Socket::SocketError::NONE)
+         {
+            setError("Error shutting down sending operation", socketResult.m_internalError);
+         }
+         else
+         { 
+            m_clientState = ClientState::CLOSE;
+            socketResult = m_socket.close();
+            if (socketResult.m_error != Socket::SocketError::NONE)
+            {
+               setError("Error closing socket", socketResult.m_internalError);
             }
          }
       }
@@ -115,5 +126,10 @@ void SimpleClient::setError(const char* text, int error)
 SimpleClient::ClientState SimpleClient::getClientState() const
 {
    return m_clientState;
+}
+
+void SimpleClient::setTextToSend(std::string& sendText)
+{
+   m_textToSend = sendText;
 }
 

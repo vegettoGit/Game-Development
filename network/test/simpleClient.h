@@ -31,6 +31,7 @@ public:
 
    void        createWork    ()                          override;
    ClientState getClientState()                          const;
+   void        setTextToSend (std::string&);
 
 private:
 
@@ -38,7 +39,7 @@ private:
 
    Future<Network::NetworkResult> m_initializeTask;
    Future<Socket::SocketResult>   m_sendTask;
-
+   std::string                    m_textToSend;
    ClientState m_clientState;
 
 };

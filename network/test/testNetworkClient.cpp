@@ -6,17 +6,42 @@
 #include "graphicsGame.h"
 #include "simpleClient.h"
 #include "testNetworkDisplay.h"
+#include "input.h"
 
 struct TestNetworkClient : IGraphicsGame
 {
    TestNetworkClient(int width, int height)
-      : IGraphicsGame(GraphicsGameProperties(width, height))
+      : IGraphicsGame(GraphicsGameProperties(width, height)),
+        m_numberMessage(0)
    {
+   }
+
+   void updateInput()
+   {
+      unsigned char key = '0';
+
+      if (Input::extractKey(key))
+      {
+         std::string textToSend;
+
+         if (key == s_endKey)
+         {
+            textToSend = m_simpleClient.s_connectionEndText;
+         }
+         else
+         {
+            textToSend = "Another text " + std::to_string(++ m_numberMessage);
+         }
+
+         m_simpleClient.setTextToSend(textToSend);
+      }
    }
 
    void gameUpdate(int millisecondsSinceGameStart) override
    {
       displayClientFeedBack(millisecondsSinceGameStart);
+
+      updateInput();
 
       Graphics::getInstance().update();
    }
@@ -59,7 +84,12 @@ private:
 
    SimpleClient m_simpleClient;
    TestNetworkDisplay m_testNetworkDisplay;
+   int m_numberMessage;
+
+   static const unsigned char s_endKey;
 };
+
+const unsigned char TestNetworkClient::s_endKey = 101;
 
 int main(int argc, char* argv[])
 {

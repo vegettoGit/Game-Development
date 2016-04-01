@@ -75,7 +75,7 @@ struct Socket
    SocketResult acceptIncomingConnection ();
 
    SocketResult receiveBytes(char* buffer, int bufferLength, int& outNumberReceivedBytes);
-   SocketResult sendBytes   (char* buffer, int bufferLength, int& outNumberSentBytes);
+   SocketResult sendBytes   (const char* buffer, int bufferLength, int& outNumberSentBytes);
 
    SocketResult shutdownOperation(SocketOperation operation);
    SocketResult close            ();

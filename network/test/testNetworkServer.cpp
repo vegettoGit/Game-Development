@@ -50,7 +50,7 @@ private:
          stateText = "Receiving and echoing bytes";
          break;
       case SimpleServer::ServerState::CLOSE:
-         stateText = "Connection closing";
+         stateText = "Closing connection";
          break;
       case SimpleServer::ServerState::SHUT_DOWN:
          stateText = "Shutting down";
