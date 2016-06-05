@@ -126,6 +126,7 @@ Network::NetworkError Network::buildAddressInfo(NetworkAddressType addressType, 
             break;
          }
          case Socket::SocketCreationType::CONNECT:
+         case Socket::SocketCreationType::CONNECTIONLESS:
          {
             break;
          }

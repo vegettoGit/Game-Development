@@ -41,7 +41,8 @@ struct Socket
    enum class SocketCreationType
    {
       ACCEPT_INCOMING_CONNECTIONS,
-      CONNECT
+      CONNECT,
+      CONNECTIONLESS
    };
 
    enum class SocketState
