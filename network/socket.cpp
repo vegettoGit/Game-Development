@@ -46,7 +46,6 @@ Socket::SocketResult Socket::createSocket(SocketCreationType socketCreationType,
          break;
       }
       case SocketCreationType::CONNECT:
-      default:
       {
          struct addrinfo *currentAddressInfo = nullptr;
 
@@ -70,6 +69,12 @@ Socket::SocketResult Socket::createSocket(SocketCreationType socketCreationType,
             break;
          }
 
+         break;
+      }
+      case SocketCreationType::CONNECTIONLESS:
+      default:
+      {
+         socketResult = createSocket(*addressInfo, outSocket);
          break;
       }
    }
