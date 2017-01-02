@@ -65,6 +65,15 @@ Network::NetworkResult Network::getSocketInfo(const char* hostName, const char* 
    return result;
 }
 
+Network::NetworkResult Network::getSocketInfo(NetworkAddressType addressType, NetworkProtocol protocol, Socket::SocketCreationType socketCreationType, struct addrinfo& outAddressInfo)
+{
+    NetworkResult result;
+
+    result.m_error = buildSocketInfo(addressType, protocol, socketCreationType, outAddressInfo);
+
+    return result;
+}
+
 
 Network::NetworkError Network::buildSocketInfo(NetworkAddressType addressType, NetworkProtocol protocol, Socket::SocketCreationType socketCreationType, struct addrinfo& outAddressInfo)
 {
@@ -182,5 +191,31 @@ Network::NetworkResult Network::createSocket(const char* hostName, const char* s
    }
 
    return result;
+}
+
+Network::NetworkResult Network::createSocket(NetworkAddressType addressType, NetworkProtocol protocol, Socket::SocketCreationType socketCreationType, Socket& outSocket)
+{
+    NetworkResult result;
+
+    if (m_networkLayerState != NetworkLayerState::INITIALIZED)
+    {
+        result.m_error = NetworkError::ERROR_NETWORK_UNINITIALIZED;
+        return result;
+    }
+
+    struct addrinfo addressInfo;
+    result = Network::getInstance().getSocketInfo(addressType, protocol, socketCreationType, addressInfo);
+
+    if (result.m_error == NetworkError::NONE)
+    {
+        Socket::SocketResult socketResult = Socket::createSocket(socketCreationType, &addressInfo, outSocket);
+        if (socketResult.m_error != Socket::SocketError::NONE)
+        {
+            result.m_error = NetworkError::ERROR_SOCKET_CREATION;
+            result.m_internalError = socketResult.m_internalError;
+        }
+    }
+
+    return result;
 }
 
