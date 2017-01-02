@@ -71,8 +71,8 @@ private:
    Network                                ()                         ;
    ~Network                               ();
    
-   NetworkResult     getAddressInfo       (const char* hostName, const char* serviceName, NetworkAddressType addressType, NetworkProtocol protocol, Socket::SocketCreationType socketCreationType, struct addrinfo*& outAddressInfo);
-   NetworkError      buildAddressInfo     (NetworkAddressType addressType, NetworkProtocol protocol, Socket::SocketCreationType socketCreationType, struct addrinfo& outAddressInfo);
+   NetworkResult     getSocketInfo       (const char* hostName, const char* serviceName, NetworkAddressType addressType, NetworkProtocol protocol, Socket::SocketCreationType socketCreationType, struct addrinfo*& outAddressInfo);
+   NetworkError      buildSocketInfo     (NetworkAddressType addressType, NetworkProtocol protocol, Socket::SocketCreationType socketCreationType, struct addrinfo& outAddressInfo);
 
    WSADATA           m_wsaData;
    NetworkLayerState m_networkLayerState;
