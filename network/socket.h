@@ -22,6 +22,7 @@ struct Socket
       ERROR_RECEIVE,
       ERROR_SEND,
       ERROR_SEND_DATAGRAM,
+      ERROR_GET_SOCKET_OPTION,
       ERROR_SHUTDOWN,
       ERROR_CLOSE,
       UNKNOWN_ERROR
@@ -72,19 +73,21 @@ struct Socket
    Socket& operator = (Socket&&)       = delete;
 
    ~Socket            ();
-   
-   SocketResult listenIncomingConnection ();
-   SocketResult acceptIncomingConnection ();
+
+
+   SocketResult getAddressFamily         (int& outputAddressFamily);
+   SocketResult shutdownOperation        (SocketOperation operation);
+   SocketResult close                    ();
 
    // Connection based
-   SocketResult receiveBytes(char* buffer, int bufferLength, int& outNumberReceivedBytes);
-   SocketResult sendBytes   (const char* buffer, int bufferLength, int& outNumberSentBytes);
+   SocketResult listenIncomingConnection ();
+   SocketResult acceptIncomingConnection ();
+   SocketResult receiveBytes             (char* buffer, int bufferLength, int& outNumberReceivedBytes);
+   SocketResult sendBytes                (const char* buffer, int bufferLength, int& outNumberSentBytes);
 
    // Connectionless
-   SocketResult sendDatagram(const char* buffer, int bufferLength, unsigned short port, const char* address, int& outNumberSentBytes);
-
-   SocketResult shutdownOperation(SocketOperation operation);
-   SocketResult close            ();
+   SocketResult sendDatagram             (const char* buffer, int bufferLength, unsigned short port, const char* address, int& outNumberSentBytes);
+   
 
    SOCKET       m_socket;
    SocketState  m_socketState;

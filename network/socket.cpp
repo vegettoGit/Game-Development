@@ -171,26 +171,55 @@ Socket::SocketResult Socket::sendBytes(const char* buffer, int bufferLength, int
    return socketResult;
 }
 
-Socket::SocketResult Socket::sendDatagram(const char* buffer, int bufferLength, unsigned short port, const char* address, int& outNumberSentBytes)
+Socket::SocketResult Socket::getAddressFamily(int& outputAddressFamily)
 {
     SocketResult socketResult;
-    outNumberSentBytes = 0;
 
-    sockaddr_in receivingAddress;
-    receivingAddress.sin_family      = AF_INET;
-    receivingAddress.sin_port        = htons(port);
-    receivingAddress.sin_addr.s_addr = inet_addr(address);
+    char optval[1024];
+    int optlen = sizeof(optval);
 
-    int sendResult = sendto(m_socket, buffer, bufferLength, 0, (SOCKADDR *)& receivingAddress, sizeof(receivingAddress));
-    if (sendResult == SOCKET_ERROR)
+    int getSocketOptionResult = getsockopt(m_socket, (int)SOL_SOCKET, (int)SO_PROTOCOL_INFO, optval, &optlen);
+    if (getSocketOptionResult == SOCKET_ERROR)
     {
-        socketResult.m_error = SocketError::ERROR_SEND_DATAGRAM;
+        socketResult.m_error = SocketError::ERROR_GET_SOCKET_OPTION;
         socketResult.m_internalError = WSAGetLastError();
         close();
     }
     else
     {
-        outNumberSentBytes = sendResult;
+        LPWSAPROTOCOL_INFO addressInfo = (LPWSAPROTOCOL_INFO)optval;
+        outputAddressFamily = addressInfo->iAddressFamily;
+    }
+
+    return socketResult;
+}
+
+Socket::SocketResult Socket::sendDatagram(const char* buffer, int bufferLength, unsigned short port, const char* address, int& outNumberSentBytes)
+{
+    SocketResult socketResult;
+    outNumberSentBytes = 0;
+
+    int addressFamily = 0;
+    socketResult = getAddressFamily(addressFamily);
+
+    if (socketResult.m_error == SocketError::NONE)
+    {
+        sockaddr_in receivingAddress;
+        receivingAddress.sin_family = addressFamily;
+        receivingAddress.sin_port = htons(port);
+        receivingAddress.sin_addr.s_addr = inet_addr(address);
+
+        int sendResult = sendto(m_socket, buffer, bufferLength, 0, (SOCKADDR *)& receivingAddress, sizeof(receivingAddress));
+        if (sendResult == SOCKET_ERROR)
+        {
+            socketResult.m_error = SocketError::ERROR_SEND_DATAGRAM;
+            socketResult.m_internalError = WSAGetLastError();
+            close();
+        }
+        else
+        {
+            outNumberSentBytes = sendResult;
+        }
     }
 
     return socketResult;
