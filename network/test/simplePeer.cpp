@@ -1,9 +1,6 @@
 
 #include "simplePeer.h"
-#include "networkProperties.h"
 
-const char* NetworkProperties::s_defaultPort   = "27015";
-const char* NetworkProperties::s_serverAddress = "127.0.0.1";
 
 ISimplePeer::ISimplePeer()
 {

@@ -1,5 +1,5 @@
 
-#include "network.h"
+#include "networkproperties.h"
 #include <string>
 
 class ISimplePeer

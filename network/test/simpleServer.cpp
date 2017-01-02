@@ -1,6 +1,5 @@
 
 #include "simpleServer.h"
-#include "networkProperties.h"
 
 SimpleServer::SimpleServer()
    : m_serverState(ServerState::NONE)
@@ -26,8 +25,8 @@ void SimpleServer::createWork()
       else
       {
          m_serverState = ServerState::CREATE;
-         networkResult = Network::getInstance().createSocket(NULL, 
-                                                             NetworkProperties::s_defaultPort, 
+         networkResult = Network::getInstance().createSocket(NULL,
+                                                             std::to_string(NetworkProperties::s_defaultPort).c_str(),
                                                              NetworkProperties::s_networkAddressType, 
                                                              Network::NetworkProtocol::TCP, 
                                                              Socket::SocketCreationType::ACCEPT_INCOMING_CONNECTIONS, 

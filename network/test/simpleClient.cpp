@@ -1,6 +1,5 @@
 
 #include "simpleClient.h"
-#include "networkProperties.h"
 
 SimpleClient::SimpleClient()
    : m_clientState(ClientState::NONE)
@@ -28,7 +27,7 @@ void SimpleClient::createWork()
          m_clientState = ClientState::CREATE;
 
          networkResult = Network::getInstance().createSocket(NetworkProperties::s_serverAddress, 
-                                                             NetworkProperties::s_defaultPort,
+                                                             std::to_string(NetworkProperties::s_defaultPort).c_str(),
                                                              NetworkProperties::s_networkAddressType, 
                                                              Network::NetworkProtocol::TCP, 
                                                              Socket::SocketCreationType::CONNECT, 
