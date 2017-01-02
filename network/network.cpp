@@ -45,13 +45,12 @@ Network::NetworkResult Network::initialize()
    return result;
 }
 
-Network::NetworkResult Network::getAddressInfo(const char* hostName, const char* serviceName, NetworkAddressType addressType, NetworkProtocol protocol, Socket::SocketCreationType socketCreationType, struct addrinfo*& outAddressInfo)
+Network::NetworkResult Network::getSocketInfo(const char* hostName, const char* serviceName, NetworkAddressType addressType, NetworkProtocol protocol, Socket::SocketCreationType socketCreationType, struct addrinfo*& outAddressInfo)
 {
    NetworkResult result;
-   
    struct addrinfo hints;
 
-   result.m_error = buildAddressInfo(addressType, protocol, socketCreationType, hints);
+   result.m_error = buildSocketInfo(addressType, protocol, socketCreationType, hints);
 
    if (result.m_error == NetworkError::NONE)
    {
@@ -67,7 +66,7 @@ Network::NetworkResult Network::getAddressInfo(const char* hostName, const char*
 }
 
 
-Network::NetworkError Network::buildAddressInfo(NetworkAddressType addressType, NetworkProtocol protocol, Socket::SocketCreationType socketCreationType, struct addrinfo& outAddressInfo)
+Network::NetworkError Network::buildSocketInfo(NetworkAddressType addressType, NetworkProtocol protocol, Socket::SocketCreationType socketCreationType, struct addrinfo& outAddressInfo)
 {
    NetworkError result = NetworkError::NONE;
 
@@ -153,7 +152,7 @@ Network::NetworkResult Network::createSocket(const char* hostName, const char* s
 
    // Resolve the host address and port
    struct addrinfo* addressInfo = nullptr;
-   result = Network::getInstance().getAddressInfo(hostName, serviceName, addressType, protocol, socketCreationType, addressInfo);
+   result = Network::getInstance().getSocketInfo(hostName, serviceName, addressType, protocol, socketCreationType, addressInfo);
 
    if (result.m_error == NetworkError::NONE)
    {
