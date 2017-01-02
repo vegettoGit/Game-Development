@@ -32,7 +32,7 @@ void SimplePeerBroadcaster::createWork()
 
          if (networkResult.m_error != Network::NetworkError::NONE)
          {
-            setError("Error creating or binding socket for connecting to server", networkResult.m_internalError);
+            setError("Error creating connectionless socket", networkResult.m_internalError);
          }
       }
 
@@ -52,7 +52,7 @@ void SimplePeerBroadcaster::createWork()
          socketResult = m_socket.sendDatagram(m_textToSend.c_str(), m_textToSend.size(), NetworkProperties::s_defaultPort, NetworkProperties::s_localHost, numberSentBytes);
          if (numberSentBytes == 0)
          {
-            setError("Error sending bytes to the server", socketResult.m_internalError);
+            setError("Error sending datagram to peer", socketResult.m_internalError);
          }
          else
          {

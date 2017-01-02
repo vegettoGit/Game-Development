@@ -11,8 +11,7 @@
 struct TestNetworkPeerBroadcaster : IGraphicsGame
 {
    TestNetworkPeerBroadcaster(int width, int height)
-      : IGraphicsGame(GraphicsGameProperties(width, height)),
-        m_numberMessage(0)
+      : IGraphicsGame(GraphicsGameProperties(width, height))
    {
    }
 
@@ -57,16 +56,13 @@ private:
    }
 
    SimplePeerBroadcaster m_simplePeerBroadcaster;
-   TestNetworkDisplay m_testNetworkDisplay;
-   int m_numberMessage;
-
-   static const unsigned char s_endKey;
+   TestNetworkDisplay    m_testNetworkDisplay;
 };
 
 int main(int argc, char* argv[])
 {
    std::unique_ptr<IGraphicsGame> testNetworkPeerBroadcaster = std::make_unique<TestNetworkPeerBroadcaster>(400, 300);
-   Graphics::getInstance().init(argc, argv, "Test Network Client", std::move(testNetworkPeerBroadcaster));
+   Graphics::getInstance().init(argc, argv, "Test Network Peer Broadcaster", std::move(testNetworkPeerBroadcaster));
 
    return 0;
 }
