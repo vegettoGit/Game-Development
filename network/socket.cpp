@@ -171,6 +171,31 @@ Socket::SocketResult Socket::sendBytes(const char* buffer, int bufferLength, int
    return socketResult;
 }
 
+Socket::SocketResult Socket::sendDatagram(const char* buffer, int bufferLength, unsigned short port, const char* address, int& outNumberSentBytes)
+{
+    SocketResult socketResult;
+    outNumberSentBytes = 0;
+
+    sockaddr_in receivingAddress;
+    receivingAddress.sin_family      = AF_INET;
+    receivingAddress.sin_port        = htons(port);
+    receivingAddress.sin_addr.s_addr = inet_addr(address);
+
+    int sendResult = sendto(m_socket, buffer, bufferLength, 0, (SOCKADDR *)& receivingAddress, sizeof(receivingAddress));
+    if (sendResult == SOCKET_ERROR)
+    {
+        socketResult.m_error = SocketError::ERROR_SEND_DATAGRAM;
+        socketResult.m_internalError = WSAGetLastError();
+        close();
+    }
+    else
+    {
+        outNumberSentBytes = sendResult;
+    }
+
+    return socketResult;
+}
+
 Socket::SocketResult Socket::shutdownOperation(SocketOperation socketOperation)
 {
    SocketResult socketResult;

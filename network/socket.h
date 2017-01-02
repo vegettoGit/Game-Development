@@ -21,6 +21,7 @@ struct Socket
       ERROR_ACCEPT,
       ERROR_RECEIVE,
       ERROR_SEND,
+      ERROR_SEND_DATAGRAM,
       ERROR_SHUTDOWN,
       ERROR_CLOSE,
       UNKNOWN_ERROR
@@ -75,8 +76,12 @@ struct Socket
    SocketResult listenIncomingConnection ();
    SocketResult acceptIncomingConnection ();
 
+   // Connection based
    SocketResult receiveBytes(char* buffer, int bufferLength, int& outNumberReceivedBytes);
    SocketResult sendBytes   (const char* buffer, int bufferLength, int& outNumberSentBytes);
+
+   // Connectionless
+   SocketResult sendDatagram(const char* buffer, int bufferLength, unsigned short port, const char* address, int& outNumberSentBytes);
 
    SocketResult shutdownOperation(SocketOperation operation);
    SocketResult close            ();
