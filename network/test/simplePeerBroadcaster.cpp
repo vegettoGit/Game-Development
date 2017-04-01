@@ -84,13 +84,11 @@ void SimplePeerBroadcaster::createWork()
            Socket::SocketResult socketResult;
            if (networkResult.m_error == Network::NetworkError::NONE)
            {
-               //m_textToSend.append("This is a test");
-
                m_state = PeerBroadcasterState::RECEIVE;
                int numberReceivedBytes = 0;
 
-               char receivingBuffer[1024];
-               int receivingBufferLength = 1024;
+               char receivingBuffer[NetworkProperties::s_defaultSocketBufferLength];
+               int receivingBufferLength = NetworkProperties::s_defaultSocketBufferLength;
                char* senderAddress = nullptr;
                unsigned short senderPort = 0;
 
