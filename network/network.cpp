@@ -156,16 +156,13 @@ Network::NetworkResult Network::createSocket(const char* hostName, const char* s
 
    // Resolve the host address and port
    struct addrinfo addressInfo;
-   struct addrinfo* addressInfoToBeFilled = nullptr;
-   if (socketCreationType == Socket::SocketCreationType::CONNECTIONLESS_SEND)
-   {
-       addressInfoToBeFilled = &addressInfo;
-   }
-   result = Network::getInstance().getSocketInfo(hostName, serviceName, addressType, protocol, socketCreationType, addressInfoToBeFilled);
+   struct addrinfo* pAddressInfo = &addressInfo;
+
+   result = Network::getInstance().getSocketInfo(hostName, serviceName, addressType, protocol, socketCreationType, pAddressInfo);
 
    if (result.m_error == NetworkError::NONE)
    {
-      Socket::SocketResult socketResult = Socket::createSocket(socketCreationType, addressInfoToBeFilled, outSocket);
+      Socket::SocketResult socketResult = Socket::createSocket(socketCreationType, pAddressInfo, outSocket);
       if (socketResult.m_error != Socket::SocketError::NONE)
       {
          result.m_error = NetworkError::ERROR_SOCKET_CREATION;
@@ -187,9 +184,9 @@ Network::NetworkResult Network::createSocket(const char* hostName, const char* s
          result.m_internalError = socketResult.m_internalError;
       }
       
-      if (socketCreationType != Socket::SocketCreationType::CONNECTIONLESS_SEND)
+      if (pAddressInfo != & addressInfo)
       {
-          freeaddrinfo(addressInfoToBeFilled);
+          freeaddrinfo(pAddressInfo);
       }
    }
 
