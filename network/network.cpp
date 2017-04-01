@@ -48,32 +48,26 @@ Network::NetworkResult Network::initialize()
 Network::NetworkResult Network::getSocketInfo(const char* hostName, const char* serviceName, NetworkAddressType addressType, NetworkProtocol protocol, Socket::SocketCreationType socketCreationType, struct addrinfo*& outAddressInfo)
 {
    NetworkResult result;
-   struct addrinfo hints;
-
-   result.m_error = buildSocketInfo(addressType, protocol, socketCreationType, hints);
-
-   if (result.m_error == NetworkError::NONE)
+   
+   if (socketCreationType == Socket::SocketCreationType::CONNECTIONLESS_SEND)
    {
-      // Resolve the server address and port
-      result.m_internalError = getaddrinfo(hostName, serviceName, &hints, &outAddressInfo);
-      if (result.m_internalError != 0)
-      {
-         result.m_error = NetworkError::ERROR_GET_ADDRESS_INFO;
-      }
+        result.m_error = buildSocketInfo(addressType, protocol, socketCreationType, *outAddressInfo);
+   }
+   else
+   {
+        struct addrinfo hints;
+        result.m_error = buildSocketInfo(addressType, protocol, socketCreationType, hints);
+
+        // Resolve the server address and port
+        result.m_internalError = getaddrinfo(hostName, serviceName, &hints, &outAddressInfo);
+        if (result.m_internalError != 0)
+        {
+            result.m_error = NetworkError::ERROR_GET_ADDRESS_INFO;
+        }
    }
 
    return result;
 }
-
-Network::NetworkResult Network::getSocketInfo(NetworkAddressType addressType, NetworkProtocol protocol, Socket::SocketCreationType socketCreationType, struct addrinfo& outAddressInfo)
-{
-    NetworkResult result;
-
-    result.m_error = buildSocketInfo(addressType, protocol, socketCreationType, outAddressInfo);
-
-    return result;
-}
-
 
 Network::NetworkError Network::buildSocketInfo(NetworkAddressType addressType, NetworkProtocol protocol, Socket::SocketCreationType socketCreationType, struct addrinfo& outAddressInfo)
 {
@@ -129,12 +123,13 @@ Network::NetworkError Network::buildSocketInfo(NetworkAddressType addressType, N
       switch (socketCreationType)
       {
          case Socket::SocketCreationType::ACCEPT_INCOMING_CONNECTIONS:
+         case Socket::SocketCreationType::CONNECTIONLESS_RECEIVE:
          {
             outAddressInfo.ai_flags = AI_PASSIVE;
             break;
          }
          case Socket::SocketCreationType::CONNECT:
-         case Socket::SocketCreationType::CONNECTIONLESS:
+         case Socket::SocketCreationType::CONNECTIONLESS_SEND:
          {
             break;
          }
@@ -160,12 +155,17 @@ Network::NetworkResult Network::createSocket(const char* hostName, const char* s
    }
 
    // Resolve the host address and port
-   struct addrinfo* addressInfo = nullptr;
-   result = Network::getInstance().getSocketInfo(hostName, serviceName, addressType, protocol, socketCreationType, addressInfo);
+   struct addrinfo addressInfo;
+   struct addrinfo* addressInfoToBeFilled = nullptr;
+   if (socketCreationType == Socket::SocketCreationType::CONNECTIONLESS_SEND)
+   {
+       addressInfoToBeFilled = &addressInfo;
+   }
+   result = Network::getInstance().getSocketInfo(hostName, serviceName, addressType, protocol, socketCreationType, addressInfoToBeFilled);
 
    if (result.m_error == NetworkError::NONE)
    {
-      Socket::SocketResult socketResult = Socket::createSocket(socketCreationType, addressInfo, outSocket);
+      Socket::SocketResult socketResult = Socket::createSocket(socketCreationType, addressInfoToBeFilled, outSocket);
       if (socketResult.m_error != Socket::SocketError::NONE)
       {
          result.m_error = NetworkError::ERROR_SOCKET_CREATION;
@@ -187,35 +187,12 @@ Network::NetworkResult Network::createSocket(const char* hostName, const char* s
          result.m_internalError = socketResult.m_internalError;
       }
       
-      freeaddrinfo(addressInfo);
+      if (socketCreationType != Socket::SocketCreationType::CONNECTIONLESS_SEND)
+      {
+          freeaddrinfo(addressInfoToBeFilled);
+      }
    }
 
    return result;
-}
-
-Network::NetworkResult Network::createSocket(NetworkAddressType addressType, NetworkProtocol protocol, Socket::SocketCreationType socketCreationType, Socket& outSocket)
-{
-    NetworkResult result;
-
-    if (m_networkLayerState != NetworkLayerState::INITIALIZED)
-    {
-        result.m_error = NetworkError::ERROR_NETWORK_UNINITIALIZED;
-        return result;
-    }
-
-    struct addrinfo addressInfo;
-    result = Network::getInstance().getSocketInfo(addressType, protocol, socketCreationType, addressInfo);
-
-    if (result.m_error == NetworkError::NONE)
-    {
-        Socket::SocketResult socketResult = Socket::createSocket(socketCreationType, &addressInfo, outSocket);
-        if (socketResult.m_error != Socket::SocketError::NONE)
-        {
-            result.m_error = NetworkError::ERROR_SOCKET_CREATION;
-            result.m_internalError = socketResult.m_internalError;
-        }
-    }
-
-    return result;
 }
 

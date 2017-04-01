@@ -10,9 +10,10 @@
 
 struct TestNetworkPeerBroadcaster : IGraphicsGame
 {
-   TestNetworkPeerBroadcaster(int width, int height)
+   TestNetworkPeerBroadcaster(int width, int height, SimplePeerBroadcaster::PeerBroadcasterMode broadcasterMode)
       : IGraphicsGame(GraphicsGameProperties(width, height))
    {
+       m_simplePeerBroadcaster.setBroadcasterMode(broadcasterMode);
    }
 
    void gameUpdate(int millisecondsSinceGameStart) override
@@ -43,6 +44,9 @@ private:
       case SimplePeerBroadcaster::PeerBroadcasterState::SEND:
          stateText = "Sending datagram";
          break;
+      case SimplePeerBroadcaster::PeerBroadcasterState::RECEIVE:
+          stateText = "Receiving datagram";
+          break;
       case SimplePeerBroadcaster::PeerBroadcasterState::CLOSE:
          stateText = "Closing socket";
          break;
@@ -57,11 +61,12 @@ private:
 
    SimplePeerBroadcaster m_simplePeerBroadcaster;
    TestNetworkDisplay    m_testNetworkDisplay;
+   
 };
 
 int main(int argc, char* argv[])
 {
-   std::unique_ptr<IGraphicsGame> testNetworkPeerBroadcaster = std::make_unique<TestNetworkPeerBroadcaster>(400, 300);
+   std::unique_ptr<IGraphicsGame> testNetworkPeerBroadcaster = std::make_unique<TestNetworkPeerBroadcaster>(400, 300, SimplePeerBroadcaster::PeerBroadcasterMode::RECEIVE);
    Graphics::getInstance().init(argc, argv, "Test Network Peer Broadcaster", std::move(testNetworkPeerBroadcaster));
 
    return 0;

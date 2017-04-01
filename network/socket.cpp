@@ -28,6 +28,7 @@ Socket::SocketResult Socket::createSocket(SocketCreationType socketCreationType,
    switch (socketCreationType)
    {
       case SocketCreationType::ACCEPT_INCOMING_CONNECTIONS:
+      case SocketCreationType::CONNECTIONLESS_RECEIVE:
       {
          socketResult = createSocket(*addressInfo, outSocket);
          if (outSocket.m_socket != INVALID_SOCKET)
@@ -71,14 +72,13 @@ Socket::SocketResult Socket::createSocket(SocketCreationType socketCreationType,
 
          break;
       }
-      case SocketCreationType::CONNECTIONLESS:
+      case SocketCreationType::CONNECTIONLESS_SEND:
       default:
       {
          socketResult = createSocket(*addressInfo, outSocket);
          break;
       }
    }
-
    
    return socketResult;
 }
@@ -219,6 +219,32 @@ Socket::SocketResult Socket::sendDatagram(const char* buffer, int bufferLength, 
         else
         {
             outNumberSentBytes = sendResult;
+        }
+    }
+
+    return socketResult;
+}
+
+Socket::SocketResult Socket::receiveDatagram(char* buffer, int bufferLength, unsigned short& port, const char* address, int& outNumberReceivedBytes)
+{
+    SocketResult socketResult;
+    outNumberReceivedBytes = 0;
+
+    if (socketResult.m_error == SocketError::NONE)
+    {
+        sockaddr_in senderAddress;
+        int sendingAddressSize = sizeof(senderAddress);
+
+        int receiveResult = recvfrom(m_socket, buffer, bufferLength, 0, (SOCKADDR *)& senderAddress, &sendingAddressSize);
+        if (receiveResult == SOCKET_ERROR)
+        {
+            socketResult.m_error = SocketError::ERROR_SEND_DATAGRAM;
+            socketResult.m_internalError = WSAGetLastError();
+            close();
+        }
+        else
+        {
+            outNumberReceivedBytes = receiveResult;
         }
     }
 

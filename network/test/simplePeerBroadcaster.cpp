@@ -2,7 +2,8 @@
 #include "SimplePeerBroadcaster.h"
 
 SimplePeerBroadcaster::SimplePeerBroadcaster()
-   : m_state(PeerBroadcasterState::NONE)
+   : m_state(PeerBroadcasterState::NONE),
+     m_broadcasterMode(PeerBroadcasterMode::SEND)
 {
 }
 
@@ -25,9 +26,13 @@ void SimplePeerBroadcaster::createWork()
       {
          m_state = PeerBroadcasterState::CREATE;
 
-         networkResult = Network::getInstance().createSocket(NetworkProperties::s_networkAddressType, 
+         Socket::SocketCreationType socketCreationType = (m_broadcasterMode == PeerBroadcasterMode::SEND) ? Socket::SocketCreationType::CONNECTIONLESS_SEND : Socket::SocketCreationType::CONNECTIONLESS_RECEIVE;
+
+         networkResult = Network::getInstance().createSocket(nullptr,
+                                                             (m_broadcasterMode == PeerBroadcasterMode::SEND) ? nullptr : std::to_string(NetworkProperties::s_defaultPort).c_str(),
+                                                             NetworkProperties::s_networkAddressType, 
                                                              Network::NetworkProtocol::UDP, 
-                                                             Socket::SocketCreationType::CONNECTIONLESS, 
+                                                             socketCreationType,
                                                              m_socket);
 
          if (networkResult.m_error != Network::NetworkError::NONE)
@@ -39,36 +44,82 @@ void SimplePeerBroadcaster::createWork()
       return networkResult;
    });
       
-   m_sendTask = m_initializeTask.then([&](const Network::NetworkResult networkResult)
+   if (m_broadcasterMode == PeerBroadcasterMode::SEND)
    {
-      Socket::SocketResult socketResult;
-      if (networkResult.m_error == Network::NetworkError::NONE)
-      {
-         m_textToSend.append("This is a test");
+       m_sendTask = m_initializeTask.then([&](const Network::NetworkResult networkResult)
+       {
+           Socket::SocketResult socketResult;
+           if (networkResult.m_error == Network::NetworkError::NONE)
+           {
+               m_textToSend.append("This is a test");
 
-         m_state = PeerBroadcasterState::SEND;
-         int numberSentBytes = 0;
-               
-         socketResult = m_socket.sendDatagram(m_textToSend.c_str(), m_textToSend.size(), NetworkProperties::s_defaultPort, NetworkProperties::s_localHost, numberSentBytes);
-         if (numberSentBytes == 0)
-         {
-            setError("Error sending datagram to peer", socketResult.m_internalError);
-         }
-         else
-         {
-            setLastSentText(m_textToSend.c_str(), numberSentBytes);
+               m_state = PeerBroadcasterState::SEND;
+               int numberSentBytes = 0;
 
-            m_state = PeerBroadcasterState::CLOSE;
-            socketResult = m_socket.close();
-            if (socketResult.m_error != Socket::SocketError::NONE)
-            {
-                setError("Error closing socket", socketResult.m_internalError);
-            }
-         }
-      }
+               socketResult = m_socket.sendDatagram(m_textToSend.c_str(), m_textToSend.size(), NetworkProperties::s_defaultPort, NetworkProperties::s_localHost, numberSentBytes);
+               if (numberSentBytes == 0)
+               {
+                   setError("Error sending datagram to peer", socketResult.m_internalError);
+               }
+               else
+               {
+                   setLastSentText(m_textToSend.c_str(), numberSentBytes);
 
-      return socketResult;
-   });
+                   m_state = PeerBroadcasterState::CLOSE;
+                   socketResult = m_socket.close();
+                   if (socketResult.m_error != Socket::SocketError::NONE)
+                   {
+                       setError("Error closing socket", socketResult.m_internalError);
+                   }
+               }
+           }
+
+           return socketResult;
+       });
+   }
+   else
+   {
+       m_receiveTask = m_initializeTask.then([&](const Network::NetworkResult networkResult)
+       {
+           Socket::SocketResult socketResult;
+           if (networkResult.m_error == Network::NetworkError::NONE)
+           {
+               //m_textToSend.append("This is a test");
+
+               m_state = PeerBroadcasterState::RECEIVE;
+               int numberReceivedBytes = 0;
+
+               char receivingBuffer[1024];
+               int receivingBufferLength = 1024;
+               char* senderAddress = nullptr;
+               unsigned short senderPort = 0;
+
+               socketResult = m_socket.receiveDatagram(receivingBuffer, receivingBufferLength, senderPort, senderAddress, numberReceivedBytes);
+               if (numberReceivedBytes == 0)
+               {
+                   setError("Error receiving datagram from peer", socketResult.m_internalError);
+               }
+               else
+               {
+                   setLastReceivedText(receivingBuffer, numberReceivedBytes);
+
+                   m_state = PeerBroadcasterState::CLOSE;
+                   socketResult = m_socket.close();
+                   if (socketResult.m_error != Socket::SocketError::NONE)
+                   {
+                       setError("Error closing socket", socketResult.m_internalError);
+                   }
+               }
+           }
+
+           return socketResult;
+       });
+   }
+}
+
+void SimplePeerBroadcaster::setBroadcasterMode(PeerBroadcasterMode broadcasterMode)
+{
+    m_broadcasterMode = broadcasterMode;
 }
 
 void SimplePeerBroadcaster::setError(const char* text, int error)

@@ -44,7 +44,8 @@ struct Socket
    {
       ACCEPT_INCOMING_CONNECTIONS,
       CONNECT,
-      CONNECTIONLESS
+      CONNECTIONLESS_SEND,
+      CONNECTIONLESS_RECEIVE
    };
 
    enum class SocketState
@@ -86,7 +87,8 @@ struct Socket
    SocketResult sendBytes                (const char* buffer, int bufferLength, int& outNumberSentBytes);
 
    // Connectionless
-   SocketResult sendDatagram             (const char* buffer, int bufferLength, unsigned short port, const char* address, int& outNumberSentBytes);
+   SocketResult sendDatagram             (const char* buffer, int bufferLength, unsigned short port , const char* address, int& outNumberSentBytes);
+   SocketResult receiveDatagram          (char* buffer      , int bufferLength, unsigned short& port, const char* address, int& outNumberReceivedBytes);
    
 
    SOCKET       m_socket;

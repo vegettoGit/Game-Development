@@ -15,12 +15,19 @@ class SimplePeerBroadcaster : public ISimplePeer
 
 public:
 
+   enum class PeerBroadcasterMode
+   {
+      SEND,
+      RECEIVE
+   };
+
    enum class PeerBroadcasterState
    {
       NONE,
       INITIALIZE,
       CREATE,
       SEND,
+      RECEIVE,
       CLOSE,
       CLIENT_ERROR
    };
@@ -28,7 +35,9 @@ public:
    SimplePeerBroadcaster        ();
    ~SimplePeerBroadcaster       ();
 
-   void        createWork       () override;
+   void        createWork        () override;
+   void        setBroadcasterMode(PeerBroadcasterMode);
+
    PeerBroadcasterState getState() const;
 
 private:
@@ -37,8 +46,10 @@ private:
 
    Future<Network::NetworkResult> m_initializeTask;
    Future<Socket::SocketResult>   m_sendTask;
+   Future<Socket::SocketResult>   m_receiveTask;
    std::string                    m_textToSend;
    PeerBroadcasterState           m_state;
+   PeerBroadcasterMode            m_broadcasterMode;
 
 };
 
