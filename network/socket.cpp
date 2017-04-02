@@ -245,6 +245,8 @@ Socket::SocketResult Socket::receiveDatagram(char* buffer, int bufferLength, uns
         else
         {
             outNumberReceivedBytes = receiveResult;
+            address = inet_ntoa(senderAddress.sin_addr);
+            port    = ntohs(senderAddress.sin_port);
         }
     }
 
