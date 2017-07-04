@@ -15,9 +15,14 @@ class Graphics
    Graphics();
    ~Graphics();
 
+   static void            setupFrameRate        (int);
+
    static void            updateGame            ();
 
    static std::unique_ptr<IGraphicsGame>  s_graphicsGame;
+
+
+   static constexpr unsigned int s_millisecondsPerFrame = 16;
 
 public:
 
@@ -35,6 +40,7 @@ public:
    Graphics&              operator =            (Graphics&& graphics)      = delete;
 
    static Graphics&       getInstance           ();
+  
    static GraphicsResult  init                  (int argc, char* argv[], const char* name, std::unique_ptr<IGraphicsGame> graphicsGame);
    static void            update                ();
 

@@ -45,9 +45,6 @@ struct TestLinkConfigurationGame : IGraphicsGame
       solveAndExamineResult(Vector3(1.0f, 0.0f, 0.0f),  Vector3(4.0f, 0.0f, 0.0f),  1.0f, 13.0f, Color(0.0f, 1.0f, 1.0f)); // No solution
       solveAndExamineResult(Vector3(1.0f, 0.0f, 0.0f),  Vector3(4.0f, 0.0f, 0.0f), -1.0f, 13.0f, Color(0.0f, 1.0f, 1.0f)); // No solution
       solveAndExamineResult(Vector3(10.0f, 5.0f, 7.0f), Vector3(5.0f, 15.0f, 7.0f), 5.0f, 10.0f, Color(1.0f, 0.0f, 0.0f));
-
-      // Enable if we want to update every frame even if things don't change
-      // Graphics::getInstance().update();
    }
 
    void initialize() override

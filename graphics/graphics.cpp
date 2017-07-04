@@ -112,6 +112,12 @@ void Graphics::updateGame()
    }
 }
 
+void Graphics::setupFrameRate(int)
+{
+    glutPostRedisplay();
+    glutTimerFunc(s_millisecondsPerFrame, setupFrameRate, 0);
+}
+
 Graphics::GraphicsResult Graphics::init(int argc, char* argv[], const char* name, std::unique_ptr<IGraphicsGame> graphicsGame)
 {
    GraphicsResult result = GraphicsResult::OK;
@@ -148,6 +154,7 @@ Graphics::GraphicsResult Graphics::init(int argc, char* argv[], const char* name
       glutDisplayFunc(updateGame);
       glutKeyboardFunc(Input::onKeyPressed);
       glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+      setupFrameRate(0);
       glutMainLoop();
    }
    else
@@ -160,5 +167,4 @@ Graphics::GraphicsResult Graphics::init(int argc, char* argv[], const char* name
 
 void Graphics::update()
 {
-   glutPostRedisplay();
 }
