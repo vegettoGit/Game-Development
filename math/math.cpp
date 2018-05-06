@@ -45,3 +45,38 @@ float Math::degreesToRadians(float degrees)
 {
    return degrees * c_pi / 180.0f;
 }
+
+float Math::mix(float a, float b, float weightB)
+{
+	return (1 - weightB) * a + weightB * b;
+}
+
+float Math::crossfade(float a, float b, float t)
+{
+	return mix(a, b, t);
+}
+
+float Math::bounceClampBottom(float t)
+{
+	return std::fabs(t);
+}
+
+float Math::bounceClampTop(float t)
+{
+	return 1.0f - std::fabs(1.0f - t);
+}
+
+float Math::bounceClampBottomTop(float t)
+{
+	return bounceClampTop(bounceClampBottom(t));
+}
+
+float Math::normalizedBezier3(float b, float c, float t)
+{
+	float s = 1.0f - t;
+	float t2 = t * t;
+	float s2 = s * s;
+	float t3 = t2 * t;
+
+	return (3.0f * b * s2 * t) + (3.0f * c * s * t2) + t3;
+}
