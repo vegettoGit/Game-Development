@@ -306,3 +306,31 @@ Socket::SocketResult Socket::close()
 
    return socketResult;
 }
+
+Socket::SocketResult Socket::setOption(SocketOption socketOption)
+{
+    SocketResult socketResult;
+
+    switch (socketOption)
+    {
+    case SocketOption::BROADCAST:
+    {
+        const int optionValue = 1;
+        const char* optionValueChar = (const char*)(&optionValue);
+
+        
+        int result = setsockopt(m_socket, SOL_SOCKET, SO_BROADCAST, optionValueChar, sizeof(optionValue));
+        if (result == SOCKET_ERROR)
+        {
+            socketResult.m_error = SocketError::ERROR_SET_SOCKET_OPTION;
+            socketResult.m_internalError = WSAGetLastError();
+            close();
+        }
+        break;
+    }
+    default:
+        break;
+    }
+
+    return socketResult;
+}

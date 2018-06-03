@@ -23,6 +23,7 @@ struct Socket
       ERROR_SEND,
       ERROR_SEND_DATAGRAM,
       ERROR_GET_SOCKET_OPTION,
+      ERROR_SET_SOCKET_OPTION,
       ERROR_SHUTDOWN,
       ERROR_CLOSE,
       UNKNOWN_ERROR
@@ -65,6 +66,11 @@ struct Socket
       SEND_AND_RECEIVE
    };
 
+   enum class SocketOption
+   {
+       BROADCAST
+   };
+
    Socket             ();
 
    Socket             (const Socket&)  = delete;
@@ -90,6 +96,7 @@ struct Socket
    SocketResult sendDatagram             (const char* buffer, int bufferLength, unsigned short port , const char* address, int& outNumberSentBytes);
    SocketResult receiveDatagram          (char* buffer      , int bufferLength, unsigned short& port, const char* address, int& outNumberReceivedBytes);
    
+   SocketResult setOption                (SocketOption);
 
    SOCKET       m_socket;
    SocketState  m_socketState;
