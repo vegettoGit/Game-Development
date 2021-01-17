@@ -19,8 +19,9 @@ class Graphics
 
    static void            updateGame            ();
 
-   static std::unique_ptr<IGraphicsGame>  s_graphicsGame;
+   static void            update                ();
 
+   static std::unique_ptr<IGraphicsGame>  s_graphicsGame;
 
    static constexpr unsigned int s_millisecondsPerFrame = 16;
 
@@ -42,7 +43,6 @@ public:
    static Graphics&       getInstance           ();
   
    static GraphicsResult  init                  (int argc, char* argv[], const char* name, std::unique_ptr<IGraphicsGame> graphicsGame);
-   static void            update                ();
 
    static void            drawPoint             (const Vector3& point, const Color& color);
    static void            drawVector3           (const Vector3& start, const Vector3& end, const Color& color);

@@ -18,8 +18,6 @@ struct TestNetworkServer : IGraphicsGame
    void gameUpdate(int millisecondsSinceGameStart) override
    {
       displayServerFeedBack(millisecondsSinceGameStart);
-
-      Graphics::getInstance().update();
    }
 
    void initialize() override

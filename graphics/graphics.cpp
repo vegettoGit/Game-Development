@@ -96,6 +96,7 @@ void Graphics::updateGame()
              properties.m_up.m_x, properties.m_up.m_y, properties.m_up.m_z);
 
    (*s_graphicsGame).update(glutGet(GLUT_ELAPSED_TIME));
+   update();
 
    switch (properties.m_bufferMode)
    {

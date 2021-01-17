@@ -37,8 +37,6 @@ struct TestGraphicsGame : IGraphicsGame
       graphics.drawVector3(Vector3(0.0f, 0.0f, 0.0f), test3, Color(1.0f, 0.0f, 0.0f));
 
       graphics.drawText(15.0f, 30.0f, Color(1.0f, 1.0f, 1.0f), s_textExample);
-
-      graphics.update();
    }
 
    void initialize() override

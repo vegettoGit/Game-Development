@@ -19,8 +19,6 @@ struct TestNetworkPeerBroadcaster : IGraphicsGame
    void gameUpdate(int millisecondsSinceGameStart) override
    {
       displayClientFeedBack(millisecondsSinceGameStart);
-
-      Graphics::getInstance().update();
    }
 
    void initialize() override
@@ -66,7 +64,7 @@ private:
 
 int main(int argc, char* argv[])
 {
-   std::unique_ptr<IGraphicsGame> testNetworkPeerBroadcaster = std::make_unique<TestNetworkPeerBroadcaster>(400, 300, SimplePeerBroadcaster::PeerBroadcasterMode::RECEIVE);
+   std::unique_ptr<IGraphicsGame> testNetworkPeerBroadcaster = std::make_unique<TestNetworkPeerBroadcaster>(400, 300, SimplePeerBroadcaster::PeerBroadcasterMode::SEND);
    Graphics::getInstance().init(argc, argv, "Test Network Peer Broadcaster", std::move(testNetworkPeerBroadcaster));
 
    return 0;

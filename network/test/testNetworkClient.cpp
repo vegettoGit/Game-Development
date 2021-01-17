@@ -42,8 +42,6 @@ struct TestNetworkClient : IGraphicsGame
       displayClientFeedBack(millisecondsSinceGameStart);
 
       updateInput();
-
-      Graphics::getInstance().update();
    }
 
    void initialize() override
