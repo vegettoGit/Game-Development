@@ -32,17 +32,17 @@ public:
       CLIENT_ERROR
    };
 
-   SimplePeerBroadcaster        ();
-   ~SimplePeerBroadcaster       ();
+   SimplePeerBroadcaster();
+   ~SimplePeerBroadcaster() = default;
 
-   void        createWork        () override;
-   void        setBroadcasterMode(PeerBroadcasterMode);
+   void createWork() override;
+   void setBroadcasterMode(PeerBroadcasterMode);
 
    PeerBroadcasterState getState() const;
 
 private:
 
-   void setError                (const char* text, int error) override;
+   void setError(const char* text, int error) override;
 
    Future<Network::NetworkResult> m_initializeTask;
    Future<Socket::SocketResult>   m_sendTask;

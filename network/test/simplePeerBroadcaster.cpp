@@ -7,10 +7,6 @@ SimplePeerBroadcaster::SimplePeerBroadcaster()
 {
 }
 
-SimplePeerBroadcaster::~SimplePeerBroadcaster()
-{
-}
-
 void SimplePeerBroadcaster::createWork()
 {
    m_state = PeerBroadcasterState::INITIALIZE;
